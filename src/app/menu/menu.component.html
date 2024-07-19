@@ -1,0 +1,32 @@
+<mat-toolbar>
+
+  <button (click)="drawer.toggle()" mat-icon-button>
+    <mat-icon>menu</mat-icon>
+  </button>
+
+</mat-toolbar>
+
+<mat-drawer-container autosize>
+
+  <mat-drawer #drawer mode="over">
+
+    <mat-list>
+      <div mat-subheader>Menu</div>
+      @for (folder of folders; track folder) {
+        <mat-list-item [routerLink]="[folder.route]">
+          <mat-icon matListItemIcon>{{folder.icon}}</mat-icon>
+          <div matListItemTitle>{{folder.name}}</div>
+          
+        </mat-list-item>
+      }
+    </mat-list>
+      
+  </mat-drawer>
+
+  <mat-drawer-content style="height: 100vh;">
+      
+    <ion-router-outlet></ion-router-outlet>
+      
+  </mat-drawer-content>
+  
+</mat-drawer-container>

@@ -1,0 +1,117 @@
+<div class="container d-flex flex-column justify-content-center align-items-center" style="height: 100vh; position: relative;">
+
+  <!-- Botón flotante a la derecha -->
+  <button color="primary" class="position-absolute top-0 end-0 mt-2 me-2" mat-mini-fab>
+    <mat-icon>contrast</mat-icon>
+  </button>
+
+  <!-- Imagen centrada un poco más abajo -->
+  <div class="text-center mb-4">
+    <img src="assets/img/TittleLogin.png" alt="QR CLEANER" width="350px" height="150px">
+  </div>
+
+  <!-- Formulario centrado -->
+  <div class="d-flex justify-content-center align-items-center flex-grow-1 w-100">
+    <mat-card appearance="outlined" class="w-100">
+      <mat-card-content>
+        
+        <!-- Formulario -->
+        <div class="text-center">
+          <form>
+            <p>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Email</mat-label>
+                <input matInput placeholder="Email">
+                <mat-icon matSuffix>mail</mat-icon>
+              </mat-form-field>
+            </p>
+      
+            <p>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Password</mat-label>
+                <input type="password" matInput placeholder="Password">
+                <mat-icon matSuffix>password</mat-icon>
+                <mat-hint><a (click)="openModalResetPass()">¿Olvido su contraseña?</a></mat-hint>
+              </mat-form-field>
+            </p>
+            
+            <!-- Botones -->
+            <div class="row">
+              <div class="col-12">
+                <button type="button" style="width: 80%" (click)="navigateToHome()" mat-flat-button>Entrar</button>
+              </div>
+              <p></p>
+              <div class="col-12">
+                <button type="button" id="open-modal" style="width: 80%" mat-stroked-button>Registrarse</button>
+              </div>
+            </div>
+
+          </form>
+        </div>
+        
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  
+  
+</div>
+
+<ion-modal trigger="open-modal" (willDismiss)="onWillDismissRegister($event)" style="background-color: white;">
+  <ng-template>
+    <ion-header >
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button (click)="cancelRegister()"><mat-icon>close</mat-icon></ion-button>
+        </ion-buttons>
+        
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      
+      <mat-stepper orientation="vertical" [linear]="isLinear" #stepper>
+        <mat-step [stepControl]="firstFormGroup">
+          <form [formGroup]="firstFormGroup">
+            <ng-template matStepLabel>Indique su correo</ng-template>
+            <mat-form-field class="w-75">
+              <mat-label>Email</mat-label>
+              <input matInput placeholder="app@gmail.com" formControlName="firstCtrl" required>
+            </mat-form-field>
+            <div>
+              <button mat-button matStepperNext>Siguiente</button>
+            </div>
+          </form>
+        </mat-step>
+        <mat-step [stepControl]="secondFormGroup">
+          <form [formGroup]="secondFormGroup">
+            <ng-template matStepLabel>Cree su contraseña</ng-template>
+            <mat-form-field class="w-75">
+              <mat-label>Contraseña</mat-label>
+              <input matInput formControlName="secondCtrl" placeholder="12345678" required>
+            </mat-form-field>
+
+            <mat-form-field class="w-75">
+              <mat-label>Repita su contraseña</mat-label>
+              <input matInput formControlName="secondCtrl" placeholder="12345678" required>
+            </mat-form-field>
+            <div>
+              <button mat-button matStepperPrevious>Atras</button>
+              <button mat-button matStepperNext>Siguiente</button>
+            </div>
+          </form>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>Listo</ng-template>
+          
+          <div>
+            <button mat-button matStepperPrevious>Atras</button>
+            <button mat-button (click)="confirmRegister()">Registrarse</button>
+          </div>
+        </mat-step>
+      </mat-stepper>
+
+
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
