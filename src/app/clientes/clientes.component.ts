@@ -89,12 +89,12 @@ export class ClientesComponent  implements OnInit {
     this.modalClients.toArray().forEach(modal => modal.dismiss(null, 'cancel'));
   }
 
-  navigateToUsuarios(id: string) {
-    this.closeModalsAndNavigate([`/usuarios`])
+  navigateToUsuarios() {
+    this.closeModalsAndNavigate([`/config-cliente/usuarios`])
   }
 
-  navigateToEquipos(id: string) {
-    this.closeModalsAndNavigate([`/equipos`])
+  navigateToEquipos() {
+    this.closeModalsAndNavigate([`/config-cliente/equipos`])
   }
 
   closeModalsAndNavigate(route: any[]) {

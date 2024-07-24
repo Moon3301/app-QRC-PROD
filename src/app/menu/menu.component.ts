@@ -59,6 +59,11 @@ export class MenuComponent  implements OnInit {
       icon: 'manage_accounts',
       route: '/clientes'
     },
+    {
+      name: 'Usuarios',
+      icon: 'person',
+      route: '/usuarios'
+    },
   ];
 
   constructor(private router: Router) { }

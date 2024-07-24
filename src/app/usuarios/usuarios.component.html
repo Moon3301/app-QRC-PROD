@@ -2,45 +2,36 @@
   <br>
 
   <p></p>
-  <form style="text-align: center;" class="w-100">
-    <mat-form-field style="border-radius: 20px; width: 100%;" appearance="outline">
-      <mat-label>Usuarios</mat-label>
-      <input type="text"
-             placeholder="Pick one"
-             aria-label="Number"
-             matInput
-             [formControl]="myControl"
-             [matAutocomplete]="auto" >
-      <mat-icon matSuffix>search</mat-icon>
-      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-        @for (option of filteredOptions | async; track option) {
-          <mat-option [value]="option">{{option}}</mat-option>
-        }
-      </mat-autocomplete>
-    </mat-form-field>
-  </form>
 
   <mat-card>
     <mat-card-content>
       
       <table mat-table [dataSource]="dataSource" >
 
-        <!--- Note that these columns can be defined in any order.
-              The actual rendered columns are set as a property on the row definition" -->
+        <!-- Name Column -->
+        <ng-container matColumnDef="cargo">
+          <th mat-header-cell *matHeaderCellDef> Cargo </th>
+          <td  mat-cell *matCellDef="let element">
+            {{element.nombre}}
+            
+            
+          
+          </td>
+        </ng-container>
       
         <!-- Position Column -->
-        <ng-container matColumnDef="telefono">
-          <th style="width: 30%; text-align: center;" mat-header-cell *matHeaderCellDef></th>
-          <td style="width: 30%;" mat-cell *matCellDef="let element">
-            <button mat-flat-button><mat-icon style="margin: 0 auto;" matSuffix>delete</mat-icon></button>
-
+        <ng-container matColumnDef="correo">
+          <th mat-header-cell *matHeaderCellDef >Correo</th>
+          <td mat-cell *matCellDef="let element">
+          {{element.correo}}
+          
           </td>
         </ng-container>
       
         <!-- Name Column -->
         <ng-container matColumnDef="nombre">
           <th mat-header-cell *matHeaderCellDef> Name </th>
-          <td #button (click)="openModalDetalleUsuario()" mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element">
             {{element.nombre}}
             
             
@@ -49,7 +40,7 @@
         </ng-container>
       
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr #button  (click)="openModalDetalleUsuario(row)" mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
       </table>
 
 

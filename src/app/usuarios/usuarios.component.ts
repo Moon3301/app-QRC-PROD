@@ -12,10 +12,6 @@ import {MatTableModule} from '@angular/material/table';
 
 import { IonicModule } from '@ionic/angular';
 
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
-import {AsyncPipe} from '@angular/common';
-
 import {FormControl, FormsModule, ReactiveFormsModule, FormBuilder, Validators,} from '@angular/forms';
 
 import { OverlayEventDetail } from '@ionic/core/components';
@@ -32,7 +28,7 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './usuarios.component.html',
   styleUrls: ['./usuarios.component.scss'],
   imports: [MatAutocompleteModule, MatButtonModule, MatIconModule, MatToolbarModule, MatListModule, 
-    MatCardModule, MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, AsyncPipe, 
+    MatCardModule, MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, 
     MatTableModule, IonicModule]
 })
 export class UsuariosComponent  implements OnInit {
@@ -41,50 +37,38 @@ export class UsuariosComponent  implements OnInit {
 
   usuarios: any[] = [
     {
-      nombre:"ACDATA1",
-      telefono: "999999999",
-      telefono_Av: "9999999999"
+      nombre:"Pedro",
+      correo: "user1@gmail.com",
+      cargo: "Tecnico"
     },
     {
-      nombre:"ACDATA2",
-      telefono: "999999999",
-      telefono_Av: "9999999999"
+      nombre:"Diego",
+      correo: "user2@gmail.com",
+      cargo: "Suspervisor"
     },
     {
-      nombre:"ACDATA3",
-      telefono: "999999999",
-      telefono_Av: "9999999999"
+      nombre:"Juan",
+      correo: "user3@gmail.com",
+      cargo: "Ayudante"
     },
     {
-      nombre:"ACDATA4",
-      telefono: "999999999",
-      telefono_Av: "9999999999"
+      nombre:"Carlos",
+      correo: "user4@gmail.com",
+      cargo: "Administrador"
     }
   ]
 
-  displayedColumns: string[] = ['nombre', 'telefono'];
+  displayedColumns: string[] = ['nombre', 'correo', 'cargo'];
   dataSource = this.usuarios;
-
-  myControl = new FormControl('');
-  options: string[] = ['One', 'Two', 'Three'];
-  filteredOptions!: Observable<string[]>;
 
   constructor(private _formBuilder: FormBuilder, private matDialog:MatDialog) {}
 
   ngOnInit() {
 
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value || '')),
-    );
-
+  
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
 
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
-  }
 
   onWillDismissRegister(event: any) {
     const ev = event as CustomEvent<OverlayEventDetail<string>>;
@@ -102,7 +86,11 @@ export class UsuariosComponent  implements OnInit {
     this.modalRegister.dismiss(null, 'cancel');
   }
 
-  openModalDetalleUsuario(){
+  openModalDetalleUsuario(element:any){
+
+    console.log(element)
+    
+    
     this.matDialog.open(DetalleUsuarioComponent, {
       width: '99%',
       height: '96%'
