@@ -19,6 +19,12 @@ import {AsyncPipe} from '@angular/common';
 import {FormControl, FormsModule, ReactiveFormsModule, FormBuilder, Validators,} from '@angular/forms';
 
 import { ActivatedRoute } from '@angular/router';
+import { Cliente } from 'src/app/Interfaces/cliente';
+import { Usuario } from 'src/app/Interfaces/usuario';
+
+import { ClientesService } from 'src/app/Services/clientes/clientes.service';
+import { UsuariosService } from 'src/app/Services/usuarios/usuarios.service';
+
 
 @Component({
   standalone: true,
@@ -30,29 +36,6 @@ import { ActivatedRoute } from '@angular/router';
     MatTableModule, IonicModule]
 })
 export class ConfigClienteComponent  implements OnInit {
-
-  usuarios: any[] = [
-    {
-      nombre:"ACDATA1",
-      telefono: "999999999",
-      telefono_Av: "9999999999"
-    },
-    {
-      nombre:"ACDATA2",
-      telefono: "999999999",
-      telefono_Av: "9999999999"
-    },
-    {
-      nombre:"ACDATA3",
-      telefono: "999999999",
-      telefono_Av: "9999999999"
-    },
-    {
-      nombre:"ACDATA4",
-      telefono: "999999999",
-      telefono_Av: "9999999999"
-    }
-  ]
 
   equipos: any[] = [
     {
@@ -87,14 +70,27 @@ export class ConfigClienteComponent  implements OnInit {
 
   type: string = ''
 
-  constructor(private route: ActivatedRoute) { }
+  usuariosClientes!: Usuario[] | undefined
+  cliente!: Cliente | undefined
+  
+
+  constructor(private route: ActivatedRoute, private clientes:ClientesService, private usuariosGlobales:UsuariosService) { }
 
   ngOnInit() {
 
     this.route.paramMap.subscribe(params => {
-      this.type = params.get('type')!;
-      this.loadData();
+      let clienteId = params.get('cliente')!;
+      
+      this.cliente = this.clientes.findCliente(parseInt(clienteId))
+
+      this.route.paramMap.subscribe(params => {
+        this.type = params.get('type')!;
+        this.loadData();
+      });
+
     });
+
+   
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
@@ -106,7 +102,29 @@ export class ConfigClienteComponent  implements OnInit {
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+    let usernameUsuario = this.usuariosGlobales.usuarios.map( user => user.username)
+    
+    if(usernameUsuario){
+      return usernameUsuario.filter(option => option.toLowerCase().includes(filterValue));
+    }
+
+    return []
+  }
+
+  onOptionSelected(event: any) {
+    const selectedUsername = event.option.value;
+    const selectedUser = this.usuariosGlobales.usuarios.find(user => user.username === selectedUsername);
+    if (selectedUser) {
+
+      let clienteId = this.cliente?.id
+      if(clienteId){
+        this.clientes.addUsuario(clienteId, selectedUser)
+        console.log("Cliente agregado")
+        this.loadDataCliente()
+        console.log("Recargando lista")
+      }
+
+    }
   }
 
   loadData() {
@@ -116,8 +134,17 @@ export class ConfigClienteComponent  implements OnInit {
 
     } else if (this.type === 'usuarios') {
       // Cargar datos de usuarios
-      this.dataSource = this.usuarios;
+
+      this.loadDataCliente()
+
+
+      
     }
+  }
+
+  loadDataCliente(){
+    this.usuariosClientes = this.cliente?.usuarios
+    this.dataSource = this.usuariosClientes
   }
 
 }

@@ -13,64 +13,31 @@ import { IonRouterOutlet, IonList, IonItem, IonContent, IonModal, IonHeader, Ion
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 
-import { Cliente } from './cliente';
-import { Usuario } from './usuario';
-import { Cargo } from './cargo';
-
 import { OverlayEventDetail } from '@ionic/core/components';
 
+import { ClientesService } from '../Services/clientes/clientes.service';
 @Component({
   standalone: true,
   selector: 'app-clientes',
   templateUrl: './clientes.component.html',
   styleUrls: ['./clientes.component.scss'],
   imports: [IonButtons, IonToolbar, IonHeader,IonContent ,IonModal , IonButton ,IonItem, MatButtonModule,
-    MatIconModule, MatListModule, MatToolbarModule, RouterModule, MatFormFieldModule, MatInputModule, MatCardModule ]
+    MatIconModule, MatListModule, MatToolbarModule, RouterModule, MatFormFieldModule, MatInputModule, 
+    MatCardModule ]
 })
 export class ClientesComponent  implements OnInit {
 
   @ViewChildren(IonModal) modalClients!: QueryList<IonModal>;
 
-  cargos: Cargo[] = [
-    {id:1, nombre: 'Administrador'},
-    {id:2, nombre: 'Supervisor'},
-    {id:3, nombre: 'Tecnico'},
-    {id:4, nombre: 'Ayudante'},
-    {id:5, nombre: 'Cliente'},
-  ]
-  
-  usuarios: Usuario[] = [
-    {
-      id:1 ,email:'test1@acdata.cl' ,nombre:'Test1' , cargo: this.cargos[0]
-    },
-    {
-      id:2 ,email:'test2@acdata.cl' ,nombre:'Test2' , cargo: this.cargos[1]
-    },
-    {
-      id:3 ,email:'test3@acdata.cl' ,nombre:'Test3' , cargo: this.cargos[2]
-    },
-    {
-      id:4 ,email:'test4@acdata.cl' ,nombre:'Test4' , cargo: this.cargos[3]
-    },
 
-  ]
-
-  clientes: Cliente[] = [
-    {id: 1, nombre: 'ACDATA', telefono_jefe_area: '+56 988943613', telefono_supervisor_area: '+56 913369488', usuarios: this.usuarios },
-    {id: 2, nombre: 'MERCADO LIBRE', telefono_jefe_area: '+56 988943613', telefono_supervisor_area: '+56 913369488', usuarios: this.usuarios},
-    {id: 3, nombre: 'CLINICA LAS CONDES', telefono_jefe_area: '+56 988943613', telefono_supervisor_area: '+56 913369488', usuarios: this.usuarios},
-    {id: 4, nombre: 'CLINICA ALEMANA', telefono_jefe_area: '+56 988943613', telefono_supervisor_area: '+56 913369488', usuarios: this.usuarios},
-  ]
-
-  constructor(private router: Router) { }
+  constructor(private router: Router, public clientes: ClientesService) { }
   
 
 
-  ngOnInit(
+  ngOnInit() {
 
-    
 
-  ) {}
+  }
 
 
   onWillDismissRegister(event: any) {
@@ -89,12 +56,12 @@ export class ClientesComponent  implements OnInit {
     this.modalClients.toArray().forEach(modal => modal.dismiss(null, 'cancel'));
   }
 
-  navigateToUsuarios() {
-    this.closeModalsAndNavigate([`/config-cliente/usuarios`])
+  navigateToUsuarios(clienteId: number) {
+    this.closeModalsAndNavigate([`/config-cliente/${clienteId}/usuarios`])
   }
 
-  navigateToEquipos() {
-    this.closeModalsAndNavigate([`/config-cliente/equipos`])
+  navigateToEquipos(clienteId: number) {
+    this.closeModalsAndNavigate([`/config-cliente/${clienteId}/equipos`])
   }
 
   closeModalsAndNavigate(route: any[]) {

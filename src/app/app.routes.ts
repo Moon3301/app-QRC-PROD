@@ -45,7 +45,7 @@ export const routes: Routes = [
         component: EquiposComponent,
       },
       {
-        path: 'config-cliente/:type',
+        path: 'config-cliente/:cliente/:type',
         component: ConfigClienteComponent,
       }
       

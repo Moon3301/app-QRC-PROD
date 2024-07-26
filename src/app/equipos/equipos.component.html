@@ -1,100 +1,132 @@
 <div class="container">
+
+  <div class="row">
+
+    <mat-accordion>
+
+      <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
+        <mat-expansion-panel-header>
+          <mat-panel-title> Filtro de busqueda </mat-panel-title>
+          
+        </mat-expansion-panel-header>
+        
+        <p>test open</p>
+
+      </mat-expansion-panel>
+
+    </mat-accordion>
+
+  </div>
   <br>
+  <div class="row text-center">
+    <div class="col-6">
+      <button mat-stroked-button>Imprimir Reporte</button>
+    </div>
 
-  <p></p>
-  <form style="text-align: center;" class="w-100">
-    <mat-form-field style="border-radius: 20px; width: 100%;" appearance="outline">
-      <mat-label>Equipos</mat-label>
-      <input type="text"
-             placeholder="Pick one"
-             aria-label="Number"
-             matInput
-             [formControl]="myControl"
-             [matAutocomplete]="auto" >
-      <mat-icon matSuffix>search</mat-icon>
-      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-        @for (option of filteredOptions | async; track option) {
-          <mat-option [value]="option">{{option}}</mat-option>
-        }
-      </mat-autocomplete>
-    </mat-form-field>
-  </form>
+    <div class="col-6">
+      <button mat-flat-button>Planificar Manten</button>
+    </div>
+  </div>
+  <br>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-  <mat-card>
-    <mat-card-content>
-      
-      <table mat-table [dataSource]="dataSource" >
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+  
+    <!-- Position Column -->
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef> No. </th>
+      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+    </ng-container>
+  
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+  
+    <!-- Weight Column -->
+    <ng-container matColumnDef="weight">
+      <th mat-header-cell *matHeaderCellDef> Weight </th>
+      <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+    </ng-container>
+  
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="symbol">
+      <th mat-header-cell *matHeaderCellDef> Symbol </th>
+      <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
 
-        <!--- Note that these columns can be defined in any order.
-              The actual rendered columns are set as a property on the row definition" -->
-      
-        <!-- Position Column -->
-        <ng-container matColumnDef="telefono">
-          <th style="width: 20%; text-align: center;" mat-header-cell *matHeaderCellDef></th>
-          <td style="width: 20%;" mat-cell *matCellDef="let element">
-            <button mat-flat-button><mat-icon style="margin: 0 auto;" matSuffix>delete</mat-icon></button>
-
-          </td>
-        </ng-container>
-      
-        <!-- Name Column -->
-        <ng-container matColumnDef="nombre">
-          <th mat-header-cell *matHeaderCellDef> Name </th>
-          <td mat-cell *matCellDef="let element">{{element.nombre}}</td>
-        </ng-container>
-      
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-
-
-    </mat-card-content>
-  </mat-card>
-
-  <button id="open-modal-add-equipos" style="position: fixed; right: 5%; bottom: 10%; background-color: rgb(35, 81, 209);" mat-fab aria-label="Example icon button with a delete icon">
+  <button id="open-modal-add-equipo" style="position: fixed; right: 5%; bottom: 10%; background-color: rgb(35, 81, 209); z-index: 1000;" mat-fab aria-label="Example icon button with a delete icon">
     <mat-icon style="color: white;">add</mat-icon>
   </button>
-  
+
 </div>
 
-
-<ion-modal trigger="open-modal-add-equipos" (willDismiss)="onWillDismissRegister($event)" style="background-color: white;">
+<ion-modal trigger="open-modal-add-equipo" (willDismiss)="onWillDismissAddEquipo($event)" style="background-color: white;">
   <ng-template>
     <ion-header >
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-button (click)="cancelRegister()"><mat-icon>close</mat-icon></ion-button>
+          <ion-button (click)="cancelAddEquipo()"><mat-icon>close</mat-icon></ion-button>
         </ion-buttons>
         
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
       
-      <h5 class="text-center">Crear equipo</h5>
+      <h5 class="text-center">Agregar equipo</h5>
       <div class="text-center">
         <form>
-          <p>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Email</mat-label>
-              <input type="text" matInput placeholder="Email">
-              <mat-icon matSuffix>mail</mat-icon>
-            </mat-form-field>
-          </p>
-    
-          <p>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Nombre</mat-label>
-              <input type="text" matInput placeholder="Nombre">
-              <mat-icon matSuffix>password</mat-icon>
-              
-            </mat-form-field>
-          </p>
+
+          <div class="row">
+            
+            <div class="col-6">
+              <p>
+                <mat-form-field appearance="outline" class="w-100">
+                  
+                  <mat-label>Turno</mat-label>
+                  <mat-select>
+                    @for (turno of turnos; track turno) {
+                      <mat-option [value]="turno">{{turno}}</mat-option>
+                    }
+                  </mat-select>
+                  
+                </mat-form-field>
+              </p>
+            </div>
+
+            
+            <div class="col-6">
+              <p>
+                <mat-form-field appearance="outline" class="w-100">
+                  
+                  <mat-label>Criticidad</mat-label>
+                  <mat-select>
+                    @for (crit of criticidad; track crit) {
+                      <mat-option [value]="crit">{{crit}}</mat-option>
+                    }
+                  </mat-select>
+                  
+                </mat-form-field>
+              </p>
+            </div>
+            
+          </div>
 
           <p>
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Cargo</mat-label>
-              <input type="password" matInput placeholder="Password">
-              <mat-icon matSuffix>password</mat-icon>
+              
+              <mat-label>Cliente</mat-label>
+              <mat-select>
+                @for (cliente of clientes.clientes; track cliente) {
+                  <mat-option [value]="cliente.id">{{cliente.nombre}}</mat-option>
+                }
+              </mat-select>
               
             </mat-form-field>
           </p>
@@ -104,6 +136,8 @@
         </form>
       </div>
       
+
+
     </ion-content>
   </ng-template>
 </ion-modal>

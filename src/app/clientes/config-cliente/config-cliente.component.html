@@ -14,7 +14,7 @@
                [formControl]="myControl"
                [matAutocomplete]="auto" >
         <mat-icon matSuffix>search</mat-icon>
-        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-autocomplete (optionSelected)="onOptionSelected($event)" autoActiveFirstOption #auto="matAutocomplete">
           @for (option of filteredOptions | async; track option) {
             <mat-option [value]="option">{{option}}</mat-option>
           }

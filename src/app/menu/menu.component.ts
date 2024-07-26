@@ -47,7 +47,7 @@ export class MenuComponent  implements OnInit {
     {
       name: 'Equipos',
       icon: 'business_center',
-      route: ''
+      route: '/equipos'
     },
     {
       name: 'Documentos',

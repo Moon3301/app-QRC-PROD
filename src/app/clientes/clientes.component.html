@@ -3,7 +3,7 @@
   <mat-list>
     <div mat-subheader>Clientes</div>
     <hr>
-    @for (cliente of clientes; track cliente) {
+    @for (cliente of clientes.listClientes(); track cliente) {
 
       <mat-list-item [id]="'open-modal' + cliente.id">
         
@@ -67,14 +67,14 @@
                 <mat-card-content>
 
                   <div class="row">
-                    <button (click)="navigateToUsuarios()" mat-fab extended class="w-100" style="background-color: white;">
+                    <button (click)="navigateToUsuarios(cliente.id)" mat-fab extended class="w-100" style="background-color: white;">
                       <mat-icon>groups</mat-icon>
                       Usuarios
                     </button>
                   </div>
                   <br>
                   <div class="row">
-                    <button (click)="navigateToEquipos()" mat-fab extended class="w-100" style="background-color: rgb(30, 89, 177); color: white;">
+                    <button (click)="navigateToEquipos(cliente.id)" mat-fab extended class="w-100" style="background-color: rgb(30, 89, 177); color: white;">
                       <mat-icon>precision_manufacturing</mat-icon>
                       Equipos
                     </button>
@@ -91,9 +91,6 @@
       </mat-list-item>
     }
   </mat-list>
-
-
- 
 
 </div>
 

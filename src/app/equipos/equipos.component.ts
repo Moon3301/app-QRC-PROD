@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy, signal } from '@angular/core';
 
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -9,21 +9,40 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatTableModule} from '@angular/material/table';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatSelectModule} from '@angular/material/select';
 
 import { IonicModule } from '@ionic/angular';
 
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
-import {AsyncPipe} from '@angular/common';
-
-import {FormControl, FormsModule, ReactiveFormsModule, FormBuilder, Validators,} from '@angular/forms';
-
+import { IonModal } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
 
-import { IonModal } from '@ionic/angular';
+import {FormControl, FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup,} from '@angular/forms';
 
-import { MatDialog } from '@angular/material/dialog';
+import { Turno } from '../Interfaces/equipo';
+import { Criticidad } from '../Interfaces/equipo';
+import { Periodicidad } from '../Interfaces/equipo';
 
+import { ClientesService } from '../Services/clientes/clientes.service';
+export interface PeriodicElement {
+  name: string;
+  position: number;
+  weight: number;
+  symbol: string;
+}
+
+const ELEMENT_DATA: PeriodicElement[] = [
+  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
+  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
+  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
+  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
+  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
+  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
+  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
+  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
+  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
+  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
+];
 
 @Component({
   standalone: true,
@@ -31,60 +50,51 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './equipos.component.html',
   styleUrls: ['./equipos.component.scss'],
   imports: [MatButtonModule, MatIconModule, MatToolbarModule, MatListModule, MatCardModule, MatFormFieldModule,
-    MatInputModule, MatAutocompleteModule, MatTableModule, AsyncPipe, ReactiveFormsModule, IonicModule]
+    MatInputModule, MatAutocompleteModule, MatTableModule, ReactiveFormsModule, IonicModule, 
+    MatExpansionModule, MatSelectModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EquiposComponent  implements OnInit {
-
-  @ViewChild(IonModal) modalRegister!: IonModal;
   
-  equipos: any[] = [
-    {
-      nombre:"PURIFICADOR",
-      telefono: "999999999",
-      telefono_Av: "9999999999"
-    },
-    {
-      nombre:"UNIDAD MANEJADORA DE AIRE",
-      telefono: "999999999",
-      telefono_Av: "9999999999"
-    },
-    {
-      nombre:"VENTILADOR INYECTOR DE AIRE",
-      telefono: "999999999",
-      telefono_Av: "9999999999"
-    },
-    {
-      nombre:"FAN COIL",
-      telefono: "999999999",
-      telefono_Av: "9999999999"
-    }
-  ]
+  turnos = Object.values(Turno)
+  criticidad = Object.values(Criticidad)
+  periodicidad = Object.values(Periodicidad)
 
-  displayedColumns: string[] = ['nombre', 'telefono'];
-  dataSource = this.equipos;
+  createForm!: FormGroup
 
-  myControl = new FormControl('');
-  options: string[] = ['One', 'Two', 'Three'];
-  filteredOptions!: Observable<string[]>;
+  @ViewChild(IonModal) modalAddEquipo!: IonModal;
 
-  constructor(private _formBuilder: FormBuilder, private matDialog:MatDialog) {}
+  readonly panelOpenState = signal(false);
+  
+  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
+  dataSource = ELEMENT_DATA;
+ 
+  constructor(private formBuilder: FormBuilder, public clientes: ClientesService) {}
 
   ngOnInit() {
 
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value || '')),
-    );
+    this.createForm = this.formBuilder.group({
 
+      turno: ['', Validators.required],
+      criticidad: ['', Validators.required],
+      cliente: ['', Validators.required],
+      tipo_equipo: ['', Validators.required],
+      periodicidad: ['', Validators.required],
+      descripcion: ['', Validators.required],
+      ubicacion: ['', Validators.required],
+      activo: ['', Validators.required],
+      archivo_fisico: ['', Validators.required],
+      marca: ['', Validators.required],
+      modelo: ['', Validators.required],
+      serie: ['', Validators.required],
+      acreditacion: ['', Validators.required],
+      ultima_mantencion: ['', Validators.required],
+
+    })
+    
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
-  }
-
-  onWillDismissRegister(event: any) {
+  onWillDismissAddEquipo(event: any) {
     const ev = event as CustomEvent<OverlayEventDetail<string>>;
     if (ev.detail.role === 'confirm') {
 
@@ -92,12 +102,14 @@ export class EquiposComponent  implements OnInit {
     }
   }
 
-  confirmRegister() {
-    this.modalRegister.dismiss(null,'confirm');
+  confirmAddEquipo() {
+    this.modalAddEquipo.dismiss(null,'confirm');
   }
 
-  cancelRegister() {
-    this.modalRegister.dismiss(null, 'cancel');
+  cancelAddEquipo() {
+    this.modalAddEquipo.dismiss(null, 'cancel');
   }
+
+  
 
 }
