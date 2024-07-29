@@ -23,7 +23,7 @@
         <ng-container matColumnDef="correo">
           <th mat-header-cell *matHeaderCellDef >Correo</th>
           <td mat-cell *matCellDef="let element">
-          {{element.correo}}
+          {{element.email}}
           
           </td>
         </ng-container>
@@ -67,19 +67,43 @@
       
       <h5 class="text-center">Crear usuario</h5>
       <div class="text-center">
-        <form>
+        <form [formGroup]="addForm">
+
           <p>
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Email</mat-label>
-              <input type="text" matInput placeholder="Email">
-              <mat-icon matSuffix>mail</mat-icon>
+                  
+              <mat-label>Cargo</mat-label>
+              <mat-select formControlName="cargo">
+                @for (cargo of cargos; track cargo) {
+                  <mat-option [value]="cargo.nombre">{{cargo.nombre}}</mat-option>
+                }
+              </mat-select>
+              
             </mat-form-field>
           </p>
-    
+
           <p>
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Nombre</mat-label>
-              <input type="text" matInput placeholder="Nombre">
+              <input type="text" matInput placeholder="Nombre y Apellido" formControlName="nombre">
+              <mat-icon matSuffix>person</mat-icon>
+              
+            </mat-form-field>
+          </p>
+
+          <p>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Nombre Usuario</mat-label>
+              <input type="text" matInput placeholder="Nombre" formControlName="username">
+              <mat-icon matSuffix>person</mat-icon>
+              
+            </mat-form-field>
+          </p>
+
+          <p>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Contrasena</mat-label>
+              <input type="text" matInput placeholder="Nombre" formControlName="password">
               <mat-icon matSuffix>password</mat-icon>
               
             </mat-form-field>
@@ -87,14 +111,22 @@
 
           <p>
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Cargo</mat-label>
-              <input type="password" matInput placeholder="Password">
-              <mat-icon matSuffix>password</mat-icon>
-              
+              <mat-label>Email</mat-label>
+              <input type="text" matInput placeholder="Email" formControlName="email">
+              <mat-icon matSuffix>mail</mat-icon>
             </mat-form-field>
           </p>
+    
+          <p>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Telefono</mat-label>
+              <input type="text" matInput placeholder="Ej: +56 9 88369413" formControlName="telefono">
+              <mat-icon matSuffix>call</mat-icon>
+            </mat-form-field>
+          </p>
+
           
-          <button class="w-75" mat-flat-button>Crear</button>
+          <button (click)="addUsuario()" class="w-75" mat-flat-button [disabled]="!addForm.valid">Crear</button>
 
         </form>
       </div>

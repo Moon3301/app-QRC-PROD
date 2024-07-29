@@ -34,11 +34,20 @@ export class UsuariosService {
   ]
 
   addUsuario(usuario: Usuario) {
+    
     this.usuarios.push(usuario);
+
+    console.log('Usuario creado con exito!')
+    console.log(this.usuarios)
   }
 
   listUsuarios(): Usuario[] {
     return this.usuarios;
+  }
+
+  getCargos(): Cargo[] {
+    
+    return this.cargos
   }
 
   updateUsuario(id: number, updatedUsuario: Usuario) {
@@ -55,9 +64,5 @@ export class UsuariosService {
   findUsuario(id: number): Usuario | undefined {
     return this.usuarios.find(usuario => usuario.id === id);
   }
-
-  
-
-
 
 }

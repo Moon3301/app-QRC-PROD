@@ -70,60 +70,57 @@ export class ConfigClienteComponent  implements OnInit {
 
   type: string = ''
 
-  usuariosClientes!: Usuario[] | undefined
-  cliente!: Cliente | undefined
-  
+  usuariosClientes: Usuario[] = []
 
-  constructor(private route: ActivatedRoute, private clientes:ClientesService, private usuariosGlobales:UsuariosService) { }
+  cliente: Cliente = { id: 0, nombre: '', telefono_jefe_area: '', telefono_supervisor_area: '', usuarios: [] };
+
+  constructor(private route: ActivatedRoute, private clientes:ClientesService, private usuariosGlobales:UsuariosService) {}
 
   ngOnInit() {
 
     this.route.paramMap.subscribe(params => {
-      let clienteId = params.get('cliente')!;
-      
-      this.cliente = this.clientes.findCliente(parseInt(clienteId))
+      const clienteId = params.get('cliente')!;
+
+      const foundCliente = this.clientes.findCliente(parseInt(clienteId, 10));
+      if(foundCliente){
+        this.cliente = foundCliente
+      }
+
+      this.loadData();
 
       this.route.paramMap.subscribe(params => {
+
         this.type = params.get('type')!;
+
         this.loadData();
+
       });
-
     });
-
-   
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
-      map(value => this._filter(value || '')),
+      map(value => this._filter(value || ''))
     );
 
   }
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
-
-    let usernameUsuario = this.usuariosGlobales.usuarios.map( user => user.username)
-    
-    if(usernameUsuario){
-      return usernameUsuario.filter(option => option.toLowerCase().includes(filterValue));
-    }
-
-    return []
+    const usernameUsuario = this.usuariosGlobales.usuarios.map(user => user.username);
+    return usernameUsuario.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   onOptionSelected(event: any) {
     const selectedUsername = event.option.value;
     const selectedUser = this.usuariosGlobales.usuarios.find(user => user.username === selectedUsername);
+
     if (selectedUser) {
-
-      let clienteId = this.cliente?.id
-      if(clienteId){
-        this.clientes.addUsuario(clienteId, selectedUser)
-        console.log("Cliente agregado")
-        this.loadDataCliente()
-        console.log("Recargando lista")
+      const clienteId = this.cliente?.id;
+      if (clienteId) {
+        this.clientes.assingUsuario(clienteId, selectedUser);
+        this.loadDataUsuario(); // Asegúrate de llamar a loadDataCliente después de agregar el usuario
+        this.myControl.reset()
       }
-
     }
   }
 
@@ -135,16 +132,21 @@ export class ConfigClienteComponent  implements OnInit {
     } else if (this.type === 'usuarios') {
       // Cargar datos de usuarios
 
-      this.loadDataCliente()
+      this.loadDataUsuario()
 
-
-      
     }
   }
 
-  loadDataCliente(){
-    this.usuariosClientes = this.cliente?.usuarios
-    this.dataSource = this.usuariosClientes
+  loadDataUsuario() {
+    this.usuariosClientes = this.cliente.usuarios;
+    this.dataSource = [...(this.usuariosClientes || [])]; // Clonar la lista para que Angular detecte el cambio
+  }
+
+  removeUsuario(clienteId:number, usuarioId: number){
+
+    this.clientes.removeUsuario(clienteId, usuarioId)
+    this.loadDataUsuario()
+    
   }
 
 }

@@ -12,7 +12,7 @@ import {MatTableModule} from '@angular/material/table';
 
 import { IonicModule } from '@ionic/angular';
 
-import {FormControl, FormsModule, ReactiveFormsModule, FormBuilder, Validators,} from '@angular/forms';
+import {FormControl, FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup,} from '@angular/forms';
 
 import { OverlayEventDetail } from '@ionic/core/components';
 
@@ -22,6 +22,10 @@ import { DetalleUsuarioComponent } from './detalle-usuario/detalle-usuario.compo
 
 import { MatDialog } from '@angular/material/dialog';
 
+import { UsuariosService } from '../Services/usuarios/usuarios.service';
+import { Usuario } from '../Interfaces/usuario';
+
+import {MatSelectModule} from '@angular/material/select';
 @Component({
   standalone: true,
   selector: 'app-usuarios',
@@ -29,46 +33,40 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./usuarios.component.scss'],
   imports: [MatAutocompleteModule, MatButtonModule, MatIconModule, MatToolbarModule, MatListModule, 
     MatCardModule, MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, 
-    MatTableModule, IonicModule]
+    MatTableModule, IonicModule, MatSelectModule]
 })
 export class UsuariosComponent  implements OnInit {
 
   @ViewChild(IonModal) modalRegister!: IonModal;
 
-  usuarios: any[] = [
-    {
-      nombre:"Pedro",
-      correo: "user1@gmail.com",
-      cargo: "Tecnico"
-    },
-    {
-      nombre:"Diego",
-      correo: "user2@gmail.com",
-      cargo: "Suspervisor"
-    },
-    {
-      nombre:"Juan",
-      correo: "user3@gmail.com",
-      cargo: "Ayudante"
-    },
-    {
-      nombre:"Carlos",
-      correo: "user4@gmail.com",
-      cargo: "Administrador"
-    }
-  ]
-
   displayedColumns: string[] = ['nombre', 'correo', 'cargo'];
-  dataSource = this.usuarios;
+  dataSource: Usuario[] = []
+  cargos = this.usuarios.getCargos()
 
-  constructor(private _formBuilder: FormBuilder, private matDialog:MatDialog) {}
+  addForm!: FormGroup
+
+  constructor(private _formBuilder: FormBuilder, private matDialog:MatDialog, private usuarios: UsuariosService) {}
 
   ngOnInit() {
 
-  
+    this.loadDataUsuarios()
+
+    this.addForm = this._formBuilder.group({
+
+      cargo: ['', Validators.required],
+      nombre: ['', Validators.required],
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+      email: ['', Validators.required],
+      telefono: ['', Validators.required],
+
+    })
+
   }
 
-
+  loadDataUsuarios(){
+    this.dataSource = [...(this.usuarios.listUsuarios() || [])]
+  }
 
   onWillDismissRegister(event: any) {
     const ev = event as CustomEvent<OverlayEventDetail<string>>;
@@ -79,6 +77,9 @@ export class UsuariosComponent  implements OnInit {
   }
 
   confirmRegister() {
+
+    this.loadDataUsuarios()
+
     this.modalRegister.dismiss(null,'confirm');
   }
 
@@ -95,6 +96,37 @@ export class UsuariosComponent  implements OnInit {
       width: '99%',
       height: '96%'
     })
+  }
+
+  addUsuario(){
+
+    try{
+
+      let now = new Date()
+      let timestamp = now.getTime()
+      let uniximeStamp = Math.floor(timestamp / 1000);
+
+      const cargo = this.addForm.get("cargo")?.value
+      const nombre = this.addForm.get("nombre")?.value
+      const username = this.addForm.get("username")?.value
+      const password = this.addForm.get("password")?.value
+      const email = this.addForm.get("email")?.value
+      const telefono = this.addForm.get("telefono")?.value
+
+      let user: Usuario = {id: uniximeStamp, cargo: cargo, nombre: nombre, username: username, password: password,
+      email: email, telefono: telefono, roles: []}
+
+      this.usuarios.addUsuario(user)
+
+      this.confirmRegister()
+
+    }catch (error){
+
+      console.log("Error al crear usuario")
+
+    }
+    
+
   }
 
 }
