@@ -73,42 +73,11 @@ export class EquiposComponent  implements OnInit {
 
   ngOnInit() {
 
-    this.createForm = this.formBuilder.group({
-
-      turno: ['', Validators.required],
-      criticidad: ['', Validators.required],
-      cliente: ['', Validators.required],
-      tipo_equipo: ['', Validators.required],
-      periodicidad: ['', Validators.required],
-      descripcion: ['', Validators.required],
-      ubicacion: ['', Validators.required],
-      activo: ['', Validators.required],
-      archivo_fisico: ['', Validators.required],
-      marca: ['', Validators.required],
-      modelo: ['', Validators.required],
-      serie: ['', Validators.required],
-      acreditacion: ['', Validators.required],
-      ultima_mantencion: ['', Validators.required],
-
-    })
+    
     
   }
 
-  onWillDismissAddEquipo(event: any) {
-    const ev = event as CustomEvent<OverlayEventDetail<string>>;
-    if (ev.detail.role === 'confirm') {
-
-      
-    }
-  }
-
-  confirmAddEquipo() {
-    this.modalAddEquipo.dismiss(null,'confirm');
-  }
-
-  cancelAddEquipo() {
-    this.modalAddEquipo.dismiss(null, 'cancel');
-  }
+  
 
   
 

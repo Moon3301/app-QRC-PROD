@@ -57,7 +57,7 @@ export class ClientesService {
 
   }
 
-  removeUsuario(clienteId: number, usuarioId: number): void {
+  removeUsuario(clienteId: number, usuarioId: string): void {
     const cliente = this.findCliente(clienteId);
     if (cliente) {
       cliente.usuarios = cliente.usuarios.filter(u => u.id !== usuarioId);

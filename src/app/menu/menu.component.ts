@@ -42,7 +42,7 @@ export class MenuComponent  implements OnInit {
     {
       name: 'Mantenciones',
       icon: 'calendar_month',
-      route: ''
+      route: '/mantenciones'
     },
     {
       name: 'Equipos',

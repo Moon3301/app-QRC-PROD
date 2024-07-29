@@ -7,6 +7,7 @@ import { ClientesComponent } from './clientes/clientes.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { EquiposComponent } from './equipos/equipos.component';
 import { ConfigClienteComponent } from './clientes/config-cliente/config-cliente.component';
+import { MantencionesComponent } from './mantenciones/mantenciones.component';
 
 export const routes: Routes = [
 
@@ -47,6 +48,10 @@ export const routes: Routes = [
       {
         path: 'config-cliente/:cliente/:type',
         component: ConfigClienteComponent,
+      },
+      {
+        path: 'mantenciones',
+        component: MantencionesComponent,
       }
       
     ]

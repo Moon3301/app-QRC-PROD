@@ -31,7 +31,7 @@
                 The actual rendered columns are set as a property on the row definition" -->
         
           <!-- Position Column -->
-          <ng-container matColumnDef="telefono">
+          <ng-container matColumnDef="delete">
             <th style="width: 30%; text-align: center;" mat-header-cell *matHeaderCellDef></th>
             <td style="width: 30%;" mat-cell *matCellDef="let element">
               <button (click)="removeUsuario(cliente.id, element.id)" mat-flat-button><mat-icon style="margin: 0 auto;" matSuffix>delete</mat-icon></button>
@@ -40,7 +40,7 @@
           </ng-container>
         
           <!-- Name Column -->
-          <ng-container matColumnDef="nombre">
+          <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef> Name </th>
             <td #button mat-cell *matCellDef="let element">{{element.username}}</td>
           </ng-container>

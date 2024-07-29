@@ -41,11 +41,14 @@ export class UsuariosComponent  implements OnInit {
 
   displayedColumns: string[] = ['nombre', 'correo', 'cargo'];
   dataSource: Usuario[] = []
-  cargos = this.usuarios.getCargos()
+  positions : any
 
   addForm!: FormGroup
 
-  constructor(private _formBuilder: FormBuilder, private matDialog:MatDialog, private usuarios: UsuariosService) {}
+  constructor(private _formBuilder: FormBuilder, private matDialog:MatDialog, private usuarios: UsuariosService) {
+
+    this.positions = this.usuarios.getCargos();
+  }
 
   ngOnInit() {
 
@@ -53,7 +56,7 @@ export class UsuariosComponent  implements OnInit {
 
     this.addForm = this._formBuilder.group({
 
-      cargo: ['', Validators.required],
+      position: ['', Validators.required],
       nombre: ['', Validators.required],
       username: ['', Validators.required],
       password: ['', Validators.required],
@@ -91,7 +94,6 @@ export class UsuariosComponent  implements OnInit {
 
     console.log(element)
     
-    
     this.matDialog.open(DetalleUsuarioComponent, {
       width: '99%',
       height: '96%'
@@ -106,15 +108,37 @@ export class UsuariosComponent  implements OnInit {
       let timestamp = now.getTime()
       let uniximeStamp = Math.floor(timestamp / 1000);
 
-      const cargo = this.addForm.get("cargo")?.value
+      const position = this.addForm.get("position")?.value
       const nombre = this.addForm.get("nombre")?.value
       const username = this.addForm.get("username")?.value
       const password = this.addForm.get("password")?.value
       const email = this.addForm.get("email")?.value
       const telefono = this.addForm.get("telefono")?.value
 
-      let user: Usuario = {id: uniximeStamp, cargo: cargo, nombre: nombre, username: username, password: password,
-      email: email, telefono: telefono, roles: []}
+      let user: Usuario = {
+
+        id: ''+uniximeStamp,
+        name: nombre, 
+        position: position, 
+        signature: '', 
+        organizacion_id: 0,
+        username: username, 
+        normalized_username: username,
+        email: email, 
+        normalized_email: email, 
+        email_confirmed: false,
+        password_hash: '', 
+        security_stamp: '', 
+        concurrency_stamp: '', 
+        phone_number: telefono, 
+        phone_number_confirmed: false,
+        two_factor_enabled: false,
+        password: password, 
+        lockout_end: '', 
+        lockout_enabled: false, 
+        acces_failed_count: 0
+      
+      }
 
       this.usuarios.addUsuario(user)
 

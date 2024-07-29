@@ -24,7 +24,8 @@ import { Usuario } from 'src/app/Interfaces/usuario';
 
 import { ClientesService } from 'src/app/Services/clientes/clientes.service';
 import { UsuariosService } from 'src/app/Services/usuarios/usuarios.service';
-
+import { EquiposService } from 'src/app/Services/equipos/equipos.service';
+import { Category } from 'src/app/Interfaces/category-equip';
 
 @Component({
   standalone: true,
@@ -37,44 +38,25 @@ import { UsuariosService } from 'src/app/Services/usuarios/usuarios.service';
 })
 export class ConfigClienteComponent  implements OnInit {
 
-  equipos: any[] = [
-    {
-      nombre:"ACDATA1",
-      telefono: "999999999",
-      telefono_Av: "9999999999"
-    },
-    {
-      nombre:"ACDATA2",
-      telefono: "999999999",
-      telefono_Av: "9999999999"
-    },
-    {
-      nombre:"ACDATA3",
-      telefono: "999999999",
-      telefono_Av: "9999999999"
-    },
-    {
-      nombre:"ACDATA4",
-      telefono: "999999999",
-      telefono_Av: "9999999999"
-    }
-  ]
-
-  displayedColumns: string[] = ['nombre', 'telefono'];
+  displayedColumns: string[] = ['name', 'delete'];
   
   dataSource:any
 
   myControl = new FormControl('');
-  options: string[] = ['One', 'Two', 'Three'];
+  options: string[] = [];
   filteredOptions!: Observable<string[]>;
 
   type: string = ''
 
   usuariosClientes: Usuario[] = []
+  equiposClientes: Category[] = []
 
   cliente: Cliente = { id: 0, nombre: '', telefono_jefe_area: '', telefono_supervisor_area: '', usuarios: [] };
 
-  constructor(private route: ActivatedRoute, private clientes:ClientesService, private usuariosGlobales:UsuariosService) {}
+  constructor(private route: ActivatedRoute, private clientes:ClientesService, private usuariosGlobales:UsuariosService, private _equipos:EquiposService) {
+
+
+  }
 
   ngOnInit() {
 
@@ -127,11 +109,10 @@ export class ConfigClienteComponent  implements OnInit {
   loadData() {
     if (this.type === 'equipos') {
       // Cargar datos de equipos
-      this.dataSource = this.equipos;
+      this.loadDataEquipos()
 
     } else if (this.type === 'usuarios') {
       // Cargar datos de usuarios
-
       this.loadDataUsuario()
 
     }
@@ -142,11 +123,25 @@ export class ConfigClienteComponent  implements OnInit {
     this.dataSource = [...(this.usuariosClientes || [])]; // Clonar la lista para que Angular detecte el cambio
   }
 
-  removeUsuario(clienteId:number, usuarioId: number){
+  loadDataEquipos(){
+
+    this.equiposClientes = this._equipos.listEquipos()
+    this.dataSource = [...(this.equiposClientes || [])]
+
+  }
+
+  removeUsuario(clienteId:number, usuarioId: string){
 
     this.clientes.removeUsuario(clienteId, usuarioId)
     this.loadDataUsuario()
     
+  }
+
+  removeEquipo(clienteId:number, equipoId: string){
+
+
+
+
   }
 
 }
