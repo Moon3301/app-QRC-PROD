@@ -84,8 +84,8 @@ export class EquiposService {
   }
 
   // Find equipos by name (case insensitive)
-  find(nombre: string): Category[] {
-    return this.equipos.filter(equipo => equipo.name.toLowerCase().includes(nombre.toLowerCase()));
+  find(id: number): Category | undefined {
+    return this.equipos.find(equipo => equipo.id === id)
   }
 
 }

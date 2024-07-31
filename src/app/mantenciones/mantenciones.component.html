@@ -61,18 +61,18 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
-  <button id="open-modal-add-equipo" style="position: fixed; right: 5%; bottom: 10%; background-color: rgb(35, 81, 209); z-index: 1000;" mat-fab aria-label="Example icon button with a delete icon">
+  <button id="open-modal-add-mantencion" style="position: fixed; right: 5%; bottom: 10%; background-color: rgb(35, 81, 209); z-index: 1000;" mat-fab aria-label="Example icon button with a delete icon">
     <mat-icon style="color: white;">add</mat-icon>
   </button>
 
 </div>
 
-<ion-modal trigger="open-modal-add-equipo" (willDismiss)="onWillDismissAddEquipo($event)" style="background-color: white;">
+<ion-modal trigger="open-modal-add-mantencion" (willDismiss)="onWillDismissAddEquipo($event)" style="background-color: white;">
   <ng-template>
     <ion-header >
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-button (click)="cancelAddEquipo()"><mat-icon>close</mat-icon></ion-button>
+          <ion-button (click)="cancelAddMantencion()"><mat-icon>close</mat-icon></ion-button>
         </ion-buttons>
         
       </ion-toolbar>
@@ -81,7 +81,7 @@
       
       <h5 class="text-center">Crear mantencion</h5>
       <div class="text-center">
-        <form>
+        <form [formGroup]="createForm">
 
           <div class="row">
             
@@ -90,7 +90,7 @@
                 <mat-form-field appearance="outline" class="w-100">
                   
                   <mat-label>Turno</mat-label>
-                  <mat-select>
+                  <mat-select formControlName="turno">
                     @for (turno of turnos; track turno) {
                       <mat-option [value]="turno">{{turno}}</mat-option>
                     }
@@ -106,7 +106,7 @@
                 <mat-form-field appearance="outline" class="w-100">
                   
                   <mat-label>Criticidad</mat-label>
-                  <mat-select>
+                  <mat-select formControlName="criticidad">
                     @for (crit of criticidad; track crit) {
                       <mat-option [value]="crit">{{crit}}</mat-option>
                     }
@@ -122,14 +122,106 @@
             <mat-form-field appearance="outline" class="w-100">
               
               <mat-label>Cliente</mat-label>
-              <mat-select>
-                @for (cliente of clientes.clientes; track cliente) {
+              <mat-select (selectionChange)="onClienteChange($event.value)" formControlName="cliente">
+                @for (cliente of clientes.listClientes(); track cliente) {
                   <mat-option [value]="cliente.id">{{cliente.nombre}}</mat-option>
                 }
               </mat-select>
               
             </mat-form-field>
           </p>
+
+          <p>
+            <mat-form-field appearance="outline" class="w-100">
+              
+              <mat-label>Equipo</mat-label>
+              <mat-select [disabled]="equiposCliente.length == 0" formControlName="tipo_equipo">
+                @for (equipo of equiposCliente; track equipo) {
+                  <mat-option [value]="equipo.id">{{equipo.name}}</mat-option>
+                }
+              </mat-select>
+              
+            </mat-form-field>
+          </p>
+
+          <p>
+            <mat-form-field appearance="outline" class="w-100">
+              
+              <mat-label>Calendario</mat-label>
+              <mat-select formControlName="periodicidad">
+                @for (per of periodicidad; track per) {
+                  <mat-option [value]="per">{{per}}</mat-option>
+                }
+              </mat-select>
+              
+            </mat-form-field>
+          </p>
+
+          <p>
+            <mat-form-field appearance="outline" class="w-100" >
+              <mat-label>Descripcion</mat-label>
+                <textarea matInput placeholder="Descripcion ..." formControlName="descripcion"></textarea>
+              
+            </mat-form-field>
+          </p>
+
+          <p>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Ubicacion</mat-label>
+              <textarea matInput placeholder="Ubicacion " formControlName="ubicacion"></textarea>
+              <mat-icon matSuffix>pin_drop</mat-icon>
+              
+            </mat-form-field>
+          </p>
+
+          <p>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Activo</mat-label>
+              <input type="text" matInput placeholder="Activo" formControlName="activo">
+            </mat-form-field>
+          </p>
+
+          <p>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Archivo Fisico</mat-label>
+              <input type="text" matInput placeholder="Activo" formControlName="archivo_fisico">
+            </mat-form-field>
+          </p>
+
+          <p>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Marca</mat-label>
+              <input type="text" matInput placeholder="Marca" formControlName="marca">
+            </mat-form-field>
+          </p>
+
+          <p>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Modelo</mat-label>
+              <input type="text" matInput placeholder="Modelo" formControlName="modelo">
+            </mat-form-field>
+          </p>
+
+          <p>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Serie</mat-label>
+              <input type="text" matInput placeholder="Serie" formControlName="serie">
+            </mat-form-field>
+          </p>
+
+          <div class="row">
+            <mat-checkbox formControlName="acreditacion">Acreditacion</mat-checkbox>
+          </div>
+            
+          <p>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Ultima mantencion</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="ultima_mantencion">
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </p>
+          
           
           <button class="w-75" mat-flat-button>Crear</button>
 

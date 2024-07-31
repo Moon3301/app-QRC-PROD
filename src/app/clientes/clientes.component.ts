@@ -48,7 +48,6 @@ export class ClientesComponent  implements OnInit {
 
     })
 
-
   }
 
   onWillDismissDetail(event: any) {
@@ -110,13 +109,9 @@ export class ClientesComponent  implements OnInit {
       const telefono_jefe_area = this.addFormCliente.get("telefono_jefe_area")?.value
       const telefono_supervisor_area = this.addFormCliente.get("telefono_supervisor_area")?.value
 
-      let cliente: Cliente = {id: uniximeStamp,nombre: nombre, telefono_jefe_area: telefono_jefe_area, telefono_supervisor_area: telefono_jefe_area, usuarios: []}
-
-      console.log(cliente)
+      let cliente: Cliente = {id: uniximeStamp,nombre: nombre, telefono_jefe_area: telefono_jefe_area, telefono_supervisor_area: telefono_supervisor_area, usuarios: [], equipos:[]}
 
       this.clientes.addCliente(cliente)
-
-      console.log(this.clientes.listClientes())
 
       this.confirmRegister()
 

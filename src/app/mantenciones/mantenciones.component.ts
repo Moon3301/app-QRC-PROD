@@ -11,6 +11,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatTableModule} from '@angular/material/table';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatSelectModule} from '@angular/material/select';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -19,11 +20,19 @@ import { OverlayEventDetail } from '@ionic/core/components';
 
 import {FormControl, FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup,} from '@angular/forms';
 
-import { Turno } from '../Interfaces/equipo';
-import { Criticidad } from '../Interfaces/equipo';
-import { Periodicidad } from '../Interfaces/equipo';
+import { Turno } from '../Interfaces/mantencion';
+import { Criticidad } from '../Interfaces/mantencion';
+import { Periodicidad } from '../Interfaces/mantencion';
 
 import { ClientesService } from '../Services/clientes/clientes.service';
+
+import { Category } from '../Interfaces/category-equip';
+import { Cliente } from '../Interfaces/cliente';
+
+import {MatDatepickerModule} from '@angular/material/datepicker';
+
+import {provideNativeDateAdapter} from '@angular/material/core';
+
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -46,18 +55,22 @@ const ELEMENT_DATA: PeriodicElement[] = [
 
 @Component({
   standalone: true,
+  providers: [provideNativeDateAdapter()],
   selector: 'app-mantenciones',
   templateUrl: './mantenciones.component.html',
   styleUrls: ['./mantenciones.component.scss'],
   imports: [MatButtonModule, MatIconModule, MatToolbarModule, MatListModule, MatCardModule, MatFormFieldModule,
     MatInputModule, MatAutocompleteModule, MatTableModule, ReactiveFormsModule, IonicModule, 
-    MatExpansionModule, MatSelectModule]
+    MatExpansionModule, MatSelectModule, MatCheckboxModule, MatDatepickerModule],
+    
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MantencionesComponent  implements OnInit {
 
   turnos = Object.values(Turno)
   criticidad = Object.values(Criticidad)
   periodicidad = Object.values(Periodicidad)
+  equiposCliente: Category[] = []
 
   createForm!: FormGroup
 
@@ -68,26 +81,30 @@ export class MantencionesComponent  implements OnInit {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = ELEMENT_DATA;
  
-  constructor(private formBuilder: FormBuilder, public clientes: ClientesService) {}
+  constructor(private formBuilder: FormBuilder, public clientes: ClientesService) {
+
+  }
 
   ngOnInit() {
 
+    
+
     this.createForm = this.formBuilder.group({
 
-      turno: ['', Validators.required],
-      criticidad: ['', Validators.required],
+      turno: ['', ],
+      criticidad: ['', ],
       cliente: ['', Validators.required],
-      tipo_equipo: ['', Validators.required],
-      periodicidad: ['', Validators.required],
-      descripcion: ['', Validators.required],
-      ubicacion: ['', Validators.required],
-      activo: ['', Validators.required],
-      archivo_fisico: ['', Validators.required],
-      marca: ['', Validators.required],
-      modelo: ['', Validators.required],
-      serie: ['', Validators.required],
-      acreditacion: ['', Validators.required],
-      ultima_mantencion: ['', Validators.required],
+      tipo_equipo: ['', Validators.required,],
+      periodicidad: ['', ],
+      descripcion: ['', ],
+      ubicacion: ['', ],
+      activo: ['', ],
+      archivo_fisico: ['', ],
+      marca: ['', ],
+      modelo: ['', ],
+      serie: ['', ],
+      acreditacion: ['', ],
+      ultima_mantencion: ['', ],
 
     })
     
@@ -101,13 +118,41 @@ export class MantencionesComponent  implements OnInit {
     }
   }
 
-  confirmAddEquipo() {
+  confirmAddMantencion() {
     this.modalAddEquipo.dismiss(null,'confirm');
   }
 
-  cancelAddEquipo() {
+  cancelAddMantencion() {
     this.modalAddEquipo.dismiss(null, 'cancel');
   }
+
+  onClienteChange(clientId: number) {
+    
+    let cliente = this.clientes.listClientes().find( x=> x.id === clientId)
+    if(cliente){
+      this.equiposCliente = this.findEquiposCliente(cliente)
+    }else{
+      console.log('Cliente no encontrado')
+    }
+    
+    // Aquí puedes agregar cualquier lógica adicional que necesites
+  }
+
+  findEquiposCliente(client: Cliente){
+
+    let equipos = client.equipos
+    return equipos
+
+  }
+
+  addMantenimiento(){
+
+    
+
+
+  }
+
+
 
 
 }

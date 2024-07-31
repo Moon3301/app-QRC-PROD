@@ -3,6 +3,7 @@ import { Cliente } from 'src/app/Interfaces/cliente';
 import { UsuariosService } from '../usuarios/usuarios.service';
 import { Usuario } from 'src/app/Interfaces/usuario';
 import { ApiService } from '../api/api.service';
+import { Category } from 'src/app/Interfaces/category-equip';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +13,10 @@ export class ClientesService {
   constructor(private usuarios: UsuariosService, private api:ApiService){}
 
   clientes: Cliente[] = [
-    {id: 1, nombre: 'ACDATA', telefono_jefe_area: '+56 988943613', telefono_supervisor_area: '+56 913369488', usuarios: [] },
-    {id: 2, nombre: 'MERCADO LIBRE', telefono_jefe_area: '+56 988943613', telefono_supervisor_area: '+56 913369488', usuarios: []},
-    {id: 3, nombre: 'CLINICA LAS CONDES', telefono_jefe_area: '+56 988943613', telefono_supervisor_area: '+56 913369488', usuarios: []},
-    {id: 4, nombre: 'CLINICA ALEMANA', telefono_jefe_area: '+56 988943613', telefono_supervisor_area: '+56 913369488', usuarios: []},
+    {id: 1, nombre: 'ACDATA', telefono_jefe_area: '+56 988943613', telefono_supervisor_area: '+56 913369488', usuarios: [], equipos: [] },
+    {id: 2, nombre: 'MERCADO LIBRE', telefono_jefe_area: '+56 988943613', telefono_supervisor_area: '+56 913369488', usuarios: [], equipos: []},
+    {id: 3, nombre: 'CLINICA LAS CONDES', telefono_jefe_area: '+56 988943613', telefono_supervisor_area: '+56 913369488', usuarios: [], equipos: []},
+    {id: 4, nombre: 'CLINICA ALEMANA', telefono_jefe_area: '+56 988943613', telefono_supervisor_area: '+56 913369488', usuarios: [], equipos: []},
   ]
 
   addCliente(cliente: Cliente) {
@@ -52,7 +53,6 @@ export class ClientesService {
         cliente.usuarios.push(usuario);
       }
 
-      
     }
 
   }
@@ -61,6 +61,33 @@ export class ClientesService {
     const cliente = this.findCliente(clienteId);
     if (cliente) {
       cliente.usuarios = cliente.usuarios.filter(u => u.id !== usuarioId);
+    }
+  }
+
+  assignEquipo(clienteId: number, equipo: Category){
+
+    const cliente = this.clientes.find(c => c.id === clienteId);
+
+    if(cliente){
+
+      const equipoId = equipo.id
+      const existe = cliente?.equipos.find(u => u.id === equipoId)
+
+      if(existe){
+        console.log("Usuario ya esta asignado")
+      }else{
+        cliente.equipos.push(equipo)
+        console.log(cliente.equipos)
+      }
+
+    }
+
+  }
+
+  removeEquipo(clienteId: number, equipoId: number): void {
+    const cliente = this.findCliente(clienteId);
+    if (cliente) {
+      cliente.equipos = cliente.equipos.filter(u => u.id !== equipoId);
     }
   }
 

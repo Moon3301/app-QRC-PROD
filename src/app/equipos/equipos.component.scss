@@ -9,3 +9,14 @@ ion-toolbar {
   --ion-background-color: #ffffff; /* Color blanco */
   --background-color: #ffffff;
 }
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Altura total de la ventana */
+}
+
+.table-container {
+  flex: 1;
+  overflow-y: auto; /* Permite el desplazamiento vertical */
+}

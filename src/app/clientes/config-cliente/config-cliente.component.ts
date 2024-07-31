@@ -51,12 +51,9 @@ export class ConfigClienteComponent  implements OnInit {
   usuariosClientes: Usuario[] = []
   equiposClientes: Category[] = []
 
-  cliente: Cliente = { id: 0, nombre: '', telefono_jefe_area: '', telefono_supervisor_area: '', usuarios: [] };
+  cliente: Cliente = { id: 0, nombre: '', telefono_jefe_area: '', telefono_supervisor_area: '', usuarios: [], equipos: [] };
 
-  constructor(private route: ActivatedRoute, private clientes:ClientesService, private usuariosGlobales:UsuariosService, private _equipos:EquiposService) {
-
-
-  }
+  constructor(private route: ActivatedRoute, private clientes:ClientesService, private usuariosGlobales:UsuariosService, private _equipos:EquiposService) {}
 
   ngOnInit() {
 
@@ -87,12 +84,23 @@ export class ConfigClienteComponent  implements OnInit {
   }
 
   private _filter(value: string): string[] {
+
     const filterValue = value.toLowerCase();
-    const usernameUsuario = this.usuariosGlobales.usuarios.map(user => user.username);
-    return usernameUsuario.filter(option => option.toLowerCase().includes(filterValue));
+    
+    if(this.type == 'usuarios'){
+      const usernameUsuario = this.usuariosGlobales.usuarios.map(user => user.username);
+      return usernameUsuario.filter(option => option.toLowerCase().includes(filterValue));
+    }
+
+    if(this.type == 'equipos'){
+      const nameEquipo = this._equipos.listEquipos().map(equip => equip.name);
+      return nameEquipo.filter(option => option.toLocaleLowerCase().includes(filterValue))
+    }
+
+    return []
   }
 
-  onOptionSelected(event: any) {
+  onOptionSelectedUser(event: any) {
     const selectedUsername = event.option.value;
     const selectedUser = this.usuariosGlobales.usuarios.find(user => user.username === selectedUsername);
 
@@ -101,6 +109,23 @@ export class ConfigClienteComponent  implements OnInit {
       if (clienteId) {
         this.clientes.assingUsuario(clienteId, selectedUser);
         this.loadDataUsuario(); // Asegúrate de llamar a loadDataCliente después de agregar el usuario
+        this.myControl.reset()
+      }
+    }
+  }
+
+  onOptionSelectedEquip(event: any) {
+    const selectedEquipName = event.option.value;
+    console.log(selectedEquipName)
+    const selectedEquip = this._equipos.listEquipos().find(equip => equip.name === selectedEquipName);
+    
+    console.log(selectedEquip)
+
+    if (selectedEquip) {
+      const clienteId = this.cliente?.id;
+      if (clienteId) {
+        this.clientes.assignEquipo(clienteId, selectedEquip);
+        this.loadDataEquipos(); 
         this.myControl.reset()
       }
     }
@@ -119,13 +144,13 @@ export class ConfigClienteComponent  implements OnInit {
   }
 
   loadDataUsuario() {
-    this.usuariosClientes = this.cliente.usuarios;
+    this.usuariosClientes = this.cliente.usuarios
     this.dataSource = [...(this.usuariosClientes || [])]; // Clonar la lista para que Angular detecte el cambio
   }
 
   loadDataEquipos(){
 
-    this.equiposClientes = this._equipos.listEquipos()
+    this.equiposClientes = this.cliente.equipos
     this.dataSource = [...(this.equiposClientes || [])]
 
   }
@@ -133,14 +158,14 @@ export class ConfigClienteComponent  implements OnInit {
   removeUsuario(clienteId:number, usuarioId: string){
 
     this.clientes.removeUsuario(clienteId, usuarioId)
-    this.loadDataUsuario()
+    this.loadDataUsuario();
     
   }
 
-  removeEquipo(clienteId:number, equipoId: string){
-
-
-
+  removeEquipo(clienteId:number, equipoId: number){
+    
+    this.clientes.removeEquipo(clienteId, equipoId);
+    this.loadDataEquipos();
 
   }
 
