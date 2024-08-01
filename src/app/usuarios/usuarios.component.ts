@@ -67,10 +67,13 @@ export class UsuariosComponent  implements OnInit {
 
   }
 
+  
   loadDataUsuarios(){
+    /*
     this.dataSource = [...(this.usuarios.listUsuarios() || [])]
+    */
   }
-
+  
   onWillDismissRegister(event: any) {
     const ev = event as CustomEvent<OverlayEventDetail<string>>;
     if (ev.detail.role === 'confirm') {

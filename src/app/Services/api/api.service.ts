@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class ApiService {
 
-  apiUrl = ''
+  private apiUrl = ''
   
   constructor() { }
 
@@ -32,7 +32,7 @@ export class ApiService {
         }
       } else {
         return {
-          error: jsonResponse.mesaage || "Error al obtener datos de la solicitud", status
+          error: jsonResponse.message || "Error al obtener datos de la solicitud", status
         }
       }
 

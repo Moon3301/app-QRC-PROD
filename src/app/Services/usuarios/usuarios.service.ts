@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Cargo } from 'src/app/Interfaces/cargo';
 import { Usuario } from 'src/app/Interfaces/usuario';
+import { ApiService } from '../api/api.service';
+import { api_url } from '../utilities';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuariosService {
 
-  constructor() { }
+  constructor(private api: ApiService) { }
 
   cargos: Cargo[] = [
     {id:1, nombre: 'Administrador'},
@@ -62,19 +64,37 @@ export class UsuariosService {
       lockout_enabled: true,
       acces_failed_count: 1
     },
-    // Añade otros tres usuarios de manera similar
+    
   ];
 
   addUsuario(usuario: Usuario) {
-    
-    this.usuarios.push(usuario);
 
-    console.log('Usuario creado con exito!')
-    console.log(this.usuarios)
+    const endpoint = `${api_url}/add-usuario`
+    const method = 'POST'
+    const body = {user: usuario}
+
+    const response = this.api.createRequest(endpoint, method, body)
+    return response
+    //this.usuarios.push(usuario);
+
   }
 
-  listUsuarios(): Usuario[] {
-    return this.usuarios;
+  getUsuarios(username: string = '', organizacionId:number = 0, position: number = 0) {
+
+    // Procedimiento de almacenado UserRead
+    // Si username es vacio y organization es 0, devuelve todos los usuarios
+    // Si username es vacio y organization tiene valores, devuelve todos los usuarios asociados al ID de la organization
+    // Si username tiene valores, devuelve todos los usuarios con el username definido y los nombres de los roles asociados al username definido
+
+    const endpoint = `${api_url}/user-read`
+    const method = 'POST'
+    const body = {organizacionId: organizacionId, username: username, position:position}
+
+    const response = this.api.createRequest(endpoint, method, body)
+    return response
+
+    //return this.usuarios;
+
   }
 
   getCargos(): Cargo[] {
@@ -83,18 +103,69 @@ export class UsuariosService {
   }
 
   updateUsuario(id: string, updatedUsuario: Usuario) {
+
+    const endpoint = `${api_url}/update-usuario`
+    const method = 'POST'
+    const body = {userId: id, updatedUser: updatedUsuario}
+
+    const response = this.api.createRequest(endpoint, method, body)
+    return response
+
+    /*
     const index = this.usuarios.findIndex(usuario => usuario.id === id);
     if (index !== -1) {
       this.usuarios[index] = updatedUsuario;
     }
+    */
+
   }
 
   deleteUsuario(id: string) {
-    this.usuarios = this.usuarios.filter(usuario => usuario.id !== id);
+
+    const endpoint = `${api_url}/delete-usuario`
+    const method = 'POST'
+    const body = {userId: id}
+
+    const response = this.api.createRequest(endpoint, method, body)
+    return response
+
+    //this.usuarios = this.usuarios.filter(usuario => usuario.id !== id);
   }
 
-  findUsuario(id: string): Usuario | undefined {
+  findUsuario(id: string) {
     return this.usuarios.find(usuario => usuario.id === id);
   }
+
+  findUsernameUser(username: string = '*'){
+
+    // Procedimiento almacenado UserAutocomplete
+    // Si el parametro es igual a = *, devolvera todos los usuarios de la tabla usuario
+    // Si el parametro tiene valores, buscara el parametro en todos los username de la tabla usuarios y devolvera el id y username. 
+    // Si mas username tienen el mismo parametro devolvera mas usuarios. 
+
+    const endpoint = `${api_url}/find-usuarios`
+    const method = 'POST'
+    const body = {username: username}
+
+    const response = this.api.createRequest(endpoint, method, body)
+    return response
+
+  }
+
+  updatePositionUser(userId:string, position: number){
+
+    // Procedimiento de almacenado UserUpdatePosition
+    // actualiza la posicion del usuario
+
+    const endpoint = `${api_url}/update-position-user`
+    const method = 'POST'
+    const body = {userId: userId, position: position}
+
+    const response = this.api.createRequest(endpoint, method, body)
+    return response
+
+  }
+
+
 
 }
