@@ -1,2 +1,2 @@
 
-export const api_url = 'https://test.qrc.cl'
+export const api_url = 'https://test.qrc.cl/api'

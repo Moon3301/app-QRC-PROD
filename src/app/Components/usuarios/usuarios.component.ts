@@ -22,8 +22,8 @@ import { DetalleUsuarioComponent } from './detalle-usuario/detalle-usuario.compo
 
 import { MatDialog } from '@angular/material/dialog';
 
-import { UsuariosService } from '../Services/usuarios/usuarios.service';
-import { Usuario } from '../Interfaces/usuario';
+import { UsuariosService } from '../../Services/usuarios/usuarios.service';
+import { Usuario } from '../../Interfaces/usuario';
 
 import {MatSelectModule} from '@angular/material/select';
 @Component({

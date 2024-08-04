@@ -17,9 +17,10 @@ import { Router } from '@angular/router';
 
 import { OverlayEventDetail } from '@ionic/core/components';
 
-import { ClientesService } from '../Services/clientes/clientes.service';
-import { Cliente } from '../Interfaces/cliente';
-import { Usuario } from '../Interfaces/usuario';
+import { ClientesService } from '../../Services/clientes/clientes.service';
+import { Cliente } from '../../Interfaces/cliente';
+import { Usuario } from '../../Interfaces/usuario';
+
 @Component({
   standalone: true,
   selector: 'app-clientes',

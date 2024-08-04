@@ -26,7 +26,6 @@ import { ClientesService } from 'src/app/Services/clientes/clientes.service';
 import { UsuariosService } from 'src/app/Services/usuarios/usuarios.service';
 import { EquiposService } from 'src/app/Services/equipos/equipos.service';
 import { Category } from 'src/app/Interfaces/category-equip';
-
 @Component({
   standalone: true,
   selector: 'app-config-cliente',

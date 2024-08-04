@@ -20,12 +20,12 @@ import { IonModal } from '@ionic/angular';
 
 import { MatDialog } from '@angular/material/dialog';
 
-import { UsuariosService } from '../Services/usuarios/usuarios.service';
-import { Category } from '../Interfaces/category-equip';
+import { UsuariosService } from '../../Services/usuarios/usuarios.service';
+import { Category } from '../../Interfaces/category-equip';
 
 import {MatSelectModule} from '@angular/material/select';
 
-import { EquiposService } from '../Services/equipos/equipos.service';
+import { EquiposService } from '../../Services/equipos/equipos.service';
 
 import { DetalleEquipoComponent } from './detalle-equipo/detalle-equipo.component';
 

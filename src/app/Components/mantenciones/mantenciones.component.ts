@@ -20,14 +20,14 @@ import { OverlayEventDetail } from '@ionic/core/components';
 
 import {FormControl, FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup,} from '@angular/forms';
 
-import { Turno } from '../Interfaces/mantencion';
-import { Criticidad } from '../Interfaces/mantencion';
-import { Periodicidad } from '../Interfaces/mantencion';
+import { Turno } from '../../Interfaces/mantencion';
+import { Criticidad } from '../../Interfaces/mantencion';
+import { Periodicidad } from '../../Interfaces/mantencion';
 
-import { ClientesService } from '../Services/clientes/clientes.service';
+import { ClientesService } from '../../Services/clientes/clientes.service';
 
-import { Category } from '../Interfaces/category-equip';
-import { Cliente } from '../Interfaces/cliente';
+import { Category } from '../../Interfaces/category-equip';
+import { Cliente } from '../../Interfaces/cliente';
 
 import {MatDatepickerModule} from '@angular/material/datepicker';
 

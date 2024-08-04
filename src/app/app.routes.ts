@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { MenuComponent } from './menu/menu.component';
-import { ScannerQRComponent } from './scanner-qr/scanner-qr.component';
-import { InicioComponent } from './inicio/inicio.component';
-import { ClientesComponent } from './clientes/clientes.component';
-import { UsuariosComponent } from './usuarios/usuarios.component';
-import { EquiposComponent } from './equipos/equipos.component';
-import { ConfigClienteComponent } from './clientes/config-cliente/config-cliente.component';
-import { MantencionesComponent } from './mantenciones/mantenciones.component';
+import { LoginComponent } from './Components/login/login.component';
+import { MenuComponent } from './Components/menu/menu.component';
+import { ScannerQRComponent } from './Components/scanner-qr/scanner-qr.component';
+import { InicioComponent } from './Components/inicio/inicio.component';
+import { ClientesComponent } from './Components/clientes/clientes.component';
+import { UsuariosComponent } from './Components/usuarios/usuarios.component';
+import { EquiposComponent } from './Components/equipos/equipos.component';
+import { ConfigClienteComponent } from './Components/clientes/config-cliente/config-cliente.component';
+import { MantencionesComponent } from './Components/mantenciones/mantenciones.component';
 
 export const routes: Routes = [
 
