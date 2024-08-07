@@ -18,7 +18,7 @@ export class CategoryService {
     // con el parametro indicado. (Parcialmente: Si dentro del paramtro existe alguna cadena que coincida con 
     // algun registro de la tabla category, lo devolvera igualmente).
 
-    const endpoint = `${api_url}/getCategory`
+    const endpoint = `${api_url}/get-category`
     const method = 'POST'
     const body = {descr: descr}
 
@@ -34,7 +34,7 @@ export class CategoryService {
     // Si el parametro es igual a 0 o no se define algun parametro, devuelve todas las categorias de la tabla categoria
     // Si el parametro tiene valores, devuelve todas las categorias asociadas al ID de la organizacion indicada.
 
-    const endpoint = `${api_url}/getCategoryByOrganization`
+    const endpoint = `${api_url}/get-category-organization`
     const method = 'POST'
     const body = {organizationId: organizationId}
 
@@ -51,7 +51,7 @@ export class CategoryService {
     // Devuelve los registros de la tabla CategoryLabor y labor asociados al ID de la categoria
     // que se indico en el parametro
 
-    const endpoint = `${api_url}/getCategoryLabor`
+    const endpoint = `${api_url}/get-category-labor`
     const method = 'POST'
     const body = {categoryId: categoryId}
 
@@ -66,7 +66,7 @@ export class CategoryService {
     // Procedimiento de almacenado CategoryLaborCreate
     // Consultar rene como funciona procedimiento
 
-    const endpoint = `${api_url}/createCategoryLabor`
+    const endpoint = `${api_url}/create-category-labor`
     const method = 'POST'
     const body = {idCategoryLabor: idCategoryLabor}
 
@@ -80,7 +80,7 @@ export class CategoryService {
 
     // Procedimiento de almacenado CategoryLaborUpdate
 
-    const endpoint = `${api_url}/updateCategoryLabor`
+    const endpoint = `${api_url}/update-category-labor`
     const method = 'POST'
     const body = {idCategoryLabor:idCategoryLabor, categoryId: categoryId, laborId: laborId, sort: sort}
 
@@ -95,7 +95,7 @@ export class CategoryService {
     // Procedimiento de almacenado CategoryPartCollection
     // Obtiene los registros de la tabla CategoryPart asociados a el ID de la categoria indicada en el parametro de entrada.
 
-    const endpoint = `${api_url}/getCategoryPart`
+    const endpoint = `${api_url}/get-category-part`
     const method = 'POST'
     const body = {categoryId:categoryId}
 
@@ -111,7 +111,7 @@ export class CategoryService {
     // Crea un nuevo registro en la tabla CategoryPart
     // Si el parametro de entrada es igual a 0, borra todos los registros asociados al ID de la tabla CategoryPart
 
-    const endpoint = `${api_url}/createCategoryPart`
+    const endpoint = `${api_url}/create-category-part`
     const method = 'POST'
     const body = {categoryId:categoryId}
 
@@ -127,7 +127,7 @@ export class CategoryService {
     // Procedimiento de almacenado CategoryStep
     // Obtiene los registros asociados al parametro indicado de la tabla CategoryStep
 
-    const endpoint = `${api_url}/getCategoryStep`
+    const endpoint = `${api_url}/get-category-step`
     const method = 'POST'
     const body = {categoryId:categoryId}
 
@@ -142,7 +142,7 @@ export class CategoryService {
     // procedimiento de almacenado CategoryStepCreate
     // Crea un nuevo registro en la tabla CategoryStep
 
-    const endpoint = `${api_url}/createCategoryStep`
+    const endpoint = `${api_url}/create-category-step`
     const method = 'POST'
     const body = {categoryId:categoryId}
 

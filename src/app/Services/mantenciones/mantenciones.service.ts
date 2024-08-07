@@ -171,6 +171,53 @@ export class MantencionesService {
 
   }
 
+  async getMeasurement(){
+
+    const endpoint = `${api_url}/get-measurement`
+    const method = 'GET'
+    const body = {}
+
+    const response = await this.api.createRequest(endpoint, method, body)
+    return response
+
+  }
+  
+  async getMonthHistoryMaintenance(month: number, year: number){
+
+    const endpoint = `${api_url}/month-history-maintenance`
+    const method = 'POST'
+    const body = {month: month, year: year}
+
+    const response = await this.api.createRequest(endpoint, method, body)
+    return response
+
+
+  }
+
+  async VisiblePdfUpdate(id: number, visible: boolean){
+
+    const endpoint = `${api_url}/visible-pdf-update`
+    const method = 'POST'
+    const body = {id:id, visible:visible}
+
+    const response = await this.api.createRequest(endpoint, method, body)
+    return response
+
+  }
+
+  async ChangeMaintenanceCalendar(equipmentId:number, calendar:number){
+
+    const endpoint = `${api_url}/change-maintenance-calendar`
+    const method = 'POST'
+    const body = {equipmentId:equipmentId, calendar:calendar}
+
+    const response = await this.api.createRequest(endpoint, method, body)
+    return response
+    
+  }
+
+  
+
 
 
 

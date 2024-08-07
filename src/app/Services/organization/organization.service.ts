@@ -135,5 +135,26 @@ export class OrganizationService {
     
   }
 
+  async getTower(){
+
+    const endpoint = `${api_url}/get-tower`
+    const method = 'GET'
+    const body = {}
+
+    const response = this.api.createRequest(endpoint, method, body)
+    return response
+
+  }
+
+  async getBuilding(){
+
+    const endpoint = `${api_url}/get-building`
+    const method = 'GET'
+    const body = {}
+
+    const response = this.api.createRequest(endpoint, method, body)
+    return response
+
+  }
 
 }

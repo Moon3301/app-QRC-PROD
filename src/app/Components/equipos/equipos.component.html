@@ -1,64 +1,248 @@
-<div class="container" style="height: 100vh;">
-    <br>
+<div class="container">
 
-    <mat-card>
-        <mat-card-content style="max-height: 800px; overflow-y: auto;">
-            
-            <table mat-table [dataSource]="dataSource" >
-    
-                <!-- Name Column -->
-                <ng-container matColumnDef="nombre">
-                    <th mat-header-cell *matHeaderCellDef> Name </th>
-                    <td mat-cell *matCellDef="let element">
-                    {{element.name}}
-                    
-                    </td>
-                </ng-container>
-                
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr #button  (click)="openModalDetalleEquipo(row)" mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
-            
-            </table>
-    
+    <br>
+    <mat-card appearance="outlined">
+
+        <mat-card-content>
+
+            <div class="row text-center w-100">
+                <button mat-stroked-button>Planificar Mantenimiento</button>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="row text-center w-100">
+                <button mat-flat-button>Imprimir Reporte</button>
+            </div>
+
         </mat-card-content>
     </mat-card>
 
-    <button id="open-modal-add-equipo" style="position: fixed; right: 5%; bottom: 10%; background-color: rgb(35, 81, 209);" mat-fab>
-        <mat-icon style="color: white;">add</mat-icon>
-    </button>
     
-</div>
+    <br>
+    <div class="row">
+  
+        <mat-accordion>
+    
+          <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
+            <mat-expansion-panel-header>
+              <mat-panel-title> Filtro de busqueda </mat-panel-title>
+              
+            </mat-expansion-panel-header>
+            
+            <p>test open</p>
+    
+          </mat-expansion-panel>
+    
+        </mat-accordion>
+    
+      </div>
 
-<ion-modal trigger="open-modal-add-equipo" (willDismiss)="onWillDismissRegister($event)" style="background-color: white;">
+    <br>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  
+      <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+    
+      <!-- Position Column -->
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef> No. </th>
+        <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+      </ng-container>
+    
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+    
+      <!-- Weight Column -->
+      <ng-container matColumnDef="weight">
+        <th mat-header-cell *matHeaderCellDef> Weight </th>
+        <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+      </ng-container>
+    
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="symbol">
+        <th mat-header-cell *matHeaderCellDef> Symbol </th>
+        <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+      </ng-container>
+    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+    <button id="open-modal-add-mantencion" style="position: fixed; right: 5%; bottom: 10%; background-color: rgb(35, 81, 209); z-index: 1000;" mat-fab aria-label="Example icon button with a delete icon">
+      <mat-icon style="color: white;">add</mat-icon>
+    </button>
+  
+  </div>
+  
+  <ion-modal trigger="open-modal-add-mantencion" (willDismiss)="onWillDismissAddEquipo($event)" style="background-color: white;">
     <ng-template>
-        <ion-header>
-            <ion-toolbar>
-                <ion-buttons slot="start">
-                    <ion-button (click)="cancelRegister()"><mat-icon>close</mat-icon></ion-button>
-                </ion-buttons>
-            
-            </ion-toolbar>
-        </ion-header>
-        <ion-content class="ion-padding">
-            
-            <h5 class="text-center">Crear equipo</h5>
-            <div class="text-center">
-            <form [formGroup]="addForm">
-
+      <ion-header >
+        
+        <ion-toolbar>
+  
+          <h5 class="text-center" >Crear mantencion</h5>
+  
+          <ion-buttons slot="start" >
+            <ion-button (click)="cancelAddMantencion()"><mat-icon>close</mat-icon></ion-button>
+          </ion-buttons>
+          
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        
+        
+        <div class="text-center">
+          <form [formGroup]="createForm">
+  
+            <div class="row">
+              
+              <div class="col-6">
                 <p>
-                <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>Nombre</mat-label>
-                    <input type="text" matInput placeholder="Nombre y Apellido" formControlName="nombre">
-                    <mat-icon matSuffix>precision_manufacturing</mat-icon>
+                  <mat-form-field appearance="outline" class="w-100">
                     
-                </mat-form-field>
+                    <mat-label>Turno</mat-label>
+                    <mat-select formControlName="turno">
+                      @for (turno of turnos; track turno) {
+                        <mat-option [value]="turno">{{turno}}</mat-option>
+                      }
+                    </mat-select>
+                    
+                  </mat-form-field>
                 </p>
-
-                <button (click)="addEquipo()" class="w-75" mat-flat-button [disabled]="!addForm.valid">Crear</button>
-
-            </form>
+              </div>
+  
+              
+              <div class="col-6">
+                <p>
+                  <mat-form-field appearance="outline" class="w-100">
+                    
+                    <mat-label>Criticidad</mat-label>
+                    <mat-select formControlName="criticidad">
+                      @for (crit of criticidad; track crit) {
+                        <mat-option [value]="crit">{{crit}}</mat-option>
+                      }
+                    </mat-select>
+                    
+                  </mat-form-field>
+                </p>
+              </div>
+              
             </div>
+  
+            <p>
+              <mat-form-field appearance="outline" class="w-100">
+                
+                <mat-label>Cliente</mat-label>
+                <mat-select (selectionChange)="onClienteChange($event.value)" formControlName="cliente">
+                  @for (cliente of clientes.listClientes(); track cliente) {
+                    <mat-option [value]="cliente.id">{{cliente.nombre}}</mat-option>
+                  }
+                </mat-select>
+                
+              </mat-form-field>
+            </p>
+  
+            <p>
+              <mat-form-field appearance="outline" class="w-100">
+                
+                <mat-label>Equipo</mat-label>
+                <mat-select [disabled]="equiposCliente.length == 0" formControlName="tipo_equipo">
+                  @for (equipo of equiposCliente; track equipo) {
+                    <mat-option [value]="equipo.id">{{equipo.name}}</mat-option>
+                  }
+                </mat-select>
+                
+              </mat-form-field>
+            </p>
+  
+            <p>
+              <mat-form-field appearance="outline" class="w-100">
+                
+                <mat-label>Calendario</mat-label>
+                <mat-select formControlName="periodicidad">
+                  @for (per of periodicidad; track per) {
+                    <mat-option [value]="per">{{per}}</mat-option>
+                  }
+                </mat-select>
+                
+              </mat-form-field>
+            </p>
+  
+            <p>
+              <mat-form-field appearance="outline" class="w-100" >
+                <mat-label>Descripcion</mat-label>
+                  <textarea matInput placeholder="Descripcion ..." formControlName="descripcion"></textarea>
+                
+              </mat-form-field>
+            </p>
+  
+            <p>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Ubicacion</mat-label>
+                <textarea matInput placeholder="Ubicacion " formControlName="ubicacion"></textarea>
+                <mat-icon matSuffix>pin_drop</mat-icon>
+                
+              </mat-form-field>
+            </p>
+  
+            <p>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Activo</mat-label>
+                <input type="text" matInput placeholder="Activo" formControlName="activo">
+              </mat-form-field>
+            </p>
+  
+            <p>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Archivo Fisico</mat-label>
+                <input type="text" matInput placeholder="Archivo Fisico" formControlName="archivo_fisico">
+              </mat-form-field>
+            </p>
+  
+            <p>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Marca</mat-label>
+                <input type="text" matInput placeholder="Marca" formControlName="marca">
+              </mat-form-field>
+            </p>
+  
+            <p>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Modelo</mat-label>
+                <input type="text" matInput placeholder="Modelo" formControlName="modelo">
+              </mat-form-field>
+            </p>
+  
+            <p>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Serie</mat-label>
+                <input type="text" matInput placeholder="Serie" formControlName="serie">
+              </mat-form-field>
+            </p>
+  
+            <div class="row">
+              <mat-checkbox formControlName="acreditacion">Acreditacion</mat-checkbox>
+            </div>
+              
+            <p>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Ultima mantencion</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="ultima_mantencion">
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </p>
             
-        </ion-content>
+            
+            <button class="w-75" mat-flat-button>Crear</button>
+  
+          </form>
+        </div>
+        
+  
+  
+      </ion-content>
     </ng-template>
-</ion-modal>
+  </ion-modal>

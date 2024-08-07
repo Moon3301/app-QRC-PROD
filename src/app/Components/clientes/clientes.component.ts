@@ -60,10 +60,12 @@ export class ClientesComponent  implements OnInit {
   }
 
   confirmDetail() {
+    
     this.modalClients.toArray().forEach(modal => modal.dismiss(null, 'confirm'));
   }
   
   cancelDetail() {
+    
     this.modalClients.toArray().forEach(modal => modal.dismiss(null, 'cancel'));
   }
 
@@ -76,10 +78,12 @@ export class ClientesComponent  implements OnInit {
   }
 
   confirmRegister() {
+    this.addFormCliente.reset();
     this.modalRegister.dismiss(null,'confirm');
   }
   
   cancelRegister() {
+    this.addFormCliente.reset();
     this.modalRegister.dismiss(null, 'cancel');
   }
 

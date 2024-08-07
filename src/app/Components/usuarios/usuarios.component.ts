@@ -58,11 +58,8 @@ export class UsuariosComponent  implements OnInit {
 
       position: ['', Validators.required],
       nombre: ['', Validators.required],
-      username: ['', Validators.required],
-      password: ['', Validators.required],
       email: ['', Validators.required],
-      telefono: ['', Validators.required],
-
+     
     })
 
   }
@@ -84,12 +81,15 @@ export class UsuariosComponent  implements OnInit {
 
   confirmRegister() {
 
-    this.loadDataUsuarios()
+    this.addForm.reset();
+
+    this.loadDataUsuarios();
 
     this.modalRegister.dismiss(null,'confirm');
   }
 
   cancelRegister() {
+    this.addForm.reset();
     this.modalRegister.dismiss(null, 'cancel');
   }
 

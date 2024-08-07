@@ -52,7 +52,7 @@ export class MenuComponent  implements OnInit {
     {
       name: 'Documentos',
       icon: 'print',
-      route: ''
+      route: '/documentos'
     },
     {
       name: 'Configuracion de clientes',

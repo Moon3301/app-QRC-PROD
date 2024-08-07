@@ -19,12 +19,8 @@
   </div>
   <br>
   <div class="row text-center">
-    <div class="col-6">
+    <div class="col-12">
       <button mat-stroked-button>Imprimir Reporte</button>
-    </div>
-
-    <div class="col-6">
-      <button mat-flat-button>Planificar Manten</button>
     </div>
   </div>
   <br>
@@ -60,18 +56,23 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-
+  <!-- 
   <button id="open-modal-add-mantencion" style="position: fixed; right: 5%; bottom: 10%; background-color: rgb(35, 81, 209); z-index: 1000;" mat-fab aria-label="Example icon button with a delete icon">
     <mat-icon style="color: white;">add</mat-icon>
   </button>
+  -->
 
 </div>
-
+<!-- 
 <ion-modal trigger="open-modal-add-mantencion" (willDismiss)="onWillDismissAddEquipo($event)" style="background-color: white;">
   <ng-template>
     <ion-header >
+      
       <ion-toolbar>
-        <ion-buttons slot="start">
+
+        <h5 class="text-center" >Crear mantencion</h5>
+
+        <ion-buttons slot="start" >
           <ion-button (click)="cancelAddMantencion()"><mat-icon>close</mat-icon></ion-button>
         </ion-buttons>
         
@@ -79,7 +80,7 @@
     </ion-header>
     <ion-content class="ion-padding">
       
-      <h5 class="text-center">Crear mantencion</h5>
+      
       <div class="text-center">
         <form [formGroup]="createForm">
 
@@ -184,7 +185,7 @@
           <p>
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Archivo Fisico</mat-label>
-              <input type="text" matInput placeholder="Activo" formControlName="archivo_fisico">
+              <input type="text" matInput placeholder="Archivo Fisico" formControlName="archivo_fisico">
             </mat-form-field>
           </p>
 
@@ -233,3 +234,4 @@
     </ion-content>
   </ng-template>
 </ion-modal>
+  -->

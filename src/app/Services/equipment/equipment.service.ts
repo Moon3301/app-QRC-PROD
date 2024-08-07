@@ -183,4 +183,15 @@ export class EquipmentService {
 
   }
 
+  async getPhysicalFile(search:string = '*'){
+
+    const endpoint = `${api_url}/get-physicalfile-equipment`
+    const method = 'POST'
+    const body = {search:search}
+
+    const response = await this.api.createRequest(endpoint, method, body)
+    return response
+
+  }
+
 }
