@@ -2,19 +2,29 @@ import { Injectable } from '@angular/core';
 import { Organization, Building, Tower } from 'src/app/Interfaces/organization';
 import { ApiService } from '../api/api.service';
 import { api_url } from '../utilities';
+import { SecurityService } from '../Security/security.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrganizationService {
 
-  constructor(private api:ApiService) { }
+  currentUser: any;
 
-  getOrganization(userId: any){
+  constructor(private api:ApiService, private security: SecurityService) {
+
+    this.currentUser = this.security.currentUserValue
+
+  }
+
+  getOrganization(){
 
     // Procedimiento de almacenado OrganizationCollection
     // Si el parametro userId es igual a '*', devuelve todas las organizaciones de la tabla Organization
     // Si el parametro userId tiene valores, devuelve las organizaciones que tienen a ese usuario asignado
+    
+    const user = this.security.currentUserValue;
+    const userId = user.userId
 
     const endpoint = `${api_url}/organizations`
     const method = 'POST'
@@ -25,11 +35,27 @@ export class OrganizationService {
     return response
   }
 
-  addOrganization(organization: Organization){
+  async getLastOrganizationId(){
 
-    const endpoint = ''
+    const userId = '*'
+
+    const endpoint = `${api_url}/organizations`
     const method = 'POST'
-    const body = {organization: organization}
+    const body = {userid: userId}
+
+    const response = await this.api.createRequest(endpoint, method, body);
+    const organizations = response
+    const maxId = Math.max(...organizations.map((item: { id: any; }) => item.id));
+
+    return maxId
+    
+  }
+
+  addOrganization(descr: string, telefono_jefe_area:string, telefono_supervisor_area:string){
+
+    const endpoint = `${api_url}/add-organization`
+    const method = 'POST'
+    const body = {descr: descr, telefono_jefe_area:telefono_jefe_area, telefono_supervisor_area:telefono_supervisor_area}
 
     const response = this.api.createRequest(endpoint, method, body)
 
@@ -39,7 +65,7 @@ export class OrganizationService {
 
   updateOrganization(organizationId:number, organization: Organization){
 
-    const endpoint = ''
+    const endpoint = `${api_url}/update-organization`
     const method = 'POST'
     const body = {organizationId: organizationId, organization: organization}
 
@@ -51,7 +77,7 @@ export class OrganizationService {
 
   deleteOrganization(organizationId:number){
 
-    const endpoint = ''
+    const endpoint = `${api_url}/delete-organization`
     const method = 'POST'
     const body = {organizationId: organizationId}
 

@@ -75,6 +75,7 @@ export class EquiposComponent  implements OnInit {
   equiposCliente: Category[] = []
 
   createForm!: FormGroup
+  filterForm!: FormGroup
 
   @ViewChild(IonModal) modalAddEquipo!: IonModal;
 
@@ -82,14 +83,54 @@ export class EquiposComponent  implements OnInit {
   
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = ELEMENT_DATA;
- 
-  constructor(private formBuilder: FormBuilder, public clientes: ClientesService) {
 
-  }
+  dataFilterSelect: any[] = []
+  dataFilterInput: any[] = []
+
+  constructor(private formBuilder: FormBuilder, public clientes: ClientesService) {}
 
   ngOnInit() {
 
-    
+    this.dataFilterSelect = [
+
+      {name: 'Turno', type: 'turno', data: this.turnos},
+      {name: 'Criticidad', type: 'criticidad', data: this.criticidad},
+      {name: 'Cliente', type: 'cliente', data: []},
+      {name: 'Tipo de Equipo', type: 'tipo_equipo', data: []},
+      {name: 'Calendario', type: 'calendario', data: this.periodicidad},
+      
+    ]
+
+    this.dataFilterInput = [
+
+      {name: 'Descripcion', type: 'descripcion'},
+      {name: 'Ubicacion', type: 'ubicacion'},
+      {name: 'Activo', type: 'activo'},
+      {name: 'Archivo Fisico', type: 'archivo_fisico'},
+      {name: 'Marca', type: 'marca'},
+      {name: 'Modelo', type: 'modelo'},
+      {name: 'Serie', type: 'serie'},
+  
+    ]
+
+    this.filterForm = this.formBuilder.group({
+
+      turno: ['', ],
+      criticidad: ['', ],
+      cliente: ['', ],
+      tipo_equipo: ['', ],
+      calendario: ['', ],
+      descripcion: ['', ],
+      ubicacion: ['', ],
+      activo: ['', ],
+      archivo_fisico: ['', ],
+      marca: ['', ],
+      modelo: ['', ],
+      serie: ['', ],
+      acreditacion: ['', ],
+      ultima_mantencion: ['', ],
+
+    })
 
     this.createForm = this.formBuilder.group({
 
@@ -116,7 +157,6 @@ export class EquiposComponent  implements OnInit {
     const ev = event as CustomEvent<OverlayEventDetail<string>>;
     if (ev.detail.role === 'confirm') {
 
-      
     }
   }
 
@@ -149,14 +189,6 @@ export class EquiposComponent  implements OnInit {
 
   }
 
-  addMantenimiento(){
-
-    
-
-
-  }
+  addMantenimiento(){}
   
-  
-  
-
 }

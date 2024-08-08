@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" style="overflow-y: auto; height: 100vh;">
 
     <br>
     <mat-card appearance="outlined">
@@ -16,7 +16,6 @@
         </mat-card-content>
     </mat-card>
 
-    
     <br>
     <div class="row">
   
@@ -28,8 +27,53 @@
               
             </mat-expansion-panel-header>
             
-            <p>test open</p>
-    
+            <form [formGroup]="filterForm" >
+
+              @for(item of dataFilterSelect; track item){
+
+                <div class="row">
+
+                  <div class="col-12">
+                    <p>
+                      <mat-form-field appearance="outline" class="w-100">
+                        
+                        <mat-label>{{item.name}}</mat-label>
+                        <mat-select placeholder={{item.name}} formControlName={{item.type}}>
+                          @for (filter of item.data; track filter) {
+                            <mat-option [value]="filter">{{filter}}</mat-option>
+                          }
+                        </mat-select>
+                        
+                      </mat-form-field>
+                    </p>
+                  </div>
+  
+                </div>
+
+              }
+
+              @for(item of dataFilterInput; track item){
+
+                <div class="row">
+
+                  <div class="col-12">
+                    <p>
+                      <mat-form-field appearance="outline" class="w-100">
+                        
+                        <mat-label>{{item.name}}</mat-label>
+                        
+                        <input type="text" matInput placeholder={{item.name}} formControlName={{item.type}}>
+
+                      </mat-form-field>
+                    </p>
+                  </div>
+  
+                </div>
+
+              }
+              
+            </form>
+
           </mat-expansion-panel>
     
         </mat-accordion>
@@ -40,7 +84,7 @@
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
   
       <!--- Note that these columns can be defined in any order.
-            The actual rendered columns are set as a property on the row definition" -->
+      The actual rendered columns are set as a property on the row definition" -->
     
       <!-- Position Column -->
       <ng-container matColumnDef="position">
@@ -82,7 +126,7 @@
         
         <ion-toolbar>
   
-          <h5 class="text-center" >Crear mantencion</h5>
+          <h5 class="text-center" >Crear equipo</h5>
   
           <ion-buttons slot="start" >
             <ion-button (click)="cancelAddMantencion()"><mat-icon>close</mat-icon></ion-button>
@@ -91,7 +135,6 @@
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
-        
         
         <div class="text-center">
           <form [formGroup]="createForm">
@@ -113,7 +156,6 @@
                 </p>
               </div>
   
-              
               <div class="col-6">
                 <p>
                   <mat-form-field appearance="outline" class="w-100">
@@ -235,14 +277,11 @@
               </mat-form-field>
             </p>
             
-            
             <button class="w-75" mat-flat-button>Crear</button>
   
           </form>
         </div>
         
-  
-  
       </ion-content>
     </ng-template>
   </ion-modal>

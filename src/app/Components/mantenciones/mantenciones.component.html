@@ -6,11 +6,44 @@
 
       <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
         <mat-expansion-panel-header>
-          <mat-panel-title> Filtro de busqueda </mat-panel-title>
-          
+          <mat-panel-title> Filtro de busqueda</mat-panel-title>
         </mat-expansion-panel-header>
         
-        <p>test open</p>
+        <form [formGroup]="filterForm">
+
+          @for(item of dataFilter; track item){
+
+            <div class="row">
+
+              <div class="col-12">
+                <p>
+                  <mat-form-field appearance="outline" class="w-100">
+                    
+                    <mat-label>{{item.name}}</mat-label>
+                    <mat-select formControlName={{item.type}}>
+                      @for (filter of item.data; track filter) {
+                        @if (item.type == 'month' || item.type == 'year'){
+                          <mat-option [value]="filter.name">{{filter.name}}</mat-option>
+                        }
+                        @if (item.type == 'cliente'){
+                          <mat-option [value]="filter">{{filter}}</mat-option>
+                        }
+                        @if (item.type == 'tipo_cliente'){
+                          <mat-option [value]="filter">{{filter}}</mat-option>
+                        }
+                        
+                      }
+                    </mat-select>
+                    
+                  </mat-form-field>
+                </p>
+              </div>
+    
+            </div>
+
+          }
+          
+        </form>
 
       </mat-expansion-panel>
 

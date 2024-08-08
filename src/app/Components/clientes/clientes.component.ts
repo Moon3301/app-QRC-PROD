@@ -19,8 +19,11 @@ import { OverlayEventDetail } from '@ionic/core/components';
 
 import { ClientesService } from '../../Services/clientes/clientes.service';
 import { Cliente } from '../../Interfaces/cliente';
-import { Usuario } from '../../Interfaces/usuario';
 
+import { OrganizationService } from 'src/app/Services/organization/organization.service';
+import { SecurityService } from 'src/app/Services/Security/security.service';
+
+import { Organization } from 'src/app/Interfaces/organization';
 @Component({
   standalone: true,
   selector: 'app-clientes',
@@ -37,7 +40,8 @@ export class ClientesComponent  implements OnInit {
 
   addFormCliente!: FormGroup
 
-  constructor(private router: Router, public clientes: ClientesService, public _FormBuilder: FormBuilder) { }
+  constructor(private router: Router, public clientes: ClientesService, public _FormBuilder: FormBuilder,
+    public organization: OrganizationService) { }
   
   ngOnInit() {
 
@@ -49,6 +53,13 @@ export class ClientesComponent  implements OnInit {
 
     })
 
+  }
+
+  listOrganizations(){
+
+    const listOrganizations = this.organization.getOrganization() || [];
+
+    return listOrganizations;
   }
 
   onWillDismissDetail(event: any) {
@@ -72,7 +83,10 @@ export class ClientesComponent  implements OnInit {
   onWillDismissRegister(event: any) {
     const ev = event as CustomEvent<OverlayEventDetail<string>>;
     if (ev.detail.role === 'confirm') {
+      
+      this.addOrganization();
 
+      this.confirmRegister();
       
     }
   }
@@ -126,6 +140,23 @@ export class ClientesComponent  implements OnInit {
 
     }
 
+  }
+
+  async addOrganization(){
+
+    try{
+
+      const descr = this.addFormCliente.get("nombre")?.value
+      const telefono_jefe_area = this.addFormCliente.get("telefono_jefe_area")?.value
+      const telefono_supervisor_area = this.addFormCliente.get("telefono_supervisor_area")?.value
+
+      this.organization.addOrganization(descr, telefono_jefe_area, telefono_supervisor_area)
+
+    }catch(error){
+
+      console.log('Error al crear la organizacion. Error: '+error)
+    }
+    
   }
 
 }

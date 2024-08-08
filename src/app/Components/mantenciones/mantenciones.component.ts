@@ -33,6 +33,9 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 
 import {provideNativeDateAdapter} from '@angular/material/core';
 
+import { months } from 'src/app/Services/utilities';
+import { years } from 'src/app/Services/utilities';
+
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -52,6 +55,13 @@ const ELEMENT_DATA: PeriodicElement[] = [
   {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
   {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
 ];
+
+interface dataFilter {
+
+  name: string;
+  type: string;
+  data: any[];
+}
 
 @Component({
   standalone: true,
@@ -73,6 +83,7 @@ export class MantencionesComponent  implements OnInit {
   equiposCliente: Category[] = []
 
   createForm!: FormGroup
+  filterForm!: FormGroup
 
   @ViewChild(IonModal) modalAddEquipo!: IonModal;
 
@@ -80,14 +91,30 @@ export class MantencionesComponent  implements OnInit {
   
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = ELEMENT_DATA;
- 
+
+  dataFilter: dataFilter[] = []
+  
   constructor(private formBuilder: FormBuilder, public clientes: ClientesService) {
 
   }
 
   ngOnInit() {
 
-    
+    this.dataFilter = [
+      {name: 'Cliente',type: 'cliente', data: [] },
+      {name: 'Tipo de equipo',type: 'tipo_equipo', data: [] },
+      {name: 'Mes',type: 'month', data: months },
+      {name: 'Año',type: 'year', data: years }
+    ]
+
+    this.filterForm = this.formBuilder.group({
+
+      cliente: ['', ],
+      tipo_equipo: ['', ],
+      month: ['', ],
+      year: ['', ]
+
+    })
 
     this.createForm = this.formBuilder.group({
 
@@ -113,7 +140,7 @@ export class MantencionesComponent  implements OnInit {
   onWillDismissAddEquipo(event: any) {
     const ev = event as CustomEvent<OverlayEventDetail<string>>;
     if (ev.detail.role === 'confirm') {
-
+      
       
     }
   }
