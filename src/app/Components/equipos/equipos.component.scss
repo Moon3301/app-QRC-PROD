@@ -25,3 +25,40 @@ ion-toolbar {
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
+.circle-button-blue {
+  color: white;
+  background-color: rgb(70, 106, 206);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.circle-button-white {
+  color: black;
+  background-color: rgb(218, 224, 255);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+
+
+.accordion-header {
+  display: flex;
+  align-items: center;
+}
+
+.text-wrapper {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.col-9 {
+  flex: 1; /* Asegura que ocupe el espacio disponible sin desplazarse */
+  min-width: 0; /* Evita que el contenido cause el desbordamiento */
+}

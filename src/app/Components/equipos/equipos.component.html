@@ -1,287 +1,292 @@
-<div class="container" style="overflow-y: auto; height: 100vh;">
+<div class="container" style="overflow-y: auto; height: 100vh; width: 100%;">
 
-    <br>
-    <mat-card appearance="outlined">
+  <br>
+  <mat-card appearance="outlined">
 
-        <mat-card-content>
+      <mat-card-content>
 
-            <div class="row text-center w-100">
-                <button mat-stroked-button>Planificar Mantenimiento</button>
+          <div class="row text-center w-100">
+              <button mat-stroked-button>Planificar Mantenimiento</button>
+          </div>
+          <mat-divider></mat-divider>
+          
+
+      </mat-card-content>
+  </mat-card>
+
+  <br>
+  <div class="row">
+
+    <mat-accordion>
+
+      <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
+        <mat-expansion-panel-header>
+          <mat-panel-title> Filtro de busqueda </mat-panel-title>
+          
+        </mat-expansion-panel-header>
+        
+        <form [formGroup]="filterForm" >
+
+          @for(item of dataFormSelect; track item){
+
+            <div class="row">
+
+              <div class="col-12">
+                <p>
+                  <mat-form-field appearance="outline" class="w-100">
+                    
+                    <mat-label>{{item.name}}</mat-label>
+                    <mat-select placeholder={{item.name}} formControlName={{item.type}}>
+                      @for (filter of item.data; track filter) {
+                        <mat-option [value]="filter">{{filter}}</mat-option>
+                      }
+                    </mat-select>
+                    
+                  </mat-form-field>
+                </p>
+              </div>
+
             </div>
-            <mat-divider></mat-divider>
-            <div class="row text-center w-100">
-                <button mat-flat-button>Imprimir Reporte</button>
+
+          }
+
+          @for(item of dataFormInput; track item){
+
+            <div class="row">
+
+              <div class="col-12">
+                <p>
+                  <mat-form-field appearance="outline" class="w-100">
+                    
+                    <mat-label>{{item.name}}</mat-label>
+                    
+                    <input type="text" matInput placeholder={{item.name}} formControlName={{item.type}}>
+                    <mat-icon matSuffix>{{item.icon}}</mat-icon>
+
+                  </mat-form-field>
+                </p>
+              </div>
+
             </div>
 
-        </mat-card-content>
-    </mat-card>
+          }
+          
+        </form>
 
-    <br>
-    <div class="row">
-  
-        <mat-accordion>
-    
-          <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
-            <mat-expansion-panel-header>
-              <mat-panel-title> Filtro de busqueda </mat-panel-title>
-              
-            </mat-expansion-panel-header>
-            
-            <form [formGroup]="filterForm" >
+      </mat-expansion-panel>
 
-              @for(item of dataFilterSelect; track item){
-
-                <div class="row">
-
-                  <div class="col-12">
-                    <p>
-                      <mat-form-field appearance="outline" class="w-100">
-                        
-                        <mat-label>{{item.name}}</mat-label>
-                        <mat-select placeholder={{item.name}} formControlName={{item.type}}>
-                          @for (filter of item.data; track filter) {
-                            <mat-option [value]="filter">{{filter}}</mat-option>
-                          }
-                        </mat-select>
-                        
-                      </mat-form-field>
-                    </p>
-                  </div>
-  
-                </div>
-
-              }
-
-              @for(item of dataFilterInput; track item){
-
-                <div class="row">
-
-                  <div class="col-12">
-                    <p>
-                      <mat-form-field appearance="outline" class="w-100">
-                        
-                        <mat-label>{{item.name}}</mat-label>
-                        
-                        <input type="text" matInput placeholder={{item.name}} formControlName={{item.type}}>
-
-                      </mat-form-field>
-                    </p>
-                  </div>
-  
-                </div>
-
-              }
-              
-            </form>
-
-          </mat-expansion-panel>
-    
-        </mat-accordion>
-    
-      </div>
-
-    <br>
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-  
-      <!--- Note that these columns can be defined in any order.
-      The actual rendered columns are set as a property on the row definition" -->
-    
-      <!-- Position Column -->
-      <ng-container matColumnDef="position">
-        <th mat-header-cell *matHeaderCellDef> No. </th>
-        <td mat-cell *matCellDef="let element"> {{element.position}} </td>
-      </ng-container>
-    
-      <!-- Name Column -->
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-      </ng-container>
-    
-      <!-- Weight Column -->
-      <ng-container matColumnDef="weight">
-        <th mat-header-cell *matHeaderCellDef> Weight </th>
-        <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
-      </ng-container>
-    
-      <!-- Symbol Column -->
-      <ng-container matColumnDef="symbol">
-        <th mat-header-cell *matHeaderCellDef> Symbol </th>
-        <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
-      </ng-container>
-    
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  
-    <button id="open-modal-add-mantencion" style="position: fixed; right: 5%; bottom: 10%; background-color: rgb(35, 81, 209); z-index: 1000;" mat-fab aria-label="Example icon button with a delete icon">
-      <mat-icon style="color: white;">add</mat-icon>
-    </button>
+    </mat-accordion>
   
   </div>
-  
-  <ion-modal trigger="open-modal-add-mantencion" (willDismiss)="onWillDismissAddEquipo($event)" style="background-color: white;">
-    <ng-template>
-      <ion-header >
-        
-        <ion-toolbar>
-  
-          <h5 class="text-center" >Crear equipo</h5>
-  
-          <ion-buttons slot="start" >
-            <ion-button (click)="cancelAddMantencion()"><mat-icon>close</mat-icon></ion-button>
-          </ion-buttons>
-          
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        
-        <div class="text-center">
-          <form [formGroup]="createForm">
-  
+  <br>
+
+  @for(item of dataSource; track item; let i = $index){
+    <br>
+    <div class="row">
+
+      <mat-accordion>
+      
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
             <div class="row">
-              
-              <div class="col-6">
-                <p>
-                  <mat-form-field appearance="outline" class="w-100">
-                    
-                    <mat-label>Turno</mat-label>
-                    <mat-select formControlName="turno">
-                      @for (turno of turnos; track turno) {
-                        <mat-option [value]="turno">{{turno}}</mat-option>
-                      }
-                    </mat-select>
-                    
-                  </mat-form-field>
-                </p>
+              <div class="col-3">
+                <button [ngClass]="i % 2 === 0 ? 'circle-button-blue' : 'circle-button-white'"  mat-icon-button class="circle-button-blue" (click)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
+                  <mat-icon>keyboard_arrow_down</mat-icon>
+                </button>
               </div>
-  
-              <div class="col-6">
-                <p>
-                  <mat-form-field appearance="outline" class="w-100">
-                    
-                    <mat-label>Criticidad</mat-label>
-                    <mat-select formControlName="criticidad">
-                      @for (crit of criticidad; track crit) {
-                        <mat-option [value]="crit">{{crit}}</mat-option>
-                      }
-                    </mat-select>
-                    
-                  </mat-form-field>
-                </p>
+                
+              <div class="col-9 text-wrapper">
+                <p>Equipo: {{item.equipo}} </p>
               </div>
-              
             </div>
-  
-            <p>
-              <mat-form-field appearance="outline" class="w-100">
-                
-                <mat-label>Cliente</mat-label>
-                <mat-select (selectionChange)="onClienteChange($event.value)" formControlName="cliente">
-                  @for (cliente of clientes.listClientes(); track cliente) {
-                    <mat-option [value]="cliente.id">{{cliente.nombre}}</mat-option>
-                  }
-                </mat-select>
-                
-              </mat-form-field>
-            </p>
-  
-            <p>
-              <mat-form-field appearance="outline" class="w-100">
-                
-                <mat-label>Equipo</mat-label>
-                <mat-select [disabled]="equiposCliente.length == 0" formControlName="tipo_equipo">
-                  @for (equipo of equiposCliente; track equipo) {
-                    <mat-option [value]="equipo.id">{{equipo.name}}</mat-option>
-                  }
-                </mat-select>
-                
-              </mat-form-field>
-            </p>
-  
-            <p>
-              <mat-form-field appearance="outline" class="w-100">
-                
-                <mat-label>Calendario</mat-label>
-                <mat-select formControlName="periodicidad">
-                  @for (per of periodicidad; track per) {
-                    <mat-option [value]="per">{{per}}</mat-option>
-                  }
-                </mat-select>
-                
-              </mat-form-field>
-            </p>
-  
-            <p>
-              <mat-form-field appearance="outline" class="w-100" >
-                <mat-label>Descripcion</mat-label>
-                  <textarea matInput placeholder="Descripcion ..." formControlName="descripcion"></textarea>
-                
-              </mat-form-field>
-            </p>
-  
-            <p>
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Ubicacion</mat-label>
-                <textarea matInput placeholder="Ubicacion " formControlName="ubicacion"></textarea>
-                <mat-icon matSuffix>pin_drop</mat-icon>
-                
-              </mat-form-field>
-            </p>
-  
-            <p>
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Activo</mat-label>
-                <input type="text" matInput placeholder="Activo" formControlName="activo">
-              </mat-form-field>
-            </p>
-  
-            <p>
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Archivo Fisico</mat-label>
-                <input type="text" matInput placeholder="Archivo Fisico" formControlName="archivo_fisico">
-              </mat-form-field>
-            </p>
-  
-            <p>
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Marca</mat-label>
-                <input type="text" matInput placeholder="Marca" formControlName="marca">
-              </mat-form-field>
-            </p>
-  
-            <p>
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Modelo</mat-label>
-                <input type="text" matInput placeholder="Modelo" formControlName="modelo">
-              </mat-form-field>
-            </p>
-  
-            <p>
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Serie</mat-label>
-                <input type="text" matInput placeholder="Serie" formControlName="serie">
-              </mat-form-field>
-            </p>
-  
-            <div class="row">
-              <mat-checkbox formControlName="acreditacion">Acreditacion</mat-checkbox>
-            </div>
-              
-            <p>
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Ultima mantencion</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="ultima_mantencion">
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-              </mat-form-field>
-            </p>
             
-            <button class="w-75" mat-flat-button>Crear</button>
+          </mat-expansion-panel-header>
+          
+          <div class="row">
+            <div class="col-2">
+
+            </div>
+
+            <div class="col-10">
+              <p>Serie: {{item.serie}}</p>
+              <p>Descripcion: {{item.descripcion}}</p>
+              <p>Ultima Mantencion: {{item.ult_mantencion}}</p>
+              <p>Periodicidad: {{item.periodicidad}}</p>
+              <div class="row">
+                <p><b>Acciones: </b></p>
+              </div>
+              
+              <div class="row">
+                <button [id]="'open-modal-view-mantenciones'+item.serie" mat-icon-button class="circle-button-blue" style="margin-right: 5px;">
+                  <mat-icon>date_range</mat-icon>
+                </button>
+
+                <button mat-icon-button class="circle-button-blue" style="margin-right: 5px;">
+                  <mat-icon>print</mat-icon>
+                </button>
+
+                <button [id]="'open-modal-edit-equipo'+item.serie" mat-icon-button class="circle-button-blue" style="margin-right: 5px;">
+                  <mat-icon>edit</mat-icon>
+                </button>
+
+                <button mat-icon-button class="circle-button-blue" style="margin-right: 5px;">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            
+            </div>
+          </div>
+          
+        </mat-expansion-panel>
   
-          </form>
-        </div>
+      </mat-accordion>
+  
+    </div>
+
+    <ion-modal #modalEditEquipo [trigger]="'open-modal-edit-equipo'+item.serie" (willDismiss)="onWillDismissEditEquipo($event)" style="background-color: white;">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <h5 class="text-center" >Editar Equipo</h5>
+    
+            <ion-buttons slot="start" >
+              <ion-button (click)="cancelEditEquipo()"><mat-icon>close</mat-icon></ion-button>
+            </ion-buttons>
+            
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          
+          <p>
+            {{item.serie}}
+          </p>
+          
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+
+    <ion-modal #modalViewMantenciones [trigger]="'open-modal-view-mantenciones'+item.serie" (willDismiss)="onWillDismissViewMantenciones($event)" style="background-color: white;">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <h5 class="text-center" >Historial de mantenciones</h5>
+    
+            <ion-buttons slot="start" >
+              <ion-button (click)="cancelViewMantenciones()"><mat-icon>close</mat-icon></ion-button>
+            </ion-buttons>
+            
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          
+          
+          
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+
+  }
+  
+  <button id="open-modal-add-mantencion" style="position: fixed; right: 5%; bottom: 10%; background-color: rgb(35, 81, 209); z-index: 1000;" mat-fab aria-label="Example icon button with a delete icon">
+    <mat-icon style="color: white;">add</mat-icon>
+  </button>
+
+</div>
+
+<ion-modal #modalAddEquipo trigger="open-modal-add-mantencion" (willDismiss)="onWillDismissAddEquipo($event)" style="background-color: white;">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <h5 class="text-center" >Crear equipo</h5>
+
+        <ion-buttons slot="start" >
+          <ion-button (click)="cancelAddEquipo()"><mat-icon>close</mat-icon></ion-button>
+        </ion-buttons>
         
-      </ion-content>
-    </ng-template>
-  </ion-modal>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      
+      <div class="text-center">
+        <form [formGroup]="createForm">
+          
+          @for(item of dataFormSelect; track item){
+
+            <div class="row">
+              <div class="col-12">
+                <p>
+                  <mat-form-field appearance="outline" class="w-100">
+                    
+                    <mat-label>{{item.name}}</mat-label>
+                    <mat-select formControlName={{item.type}}>
+
+                      @for (data of item.data; track data) {
+
+                        @if(item.type == 'turno' || item.type == 'criticidad' || item.type == 'calendario'){
+                          <mat-option [value]="data">{{data}}</mat-option>
+                        }
+
+                        @if(item.type == 'cliente'){
+                          <mat-option [value]="data">{{data}}</mat-option>
+                        }
+
+                        @if(item.type == 'tipo_equipo'){
+                          <mat-option [value]="data">{{data}}</mat-option>
+                        }
+
+                      }
+                    </mat-select>
+                    
+                  </mat-form-field>
+                </p>
+              </div>
+            </div>
+
+          }
+
+          @for(item of dataFormInput; track item){
+
+            <div class="row">
+
+              <div class="col-12">
+                <p>
+                  <mat-form-field appearance="outline" class="w-100">
+                    
+                    <mat-label>{{item.name}}</mat-label>
+                    
+                    <input type="text" matInput placeholder={{item.name}} formControlName={{item.type}}>
+                    <mat-icon matSuffix>{{item.icon}}</mat-icon>
+                  </mat-form-field>
+                </p>
+              </div>
+
+            </div>
+
+          }
+          
+
+          <div class="row">
+            <mat-checkbox formControlName="acreditacion">Acreditacion</mat-checkbox>
+          </div>
+            
+          <p>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Ultima mantencion</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="ultima_mantencion">
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </p>
+          
+          <button class="w-75" mat-flat-button>Crear</button>
+
+        </form>
+      </div>
+      
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+
+
+

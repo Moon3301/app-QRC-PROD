@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy, signal, ViewChildren, QueryList } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -35,24 +36,26 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 
 import {MatDividerModule} from '@angular/material/divider';
 
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
+export interface equiposTest {
+  equipo: string;
+  descripcion: string;
+  serie: string;
+  ult_mantencion: string;
+  periodicidad: string;
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
+const ELEMENT_DATA: equiposTest[] = [
+  {equipo: 'FAN COIL', descripcion: 'BODEGA EQUIPOS NEONATOLOGIA', serie: '	K115031551', ult_mantencion: '4/ 4/ 2024', periodicidad: 'Cuatrimestral'},
+  {equipo: 'SPLIT DUCTO', descripcion: 'URGENCIA TRAUMATOLOGICA, BOX 2', serie: 'K113100214', ult_mantencion: '17/ 4/ 2024', periodicidad: 'Cuatrimestral'},
+  {equipo: 'FAN COIL', descripcion: 'NORTE, MEDICO JEFE PABELLONES', serie: '	K111030298', ult_mantencion: '20/ 5/ 2024', periodicidad: 'Trimestral'},
+  {equipo: 'FAN COIL', descripcion: 'PLANTA TRATAMIENTO DE AGUA HEMODIALISIS', serie: '	THS-9681', ult_mantencion: '4/ 7/ 2024', periodicidad: 'Mensual'},
+  {equipo: 'FAN COIL', descripcion: 'PERIFERICA PISO 6 MO', serie: '50531E19666910', ult_mantencion: '11/ 4/ 2024', periodicidad: 'Cuatrimestral'},
+  {equipo: 'FAN COIL', descripcion: 'ENFERMERA COORDINADORA CLINICO DE TRANSPLANTE, PISO 13 TORRE SUR', serie: 'F5047005FA08565', ult_mantencion: '11/ 5/ 2024', periodicidad: 'Cuatrimestral'},
+  {equipo: 'FAN COIL', descripcion: 'AREA DE MATERIALES QUIRURGICOS', serie: 'UJIM041966', ult_mantencion: '4/ 4/ 2024', periodicidad: 'Trimestral'},
+  {equipo: 'FAN COIL', descripcion: 'AREA LIMPIA, PISO 9 TORRE NORTE', serie: 'F300408BI08834', ult_mantencion: '25/ 5/ 2024', periodicidad: 'Trimestral'},
+  {equipo: 'FAN COIL', descripcion: 'AREA LIMPIA, PISO 7 TORRE NORTE', serie: 'K114012998', ult_mantencion: '11/ 5/ 2024', periodicidad: 'Trimestral'},
+  {equipo: 'FAN COIL', descripcion: 'AREA LIMPIA MQ ALA NORTE, PISO 2 CLINICA', serie: 'K113065030', ult_mantencion: '11/ 5/ 2024', periodicidad: 'Cuatrimestral'},
+  {equipo: 'FAN COIL', descripcion: 'NORTE, MEDICO JEFE PABELLONES', serie: 'UJIM041966', ult_mantencion: '22/ 5/ 2024', periodicidad: 'Mensual'},
 ];
 
 @Component({
@@ -63,7 +66,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./equipos.component.scss'],
   imports: [MatButtonModule, MatIconModule, MatToolbarModule, MatListModule, MatCardModule, MatFormFieldModule,
     MatInputModule, MatAutocompleteModule, MatTableModule, ReactiveFormsModule, IonicModule, MatDividerModule,
-    MatExpansionModule, MatSelectModule, MatCheckboxModule, MatDatepickerModule],
+    MatExpansionModule, MatSelectModule, MatCheckboxModule, MatDatepickerModule, CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   
 })
@@ -77,21 +80,30 @@ export class EquiposComponent  implements OnInit {
   createForm!: FormGroup
   filterForm!: FormGroup
 
-  @ViewChild(IonModal) modalAddEquipo!: IonModal;
+  @ViewChild('modalAddEquipo', { static: false }) modalAddEquipo!: IonModal;
 
+  //@ViewChild('modalEditEquipo', { static: false }) modalEditEquipo!: IonModal;
+  //@ViewChild('modalViewMantenciones', { static: false }) modalViewMantenciones!: IonModal;
+
+  
+  //@ViewChildren(IonModal) modalEditEquipoTest!: QueryList<IonModal>;
+  //@ViewChildren(IonModal) modalViewMantencionesTest!: QueryList<IonModal>;
+
+  @ViewChildren('modalEditEquipo') modalEditEquipo!: QueryList<IonModal>;
+  @ViewChildren('modalViewMantenciones') modalViewMantenciones!: QueryList<IonModal>;
+   
   readonly panelOpenState = signal(false);
   
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = ELEMENT_DATA;
 
-  dataFilterSelect: any[] = []
-  dataFilterInput: any[] = []
+  dataFormSelect: any[] = []
+  dataFormInput: any[] = []
 
   constructor(private formBuilder: FormBuilder, public clientes: ClientesService) {}
 
   ngOnInit() {
 
-    this.dataFilterSelect = [
+    this.dataFormSelect = [
 
       {name: 'Turno', type: 'turno', data: this.turnos},
       {name: 'Criticidad', type: 'criticidad', data: this.criticidad},
@@ -101,15 +113,15 @@ export class EquiposComponent  implements OnInit {
       
     ]
 
-    this.dataFilterInput = [
+    this.dataFormInput = [
 
-      {name: 'Descripcion', type: 'descripcion'},
-      {name: 'Ubicacion', type: 'ubicacion'},
-      {name: 'Activo', type: 'activo'},
-      {name: 'Archivo Fisico', type: 'archivo_fisico'},
-      {name: 'Marca', type: 'marca'},
-      {name: 'Modelo', type: 'modelo'},
-      {name: 'Serie', type: 'serie'},
+      {name: 'Descripcion', type: 'descripcion', icon: 'description'},
+      {name: 'Ubicacion', type: 'ubicacion', icon: 'pin_drop'},
+      {name: 'Activo', type: 'activo', icon: ''},
+      {name: 'Archivo Fisico', type: 'archivo_fisico', icon: ''},
+      {name: 'Marca', type: 'marca', icon: ''},
+      {name: 'Modelo', type: 'modelo', icon: ''},
+      {name: 'Serie', type: 'serie', icon: ''},
   
     ]
 
@@ -138,7 +150,7 @@ export class EquiposComponent  implements OnInit {
       criticidad: ['', ],
       cliente: ['', Validators.required],
       tipo_equipo: ['', Validators.required,],
-      periodicidad: ['', ],
+      calendario: ['', ],
       descripcion: ['', ],
       ubicacion: ['', ],
       activo: ['', ],
@@ -153,6 +165,7 @@ export class EquiposComponent  implements OnInit {
     
   }
 
+  // Modal Add Mantencion
   onWillDismissAddEquipo(event: any) {
     const ev = event as CustomEvent<OverlayEventDetail<string>>;
     if (ev.detail.role === 'confirm') {
@@ -160,16 +173,53 @@ export class EquiposComponent  implements OnInit {
     }
   }
 
-  confirmAddMantencion() {
+  confirmAddEquipo() {
     this.createForm.reset();
     this.modalAddEquipo.dismiss(null,'confirm');
   }
 
-  cancelAddMantencion() {
+  cancelAddEquipo() {
     this.createForm.reset();
     this.modalAddEquipo.dismiss(null, 'cancel');
   }
 
+  // Modal Edit Mantencion
+  onWillDismissEditEquipo(event: any) {
+    const ev = event as CustomEvent<OverlayEventDetail<string>>;
+    if (ev.detail.role === 'confirm') {
+
+    }
+  }
+
+  confirmEditEquipo() {
+
+    this.modalEditEquipo.toArray().forEach(modal => modal.dismiss(null, 'confirm'));
+  }
+
+  cancelEditEquipo() {
+    
+    this.modalEditEquipo.toArray().forEach(modal => modal.dismiss(null, 'cancel'));
+  }
+
+  // Modal View Mantenciones
+  onWillDismissViewMantenciones(event: any) {
+    const ev = event as CustomEvent<OverlayEventDetail<string>>;
+    if (ev.detail.role === 'confirm') {
+
+    }
+  }
+
+  confirmViewMantenciones() {
+    
+    this.modalViewMantenciones.toArray().forEach(modal => modal.dismiss(null, 'confirm'));
+  }
+
+  cancelViewMantenciones() {
+    
+    this.modalViewMantenciones.toArray().forEach(modal => modal.dismiss(null, 'cancel'));
+  }
+
+  //
   onClienteChange(clientId: number) {
     
     let cliente = this.clientes.listClientes().find( x=> x.id === clientId)

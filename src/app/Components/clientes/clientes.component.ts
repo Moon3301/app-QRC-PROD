@@ -38,6 +38,8 @@ export class ClientesComponent  implements OnInit {
   @ViewChildren(IonModal) modalClients!: QueryList<IonModal>;
   @ViewChild('modalRegister', { static: false }) modalRegister!: IonModal;
 
+
+
   addFormCliente!: FormGroup
 
   constructor(private router: Router, public clientes: ClientesService, public _FormBuilder: FormBuilder,
