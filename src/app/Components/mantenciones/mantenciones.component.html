@@ -95,11 +95,11 @@
               </div>
               
               <div class="row">
-                <button mat-icon-button class="circle-button-blue" style="margin-right: 5px;">
+                <button (click)="navigateToOrdenTrabajo()" mat-icon-button class="circle-button-blue" style="margin-right: 5px;">
                   <mat-icon>content_paste</mat-icon>
                 </button>
 
-                <button mat-icon-button class="circle-button-blue" style="margin-right: 5px;">
+                <button [id]="'open-modal-edit-mantencion'+item.serie" mat-icon-button class="circle-button-blue" style="margin-right: 5px;">
                   <mat-icon>edit</mat-icon>
                 </button>
 
@@ -114,6 +114,30 @@
   
     </div>
 
+    <ion-modal #modalEditMantencion [trigger]="'open-modal-edit-mantencion'+item.serie" (willDismiss)="onWillDismissEditMantencion($event)" style="background-color: white;">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <h5 class="text-center" >Editar Mantencion</h5>
+    
+            <ion-buttons slot="start" >
+              <ion-button (click)="cancelEditMantencion()"><mat-icon>close</mat-icon></ion-button>
+            </ion-buttons>
+            
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          
+          <p>
+            {{item.serie}}
+          </p>
+          
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+
   }
 
 </div>
+
+

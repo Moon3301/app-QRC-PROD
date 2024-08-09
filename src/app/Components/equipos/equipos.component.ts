@@ -36,6 +36,7 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 
 import {MatDividerModule} from '@angular/material/divider';
 
+import { Router } from '@angular/router';
 export interface equiposTest {
   equipo: string;
   descripcion: string;
@@ -99,7 +100,7 @@ export class EquiposComponent  implements OnInit {
   dataFormSelect: any[] = []
   dataFormInput: any[] = []
 
-  constructor(private formBuilder: FormBuilder, public clientes: ClientesService) {}
+  constructor(private formBuilder: FormBuilder, public clientes: ClientesService, public router: Router) {}
 
   ngOnInit() {
 
@@ -163,6 +164,11 @@ export class EquiposComponent  implements OnInit {
 
     })
     
+  }
+
+  navigateToOrdenTrabajo(){
+    this.confirmViewMantenciones();
+    this.router.navigate(['/orden-trabajo'])
   }
 
   // Modal Add Mantencion

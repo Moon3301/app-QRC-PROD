@@ -37,6 +37,8 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 import { months } from 'src/app/Services/utilities';
 import { years } from 'src/app/Services/utilities';
 
+import { Router } from '@angular/router';
+
 export interface MantenimientosTest {
 
   equipo: string;
@@ -91,7 +93,7 @@ export class MantencionesComponent  implements OnInit {
   createForm!: FormGroup
   filterForm!: FormGroup
 
-  @ViewChild(IonModal) modalAddEquipo!: IonModal;
+  @ViewChild('modalEditMantencion', { static: false }) modalEditMantencion!: IonModal;
 
   readonly panelOpenState = signal(false);
 
@@ -99,7 +101,7 @@ export class MantencionesComponent  implements OnInit {
 
   dataFilter: dataFilter[] = []
   
-  constructor(private formBuilder: FormBuilder, public clientes: ClientesService) {
+  constructor(private formBuilder: FormBuilder, public clientes: ClientesService, public router: Router) {
 
   }
 
@@ -142,7 +144,7 @@ export class MantencionesComponent  implements OnInit {
     
   }
 
-  onWillDismissAddEquipo(event: any) {
+  onWillDismissEditMantencion(event: any) {
     const ev = event as CustomEvent<OverlayEventDetail<string>>;
     if (ev.detail.role === 'confirm') {
       
@@ -150,12 +152,12 @@ export class MantencionesComponent  implements OnInit {
     }
   }
 
-  confirmAddMantencion() {
-    this.modalAddEquipo.dismiss(null,'confirm');
+  confirmEditMantencion() {
+    this.modalEditMantencion.dismiss(null,'confirm');
   }
 
-  cancelAddMantencion() {
-    this.modalAddEquipo.dismiss(null, 'cancel');
+  cancelEditMantencion() {
+    this.modalEditMantencion.dismiss(null, 'cancel');
   }
 
   onClienteChange(clientId: number) {
@@ -184,7 +186,9 @@ export class MantencionesComponent  implements OnInit {
 
   }
 
-
+  navigateToOrdenTrabajo(){
+    this.router.navigate(['/orden-trabajo'])
+  }
 
 
 }

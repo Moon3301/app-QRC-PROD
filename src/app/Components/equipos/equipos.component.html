@@ -179,7 +179,66 @@
         </ion-header>
         <ion-content class="ion-padding">
           
-          
+          <mat-card>
+            <mat-card-content>
+
+              <div class="row">
+                <div class="col-12">
+                  <p><b>Descripcion:</b><br>text text </p>
+                </div>
+
+                <div class="col-12">
+                  <p><b>Ubicacion:</b><br>text text </p>
+                </div>
+
+                <div class="col-12">
+                  <p><b>Serie:</b><br>text text </p>
+                </div>
+
+                <div class="col-12 text-center">
+                  <button mat-flat-button>Imprimir Historial</button>
+                </div>
+              </div>
+
+            </mat-card-content>
+          </mat-card>
+          <hr>
+
+          <h6 class="text-center">Registro de mantenciones</h6>
+
+          <mat-card>
+
+            <mat-card-content>
+
+              <div class="row">
+                <div class="col-12">
+                  <p><b>Fecha:</b> 17/4/2024</p>
+                </div>
+
+                <div class="col-12">
+                  <p><b>Tecnico:</b> Miguel Angel Delgado</p>
+                </div>
+
+                <div class="col-12">
+                  <p><b>Observaciones:</b> text text text text text text text text text text text text text text</p>
+                </div>
+
+                <div class="col-10">
+                  <p>Acciones:</p>
+                  
+                  <div class="row" style="margin: 0 auto;">
+                    <button (click)="navigateToOrdenTrabajo()" mat-icon-button class="circle-button-blue" style="margin-right: 5px;">
+                      <mat-icon>content_paste</mat-icon>
+                    </button>
+                    <button mat-icon-button class="circle-button-blue" style="margin-right: 5px;">
+                      <mat-icon>print</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </mat-card-content>
+          </mat-card>
           
         </ion-content>
       </ng-template>
@@ -286,7 +345,3 @@
     </ion-content>
   </ng-template>
 </ion-modal>
-
-
-
-

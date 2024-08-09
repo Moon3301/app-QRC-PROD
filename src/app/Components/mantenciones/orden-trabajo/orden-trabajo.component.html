@@ -1,3 +1,87 @@
-<p>
-  orden-trabajo works!
-</p>
+<div class="container">
+
+  <mat-card appearance="outlined">
+    <mat-card-content>
+
+      <div class="row">
+        <div class="col-12">
+          <p><b>Descripcion: </b>{{ordenTrabajo.descripcion}}</p>
+        </div>
+    
+        <div class="col-6">
+          <p><b>Ubicacion:</b><br>{{ordenTrabajo.ubicacion}}</p>
+        </div>
+    
+        <div class="col-6">
+          <p><b>Serie:</b><br>{{ordenTrabajo.serie}}</p>
+        </div>
+    
+        <div class="col-6">
+          <p><b>Tecnico Asignado:</b><br>{{ordenTrabajo.tecnicoAsignado}}</p>
+        </div>
+    
+        <div class="col-6">
+          <p><b>Orden:</b> <br>{{ordenTrabajo.orden}}</p>
+        </div>
+    
+        <div class="col-6">
+          <p><b>Fecha Programada:</b><br>{{ordenTrabajo.fechaProgramada}}</p>
+        </div>
+    
+        <div class="col-6">
+          <p><b>Estado:</b><br>{{ordenTrabajo.estado}}</p>
+        </div>
+      </div>
+
+    </mat-card-content>
+
+  </mat-card>
+  <br>
+  
+  <mat-card>
+    <mat-card-content>
+      
+      <mat-checkbox labelPosition='after' checked=false class="example-margin checkbox-derecha"><b>Seleccionar todo</b></mat-checkbox>
+      
+      @for(item of ordenTrabajo.data; track item){
+        <mat-checkbox labelPosition='after' checked={{item.check}} class="example-margin checkbox-derecha">{{item.name}}</mat-checkbox>
+      }
+      
+    </mat-card-content>
+
+  </mat-card>
+  <br>
+
+  <mat-card>
+    <mat-card-content>
+      
+      <div class="row">
+        <mat-label>Observaciones</mat-label>
+        <mat-form-field style="width: 100%;">
+          <textarea  matInput placeholder="Observaciones"></textarea>
+        </mat-form-field>
+      </div>
+      <br>
+      <div class="row">
+        <mat-checkbox labelPosition='after' checked=false class="example-margin checkbox-derecha">¿Visualizar en Pdf?</mat-checkbox>
+      </div>
+      <br>
+      <div class="row">
+        <button mat-stroked-button>Subir Fotos</button>
+      </div>
+
+    </mat-card-content>
+
+  </mat-card>
+  <br>
+  <mat-card>
+    <mat-card-content>
+      
+      <div class="row">
+        <button mat-flat-button>Finalizar</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  
+<br>
+</div>

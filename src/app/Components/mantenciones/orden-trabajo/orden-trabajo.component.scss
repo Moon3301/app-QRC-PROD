@@ -1,0 +1,13 @@
+.container{
+    
+    overflow-y: auto;
+    height: 100vh;
+    width: 100%;
+    box-sizing: border-box; /* Agrega esta línea */
+    margin-bottom: 40px; /* Ajusta este valor según tus necesidades */
+}
+
+.checkbox-derecha {
+    display: flex;
+    justify-content: flex-start;
+  }

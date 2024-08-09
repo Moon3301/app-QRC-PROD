@@ -9,6 +9,7 @@ import { EquiposComponent } from './Components/equipos/equipos.component';
 import { ConfigClienteComponent } from './Components/clientes/config-cliente/config-cliente.component';
 import { MantencionesComponent } from './Components/mantenciones/mantenciones.component';
 import { DocumentosComponent } from './Components/documentos/documentos.component';
+import { OrdenTrabajoComponent } from './Components/mantenciones/orden-trabajo/orden-trabajo.component';
 
 export const routes: Routes = [
 
@@ -57,6 +58,10 @@ export const routes: Routes = [
       {
         path: 'documentos',
         component: DocumentosComponent
+      },
+      {
+        path: 'orden-trabajo',
+        component: OrdenTrabajoComponent
       }
       
     ]

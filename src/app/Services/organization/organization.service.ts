@@ -17,155 +17,116 @@ export class OrganizationService {
 
   }
 
-  getOrganization(){
+  getOrganization() {
 
     // Procedimiento de almacenado OrganizationCollection
-    // Si el parametro userId es igual a '*', devuelve todas las organizaciones de la tabla Organization
-    // Si el parametro userId tiene valores, devuelve las organizaciones que tienen a ese usuario asignado
-    
+    // Si el parámetro userId es igual a '*', devuelve todas las organizaciones de la tabla Organization
+    // Si el parámetro userId tiene valores, devuelve las organizaciones que tienen a ese usuario asignado
+
     const user = this.security.currentUserValue;
-    const userId = user.userId
+    const userId = user.userId;
 
-    const endpoint = `${api_url}/organizations`
-    const method = 'POST'
-    const body = {userid: userId}
+    const endpoint = `${api_url}/organizations/${userId}`;
+    const method = 'GET';
+    const body = null;
 
-    const response = this.api.createRequest(endpoint, method, body)
+    return this.api.createRequest(endpoint, method, body);
+}
 
-    return response
+  addOrganization(descr: string, telefono_jefe_area: string, telefono_supervisor_area: string) {
+    const endpoint = `${api_url}/organizations`;
+    const method = 'POST';
+    const body = {descr: descr, telefono_jefe_area: telefono_jefe_area, telefono_supervisor_area: telefono_supervisor_area};
+
+    return this.api.createRequest(endpoint, method, body);
   }
 
-  async getLastOrganizationId(){
+  updateOrganization(organizationId: number, organization: Organization) {
+    const endpoint = `${api_url}/organizations/${organizationId}`;
+    const method = 'PUT';
+    const body = {organization};
 
-    const userId = '*'
-
-    const endpoint = `${api_url}/organizations`
-    const method = 'POST'
-    const body = {userid: userId}
-
-    const response = await this.api.createRequest(endpoint, method, body);
-    const organizations = response
-    const maxId = Math.max(...organizations.map((item: { id: any; }) => item.id));
-
-    return maxId
-    
+    return this.api.createRequest(endpoint, method, body);
   }
 
-  addOrganization(descr: string, telefono_jefe_area:string, telefono_supervisor_area:string){
+  deleteOrganization(organizationId: number) {
+    const endpoint = `${api_url}/organizations/${organizationId}`;
+    const method = 'DELETE';
+    const body = {organizationId};
 
-    const endpoint = `${api_url}/add-organization`
-    const method = 'POST'
-    const body = {descr: descr, telefono_jefe_area:telefono_jefe_area, telefono_supervisor_area:telefono_supervisor_area}
-
-    const response = this.api.createRequest(endpoint, method, body)
-
-    return response
-
+    return this.api.createRequest(endpoint, method, body);
   }
 
-  updateOrganization(organizationId:number, organization: Organization){
+  findOrganization(organizationId: number) {
 
-    const endpoint = `${api_url}/update-organization`
-    const method = 'POST'
-    const body = {organizationId: organizationId, organization: organization}
+    const endpoint = `${api_url}/organizations/${organizationId}`;
+    const method = 'GET';
+    const body = null
 
-    const response = this.api.createRequest(endpoint, method, body)
-
-    return response
-
+    return this.api.createRequest(endpoint, method, body);
   }
 
-  deleteOrganization(organizationId:number){
-
-    const endpoint = `${api_url}/delete-organization`
-    const method = 'POST'
-    const body = {organizationId: organizationId}
-
-    const response = this.api.createRequest(endpoint, method, body)
-
-    return response
-
-  }
-
-  findOrganization(organizationId:number){
-
-    const endpoint = ''
-    const method = 'POST'
-    const body = {organizationId: organizationId}
-
-    const response = this.api.createRequest(endpoint, method, body)
-
-    return response
-  }
-
-  assingUserOrganization(userId:string, organizationId:number, remove: boolean = false){
+  assignUserToOrganization(userId: string, organizationId: number) {
 
     // Procedimiento de almacenado OrganizationUserRelation
     // Si el parametro userId es vacio no hace ni devuelve nada
     // Si el parametro remove es 0 asigna el usuario con la organizacion
     // Si el parametro remove es diferente de 0 desasigna el usuario con la organizacion
 
-    const endpoint = `${api_url}/assign-usuario`
-    const method = 'POST'
-    const body = {organizationId: organizationId, userId: userId, remove: remove}
+    const endpoint = `${api_url}/organizations/${organizationId}/users/assign`;
+    const method = 'POST';
+    const body = {userId: userId, remove: false};
 
-    const response = this.api.createRequest(endpoint, method, body)
-    return response
-
+    return this.api.createRequest(endpoint, method, body);
   }
 
-  unassignUserOrganization(userId:string, organizationId:number, remove: boolean = true){
+  unassignUserFromOrganization(userId: string, organizationId: number) {
 
     // Procedimiento de almacenado OrganizationUserRelation
     // Si el parametro userId es vacio no hace ni devuelve nada
     // Si el parametro remove es 0 asigna el usuario con la organizacion
     // Si el parametro remove es diferente de 0 desasigna el usuario con la organizacion
 
-    const endpoint = `${api_url}/unassign-usuario`
-    const method = 'POST'
-    const body = {userId: userId, organizationId: organizationId, remove: remove}
+    const endpoint = `${api_url}/organizations/${organizationId}/users/unassign`;
+    const method = 'POST';
+    const body = {userId: userId, remove: true};
 
-    const response = this.api.createRequest(endpoint, method, body)
-    return response
+    return this.api.createRequest(endpoint, method, body);
   }
 
-  assignCategoryOrganization(organizationId:number, categoryId: number = 0, remove: boolean = false){
+  assignCategoryToOrganization(organizationId: number, categoryId: number) {
 
     // Procedimiento de almacenado OrganizationCategoryRelation
     // Si el parametro categoryId es vacio no hace ni devuelve nada
     // Si el parametro remove es 0 asigna el equipo con la organizacion
     // Si el parametro remove es diferente de 0 desasigna el equipo con la organizacion
 
-    const endpoint = `${api_url}/assign-category`
-    const method = 'POST'
-    const body = {organization: organizationId, category: categoryId ,remove: remove}
+    const endpoint = `${api_url}/organizations/${organizationId}/categories/assign`;
+    const method = 'POST';
+    const body = {categoryId: categoryId, remove: false};
 
-    const response = this.api.createRequest(endpoint, method, body)
-    return response
-
+    return this.api.createRequest(endpoint, method, body);
   }
 
-  unassignCategoryOrganization(organizationId:number, categoryId: number = 0, remove: boolean = true){
+  unassignCategoryFromOrganization(organizationId: number, categoryId: number) {
 
     // Procedimiento de almacenado OrganizationCategoryRelation
     // Si el parametro categoryId es vacio no hace ni devuelve nada
     // Si el parametro remove es 0 asigna el equipo con la organizacion
     // Si el parametro remove es diferente de 0 desasigna el equipo con la organizacion
-    
-    const endpoint = `${api_url}/unassign-category`
-    const method = 'POST'
-    const body = {organization: organizationId, category: categoryId ,remove: remove}
 
-    const response = this.api.createRequest(endpoint, method, body)
-    return response
-    
+    const endpoint = `${api_url}/organizations/${organizationId}/categories/unassign`;
+    const method = 'POST';
+    const body = {categoryId: categoryId, remove: true};
+
+    return this.api.createRequest(endpoint, method, body);
   }
 
   async getTower(){
 
     const endpoint = `${api_url}/get-tower`
     const method = 'GET'
-    const body = {}
+    const body = null
 
     const response = this.api.createRequest(endpoint, method, body)
     return response
@@ -176,7 +137,7 @@ export class OrganizationService {
 
     const endpoint = `${api_url}/get-building`
     const method = 'GET'
-    const body = {}
+    const body = null
 
     const response = this.api.createRequest(endpoint, method, body)
     return response
