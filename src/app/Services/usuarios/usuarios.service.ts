@@ -69,7 +69,7 @@ export class UsuariosService {
 
   addUsuario(usuario: Usuario) {
 
-    const endpoint = `${api_url}/add-usuario`
+    const endpoint = `${api_url}/users`
     const method = 'POST'
     const body = {user: usuario}
 
@@ -86,14 +86,37 @@ export class UsuariosService {
     // Si username es vacio y organization tiene valores, devuelve todos los usuarios asociados al ID de la organization
     // Si username tiene valores, devuelve todos los usuarios con el username definido y los nombres de los roles asociados al username definido
 
-    const endpoint = `${api_url}/user-read`
-    const method = 'POST'
+    const endpoint = `${api_url}/users/${username}`
+    const method = 'GET'
     const body = {organizacionId: organizacionId, username: username, position:position}
 
     const response = this.api.createRequest(endpoint, method, body)
     return response
 
-    //return this.usuarios;
+  }
+
+  getAllUsers(){
+
+    const username = '';
+    const organizacionId = 0;
+    const position = 0;
+
+    const endpoint = `${api_url}/users/${username}/${position}/${organizacionId}`
+    const method = 'GET'
+    const body = null
+
+    const response = this.api.createRequest(endpoint, method, body)
+    return response
+  }
+
+  getUsersByOrganizationId(organizacionId:number){
+
+    const endpoint = `${api_url}/users/${organizacionId}`
+    const method = 'GET'
+    const body = null
+
+    const response = this.api.createRequest(endpoint, method, body)
+    return response
 
   }
 
@@ -102,11 +125,11 @@ export class UsuariosService {
     return this.cargos
   }
 
-  updateUsuario(id: string, updatedUsuario: Usuario) {
+  updateUsuario(userId: string, updatedUsuario: Usuario) {
 
-    const endpoint = `${api_url}/update-usuario`
-    const method = 'POST'
-    const body = {userId: id, updatedUser: updatedUsuario}
+    const endpoint = `${api_url}/users/${userId}`
+    const method = 'PUT'
+    const body = {updatedUser: updatedUsuario}
 
     const response = this.api.createRequest(endpoint, method, body)
     return response
@@ -120,11 +143,11 @@ export class UsuariosService {
 
   }
 
-  deleteUsuario(id: string) {
+  deleteUsuario(userId: string) {
 
-    const endpoint = `${api_url}/delete-usuario`
-    const method = 'POST'
-    const body = {userId: id}
+    const endpoint = `${api_url}/users/${userId}`
+    const method = 'DELETE'
+    const body = null;
 
     const response = this.api.createRequest(endpoint, method, body)
     return response
@@ -136,16 +159,16 @@ export class UsuariosService {
     return this.usuarios.find(usuario => usuario.id === id);
   }
 
-  findUsernameUser(username: string = '*'){
+  findUserByUsername(username: string = '*'){
 
     // Procedimiento almacenado UserAutocomplete
     // Si el parametro es igual a = *, devolvera todos los usuarios de la tabla usuario
     // Si el parametro tiene valores, buscara el parametro en todos los username de la tabla usuarios y devolvera el id y username. 
     // Si mas username tienen el mismo parametro devolvera mas usuarios. 
 
-    const endpoint = `${api_url}/find-usuarios`
-    const method = 'POST'
-    const body = {username: username}
+    const endpoint = `${api_url}/users/${username}`
+    const method = 'GET'
+    const body = null;
 
     const response = this.api.createRequest(endpoint, method, body)
     return response
@@ -157,9 +180,9 @@ export class UsuariosService {
     // Procedimiento de almacenado UserUpdatePosition
     // actualiza la posicion del usuario
 
-    const endpoint = `${api_url}/update-position-user`
+    const endpoint = `${api_url}/users/${userId}/position`
     const method = 'POST'
-    const body = {userId: userId, position: position}
+    const body = {position: position}
 
     const response = this.api.createRequest(endpoint, method, body)
     return response

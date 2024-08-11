@@ -17,7 +17,7 @@ export class OrganizationService {
 
   }
 
-  getOrganization() {
+  getOrganizationByUserId() {
 
     // Procedimiento de almacenado OrganizationCollection
     // Si el parámetro userId es igual a '*', devuelve todas las organizaciones de la tabla Organization
@@ -31,7 +31,20 @@ export class OrganizationService {
     const body = null;
 
     return this.api.createRequest(endpoint, method, body);
-}
+  }
+
+  getAllOrganizations() {
+    // Procedimiento de almacenado OrganizationCollection
+    // Si el parámetro userId es igual a '*', devuelve todas las organizaciones de la tabla Organization
+    // Si el parámetro userId tiene valores, devuelve las organizaciones que tienen a ese usuario asignado
+    const userId = '*'
+
+    const endpoint = `${api_url}/organizations/${userId}`;
+    const method = 'GET';
+    const body = null;
+
+    return this.api.createRequest(endpoint, method, body);
+  }
 
   addOrganization(descr: string, telefono_jefe_area: string, telefono_supervisor_area: string) {
     const endpoint = `${api_url}/organizations`;
@@ -52,7 +65,7 @@ export class OrganizationService {
   deleteOrganization(organizationId: number) {
     const endpoint = `${api_url}/organizations/${organizationId}`;
     const method = 'DELETE';
-    const body = {organizationId};
+    const body = null;
 
     return this.api.createRequest(endpoint, method, body);
   }
