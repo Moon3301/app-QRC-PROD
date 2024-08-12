@@ -60,11 +60,13 @@ export class EquipmentService {
   }
 
   // DELETE
+  // Procedimiento de almacenado realiza un UPDATE sobre la tabla equipmentFilterTable
+
   async deleteEquipment(id:number, organizationId:number, calendar:number, priority:number, shift:number,
     categoryId:number, asset:string, descr: string, location: string, physicalFile:string, serial:string,
     brand:string, model:string, accreditation:boolean, month:boolean){
 
-    const endpoint = `${api_url}/delete-equipment`
+    const endpoint = `${api_url}/equipment`
     const method = 'POST'
 
     const body = {id:id, organizationId:organizationId, calendar: calendar, priority: priority, shift: shift, 
@@ -80,7 +82,7 @@ export class EquipmentService {
     categoryId:number = 0, asset:string = '', descr: string = '', location: string = '', physicalFile:string = '', serial:string = '',
     brand:string = '', model:string = '', accreditation:boolean = false, month:boolean = false, pageIndex: number = 1, pageSize: number = 10){
 
-    const endpoint = `${api_url}/filter-equipment`
+    const endpoint = `${api_url}/equipment/filter`
     const method = 'POST'
 
     const body = {id:id, organizationId:organizationId, calendar: calendar, priority: priority, shift: shift, 
