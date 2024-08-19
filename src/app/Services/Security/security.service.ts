@@ -37,9 +37,9 @@ export class SecurityService {
     }
   }
 
-  async login(username: string, password: string, rememberMe: boolean,){
+  async login(username: string, password: string){
 
-    const endpoint = `${api_url}/login`
+    const endpoint = `${api_url}/security/login`
     const method = 'POST'
     const body = {username: username, password: password}
 
@@ -59,6 +59,8 @@ export class SecurityService {
   }
 
   logout(){
+
+    
 
     this.storage.remove('currentUser');
     this.currentUserSubject.next(null);

@@ -23,14 +23,19 @@ export class OrganizationService {
     // Si el parámetro userId es igual a '*', devuelve todas las organizaciones de la tabla Organization
     // Si el parámetro userId tiene valores, devuelve las organizaciones que tienen a ese usuario asignado
 
+    // Obtiene los datos guardados en storage del usuario logeado.
     const user = this.security.currentUserValue;
+    
+    // Obtiene el ID del usuario logeado
     const userId = user.userId;
+    const token = user.token;
 
+    // Se define el endpoint al que se obtendra la data de Organizations asociado a este usuario.
     const endpoint = `${api_url}/organizations/${userId}`;
     const method = 'GET';
     const body = null;
 
-    return this.api.createRequest(endpoint, method, body);
+    return this.api.createRequest(endpoint, method, body, token);
   }
 
   getAllOrganizations() {

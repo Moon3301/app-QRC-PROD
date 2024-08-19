@@ -9,16 +9,22 @@ export class ApiService {
   
   constructor() { }
 
-  async createRequest(endpoint: string, _method: string, body:any): Promise<any>{
+  async createRequest(endpoint: string, _method: string, body:any, token?:string): Promise<any>{
     
     try{
+
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      };
+  
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
 
       const response = await fetch(`${this.apiUrl}/${endpoint}`, {
 
         method: _method,
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: headers,
         body: body ? JSON.stringify(body): undefined 
   
       });
