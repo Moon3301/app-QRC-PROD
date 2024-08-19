@@ -17,11 +17,11 @@
         
         <!-- Formulario -->
         <div class="text-center">
-          <form>
+          <form [formGroup]="loginForm">
             <p>
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Email</mat-label>
-                <input matInput placeholder="Email">
+                <input formControlName="username" matInput placeholder="Email">
                 <mat-icon matSuffix>mail</mat-icon>
               </mat-form-field>
             </p>
@@ -29,7 +29,7 @@
             <p>
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Password</mat-label>
-                <input type="password" matInput placeholder="Password">
+                <input formControlName="password" type="password" matInput placeholder="Password">
                 <mat-icon matSuffix>password</mat-icon>
                 <mat-hint><a (click)="openModalResetPass()">¿Olvido su contraseña?</a></mat-hint>
               </mat-form-field>
@@ -38,7 +38,7 @@
             <!-- Botones -->
             <div class="row">
               <div class="col-12">
-                <button type="button" style="width: 80%" (click)="navigateToHome()" mat-flat-button>Entrar</button>
+                <button type="button" style="width: 80%" (click)="login()" mat-flat-button>Entrar</button>
               </div>
               <p></p>
               <div class="col-12">

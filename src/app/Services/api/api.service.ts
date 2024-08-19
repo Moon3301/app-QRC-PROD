@@ -5,53 +5,57 @@ import { Injectable } from '@angular/core';
 })
 export class ApiService {
 
-  private apiUrl = ''
-  
   constructor() { }
 
-  async createRequest(endpoint: string, _method: string, body:any, token?:string): Promise<any>{
-    
-    try{
+  async createRequest(endpoint: string, _method: string, body: any, token?: string, queryParams?: Record<string, string>): Promise<any> {
+    try {
+        const headers: HeadersInit = {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+        };
 
-      const headers: HeadersInit = {
-        'Content-Type': 'application/json',
-      };
-  
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
-
-      const response = await fetch(`${this.apiUrl}/${endpoint}`, {
-
-        method: _method,
-        headers: headers,
-        body: body ? JSON.stringify(body): undefined 
-  
-      });
-  
-      const status = response.status;
-      const jsonResponse = await response.json();
-  
-      if(response.ok){
-        return {
-          data: jsonResponse, status
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
         }
-      } else {
-        return {
-          error: jsonResponse.message || "Error al obtener datos de la solicitud", status
+
+        // Construir la URL con los parámetros de consulta si se proporcionan
+        let url = endpoint;
+        if (queryParams) {
+            const queryString = new URLSearchParams(queryParams).toString();
+            url += `?${queryString}`;
         }
-      }
 
-    }catch (error:any){
+        const response = await fetch(url, {
 
-      return {
-        error: error.message || 'Error al al realizar la solicitud',
-        status: 0,
-      }
+            method: _method,
+            headers: headers,
+            body: body ? JSON.stringify(body) : undefined 
+        });
 
+        const status = response.status;
+        const jsonResponse = await response.json();
+
+        if (response.ok) {
+            return {
+                data: jsonResponse, 
+                status
+                
+            };
+        } else {
+            return {
+                error: jsonResponse.message || "Error al obtener datos de la solicitud", 
+                status
+            };
+        }
+
+    } catch (error: any) {
+        return {
+            error: error.message || 'Error al realizar la solicitud',
+            status: 0,
+        };
     }
-    
   }
+
 
   /* EJEMPLO DE USO
 

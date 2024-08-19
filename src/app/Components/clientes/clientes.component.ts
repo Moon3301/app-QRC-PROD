@@ -59,7 +59,7 @@ export class ClientesComponent  implements OnInit {
 
   listOrganizations(){
 
-    const listOrganizations = this.organization.getOrganization() || [];
+    const listOrganizations = this.organization.getOrganizations() || [];
 
     return listOrganizations;
   }
@@ -148,11 +148,14 @@ export class ClientesComponent  implements OnInit {
 
     try{
 
-      const descr = this.addFormCliente.get("nombre")?.value
-      const telefono_jefe_area = this.addFormCliente.get("telefono_jefe_area")?.value
-      const telefono_supervisor_area = this.addFormCliente.get("telefono_supervisor_area")?.value
+      let organizacion: Organization;
 
-      this.organization.addOrganization(descr, telefono_jefe_area, telefono_supervisor_area)
+      const Descr = this.addFormCliente.get("nombre")?.value || ''
+      const ManagerPhone = this.addFormCliente.get("telefono_jefe_area")?.value || ''
+      const SupervisorPhone = this.addFormCliente.get("telefono_supervisor_area")?.value || ''
+
+      organizacion = {Descr: Descr, ManagerPhone: ManagerPhone, SupervisorPhone: SupervisorPhone}
+      this.organization.addOrganization(organizacion)
 
     }catch(error){
 

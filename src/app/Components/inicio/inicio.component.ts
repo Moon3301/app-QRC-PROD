@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { OrganizationService } from 'src/app/Services/organization/organization.service';
 
 @Component({
   standalone:true,
@@ -9,9 +10,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InicioComponent  implements OnInit {
 
-  constructor() { }
+  private listOrganizations: any[] = []
+
+  constructor(private organizations: OrganizationService) { }
 
   ngOnInit() {}
 
+  async getOrganizations(){
+
+   this.organizations.getOrganizations();
+
+  }
 
 }

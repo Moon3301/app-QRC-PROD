@@ -1,9 +1,9 @@
 export type Organization = {
 
-    id: number
-    descr: string
-    managerPhone: string
-    supervisorPhone: string
+    id?: number
+    Descr: string
+    ManagerPhone: string
+    SupervisorPhone: string
 }
 
 export type Building = {

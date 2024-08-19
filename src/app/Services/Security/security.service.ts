@@ -20,7 +20,7 @@ export class SecurityService {
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
 
-  constructor(private user: UsuariosService, private api:ApiService, private storage: StorageService) {
+  constructor(private api:ApiService, private storage: StorageService) {
 
     this.currentUserSubject = new BehaviorSubject<any>(null);
     this.currentUser = this.currentUserSubject.asObservable();
@@ -41,13 +41,20 @@ export class SecurityService {
 
     const endpoint = `${api_url}/security/login`
     const method = 'POST'
-    const body = {username: username, password: password}
 
-    const response = await this.api.createRequest(endpoint, method, body);
+    const queryParams = {
+      "username": username,
+      "password": password
+    }
+    const body = undefined
+    const token = undefined
 
-    if(response && response.token){
+    const response = await this.api.createRequest(endpoint, method, body, token, queryParams);
 
-      this.storage.set('currentUser', response);
+    if(response){
+      console.log(response.data)
+      this.storage.set('currentUser', response.data);
+      this.storage.set('bearer_token', response.data);
       this.currentUserSubject.next(response);
 
     }else{
@@ -59,8 +66,6 @@ export class SecurityService {
   }
 
   logout(){
-
-    
 
     this.storage.remove('currentUser');
     this.currentUserSubject.next(null);

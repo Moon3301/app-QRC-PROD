@@ -1,6 +1,6 @@
 export interface Usuario {
 
-    id: string
+    id?: string
     name:string
     position:number
     signature: string
@@ -32,7 +32,7 @@ export type UserRole = {
 
 export type Role = {
     
-    id: string
+    id?: string
     name_role: string
     normalized_name: string
     concurrencyStamp:string
@@ -52,12 +52,12 @@ export type UserLogin = {
     login_provider: string
     provider_key: string
     provider_display_name: string
-    usuario: Usuario
+    user: Usuario
 }
 
 export type UserToken = {
 
-    usuario: Usuario
+    user: Usuario
     login_provider: string
     name: string
     value:string
@@ -67,7 +67,7 @@ export type UserToken = {
 export type UserClaim = {
 
     id: number
-    usuario: Usuario
+    user: Usuario
     claim_type: string
     claim_value: string
 

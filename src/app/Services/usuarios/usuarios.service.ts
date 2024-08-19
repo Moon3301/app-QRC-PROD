@@ -3,13 +3,14 @@ import { Cargo } from 'src/app/Interfaces/cargo';
 import { Usuario } from 'src/app/Interfaces/usuario';
 import { ApiService } from '../api/api.service';
 import { api_url } from '../utilities';
+import { SecurityService } from '../Security/security.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuariosService {
 
-  constructor(private api: ApiService) { }
+  constructor(private api: ApiService, private security: SecurityService) { }
 
   cargos: Cargo[] = [
     {id:1, nombre: 'Administrador'},
@@ -67,13 +68,30 @@ export class UsuariosService {
     
   ];
 
-  async addUsuario(usuario: Usuario) {
+  async getUsers(): Promise<any>{
+
+    const user = this.security.currentUserValue;
+    const token = user.token;
+
+    const endpoint = `${api_url}/users`
+    const method = 'GET'
+    const body = undefined
+
+    const response = await this.api.createRequest(endpoint, method, body, token)
+    return response
+
+  }
+
+  async addUser(user: Usuario) {
+
+    const currentUser = this.security.currentUserValue;
+    const token = currentUser.token;
 
     const endpoint = `${api_url}/users`
     const method = 'POST'
-    const body = {user: usuario}
+    const body = {user: user}
 
-    const response = await this.api.createRequest(endpoint, method, body)
+    const response = await this.api.createRequest(endpoint, method, body, token)
     return response
     //this.usuarios.push(usuario);
 

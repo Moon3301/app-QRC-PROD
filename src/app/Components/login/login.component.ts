@@ -9,7 +9,7 @@ import {MatButtonModule} from '@angular/material/button';
 
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
-import {FormBuilder, Validators, ReactiveFormsModule} from '@angular/forms';
+import {FormBuilder, Validators, ReactiveFormsModule, FormGroup} from '@angular/forms';
 
 import {MatStepperModule} from '@angular/material/stepper';
 
@@ -21,6 +21,8 @@ import { OverlayEventDetail } from '@ionic/core/components';
 
 import { ResetPasswordComponent } from '../reset-password/reset-password.component';
 import { MatDialog } from '@angular/material/dialog';
+
+import { SecurityService } from 'src/app/Services/Security/security.service';
 
 @Component({
   selector: 'app-login',
@@ -45,11 +47,38 @@ export class LoginComponent  implements OnInit {
     secondCtrl: ['', Validators.required],
   });
 
-  constructor(private _formBuilder: FormBuilder, private router: Router, private matDialog:MatDialog) { }
+  loginForm!: FormGroup
+
+  constructor(private _formBuilder: FormBuilder, private router: Router, private matDialog:MatDialog, private security:SecurityService) { }
 
   ngOnInit() {
 
+    this.loginForm = this._formBuilder.group({
 
+      username: ['', Validators.required],
+      password: ['', Validators.required]
+    })
+
+  }
+
+  async login(){
+
+    let response
+
+    try{
+
+      const username = this.loginForm.get("username")?.value;
+      const password = this.loginForm.get("password")?.value;
+
+      response = await this.security.login(username, password);
+
+      this.navigateToHome();
+    }catch{
+      console.log('Error al ingresar las credenciales')
+    }finally{
+      console.log(response)
+    }
+    
   }
 
   openModalResetPass(){

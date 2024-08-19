@@ -47,7 +47,7 @@ export class UsuariosComponent  implements OnInit {
 
   constructor(private _formBuilder: FormBuilder, private matDialog:MatDialog, private usuarios: UsuariosService) {
 
-    this.positions = this.usuarios.getCargos();
+    this.positions = this.usuarios.getPosition();
   }
 
   ngOnInit() {
@@ -143,7 +143,7 @@ export class UsuariosComponent  implements OnInit {
       
       }
 
-      this.usuarios.addUsuario(user)
+      this.usuarios.addUser(user)
 
       this.confirmRegister()
 

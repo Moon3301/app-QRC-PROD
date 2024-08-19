@@ -1,4 +1,4 @@
-export const api_url = 'https://test.qrc.cl/api'
+export const api_url = 'https://mobile.qrc.cl'
 
 export type datetimeQRC = {
 
