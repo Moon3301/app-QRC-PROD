@@ -70,8 +70,7 @@ export class UsuariosService {
 
   async getUsers(): Promise<any>{
 
-    const user = this.security.currentUserValue;
-    const token = user.token;
+    const token = await this.security.loadToken();
 
     const endpoint = `${api_url}/users`
     const method = 'GET'
@@ -82,10 +81,9 @@ export class UsuariosService {
 
   }
 
-  async addUser(user: Usuario) {
+  async addUser(user: Usuario): Promise<any>{
 
-    const currentUser = this.security.currentUserValue;
-    const token = currentUser.token;
+    const token = await this.security.loadToken();
 
     const endpoint = `${api_url}/users`
     const method = 'POST'
@@ -93,7 +91,6 @@ export class UsuariosService {
 
     const response = await this.api.createRequest(endpoint, method, body, token)
     return response
-    //this.usuarios.push(usuario);
 
   }
 

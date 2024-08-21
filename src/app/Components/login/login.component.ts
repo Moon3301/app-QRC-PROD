@@ -63,20 +63,16 @@ export class LoginComponent  implements OnInit {
 
   async login(){
 
-    let response
-
     try{
 
       const username = this.loginForm.get("username")?.value;
       const password = this.loginForm.get("password")?.value;
 
-      response = await this.security.login(username, password);
+      await this.security.login(username, password);
 
       this.navigateToHome();
     }catch{
       console.log('Error al ingresar las credenciales')
-    }finally{
-      console.log(response)
     }
     
   }

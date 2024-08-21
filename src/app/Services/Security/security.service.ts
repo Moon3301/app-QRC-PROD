@@ -1,15 +1,20 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { UsuariosService } from '../usuarios/usuarios.service';
 import { Usuario } from 'src/app/Interfaces/usuario';
+import { UserToken } from 'src/app/Interfaces/usuario';
 
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { StorageService } from '../Storage/storage.service';
-
 import { ApiService } from '../api/api.service';
 
 import { api_url } from '../utilities';
+
+import { Store, select } from '@ngrx/store';
+import { setToken, clearToken } from 'src/app/Store/auth.actions';
+import { AuthState } from 'src/app/Store/auth.reducer';
+import { selectToken } from 'src/app/Store/auth.selectors';
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,25 +22,93 @@ import { api_url } from '../utilities';
 
 export class SecurityService {
 
-  private currentUserSubject: BehaviorSubject<any>;
-  public currentUser: Observable<any>;
+  private token: string = ''
+  
 
-  constructor(private api:ApiService, private storage: StorageService) {
+  
+  currentToken:string | null = null;
+  token$!: Observable<string | null>;
 
-    this.currentUserSubject = new BehaviorSubject<any>(null);
-    this.currentUser = this.currentUserSubject.asObservable();
-    this.loadStoredUser();
+  //constructor(private api:ApiService, private storage: StorageService, private store: Store<{ auth: AuthState }>) {
+    
+  //}
+
+  constructor(private api:ApiService, private store: Store<{ auth: AuthState }>) {
+
+    // Selecciona el token desde el store
+    this.token$ = this.store.select(selectToken);
+
+    this.token$.subscribe(token => {
+      
+      console.log('Token: ',token)
+
+      if (token) {
+        
+        this.currentToken = token
+        console.log('Token obtenido:', token);
+      } else {
+        console.log('No hay token disponible.');
+      }
+    });
 
   }
 
-  private async loadStoredUser() {
+  setUserToken(token:string) {       
+    
+    this.store.dispatch(setToken({ token }));
+  }
 
-    const user = this.storage.get('currentUser');
+  clearUserToken() {
+    this.store.dispatch(clearToken());
+  } 
 
-    if (user) {
-      this.currentUserSubject.next(user);
+  /*
+  public async loadCurrentUser() {
+
+    try {
+      const userToken = await this.loadStoredUserToken();
+      if (!userToken || !userToken.user) {
+        throw new Error('Token no encontrado en el almacenamiento.');
+      }
+      return userToken.user;
+    } catch (error:any) {
+      console.error('Error al obtener el token:', error.message);
+      throw new Error('Error al obtener el token.'); // Lanzar un error si no se puede obtener el token
     }
   }
+  */
+  /*
+  public _loadToken(): Observable<string | null> {
+    return this.store.pipe(select(selectToken));
+  }
+  */
+ 
+  public async loadToken(): Promise<any>{
+
+    /*
+    try {
+
+      const userToken = await this.loadStoredUserToken();
+      if (!userToken || !userToken.value) {
+        throw new Error('Token no encontrado en el almacenamiento.');
+      }
+      return userToken.value;
+    } catch (error:any) {
+      console.error('Error al obtener el token:', error.message);
+      throw new Error('Error al obtener el token.'); // Lanzar un error si no se puede obtener el token
+    }
+      */
+    
+  }
+  
+  /*
+  public async loadStoredUserToken(){
+
+    const token = await this.storage.get('UserToken');
+    console.log(token)
+    return token
+  }
+  */
 
   async login(username: string, password: string){
 
@@ -52,11 +125,40 @@ export class SecurityService {
     const response = await this.api.createRequest(endpoint, method, body, token, queryParams);
 
     if(response){
-      console.log(response.data)
-      this.storage.set('currentUser', response.data);
-      this.storage.set('bearer_token', response.data);
-      this.currentUserSubject.next(response);
 
+      const user: Usuario = { 
+        id: response.data.id,
+        name: response.data.name,
+        position: response.data.position,
+        signature: '',
+        organizacion_id: 0,
+        username: response.data.userName,
+        normalized_username:  ''+response.data.userName.toUpperCase(),
+        email: response.data.email,
+        normalized_email: ''+response.data.email.toUpperCase(),
+        email_confirmed: true,
+        password_hash: '',
+        security_stamp: '',
+        concurrency_stamp: '',
+        phone_number: '',
+        phone_number_confirmed: true,
+        two_factor_enabled: false,
+        password: '',
+        lockout_end: '',
+        lockout_enabled: false,
+        acces_failed_count: 0
+      }
+
+      const userToken: UserToken = {
+        user: user,
+        login_provider: 'mobile',
+        name: 'token',
+        value: response.data.token
+      }
+      console.log('dadsad')
+      //await this.storage.set('UserToken', userToken)
+      this.setUserToken(userToken.value)
+      
     }else{
 
       console.log('Error al iniciar sesion.')
@@ -64,16 +166,14 @@ export class SecurityService {
     }
 
   }
-
+  
   logout(){
-
-    this.storage.remove('currentUser');
-    this.currentUserSubject.next(null);
+    
+    //this.storage.remove('currentUser');
+    
 
   }
 
-  public get currentUserValue() {
-    return this.currentUserSubject.value;
-  }
 
 }
+

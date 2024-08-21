@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OrganizationService } from 'src/app/Services/organization/organization.service';
-
+import { SecurityService } from 'src/app/Services/Security/security.service';
 @Component({
   standalone:true,
   selector: 'app-inicio',
@@ -10,15 +10,17 @@ import { OrganizationService } from 'src/app/Services/organization/organization.
 })
 export class InicioComponent  implements OnInit {
 
-  private listOrganizations: any[] = []
+  constructor(private organizations: OrganizationService, private security:SecurityService ) {}
 
-  constructor(private organizations: OrganizationService) { }
+  async ngOnInit() {
 
-  ngOnInit() {}
+    await this.getOrganizations();
+  }
 
   async getOrganizations(){
 
-   this.organizations.getOrganizations();
+   const organization = await this.organizations.getOrganizations();
+   console.log(organization)
 
   }
 
