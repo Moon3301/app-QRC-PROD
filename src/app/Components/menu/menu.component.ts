@@ -15,6 +15,7 @@ export interface Section {
   name: string;
   icon: string;
   route: string;
+  roles: string[];
 }
 
 @Component({
@@ -32,37 +33,44 @@ export class MenuComponent  implements OnInit {
     {
       name: 'Inicio',
       icon: 'pie_chart',
-      route: '/inicio'
+      route: '/inicio',
+      roles: ['administrador']
     },
     {
       name: 'Scanner QR',
       icon: 'qr_code_scanner',
-      route: '/scannerQR'
+      route: '/scannerQR',
+      roles: ['administrador', 'Ayudante']
     },
     {
       name: 'Mantenciones',
       icon: 'calendar_month',
-      route: '/mantenciones'
+      route: '/mantenciones',
+      roles: ['Tecnico', 'Ayudante']
     },
     {
       name: 'Equipos',
       icon: 'business_center',
-      route: '/equipos'
+      route: '/equipos',
+      roles: ['administrador']
     },
     {
       name: 'Documentos',
       icon: 'print',
-      route: '/documentos'
+      route: '/documentos',
+      roles: ['administrador']
     },
     {
       name: 'Configuracion de clientes',
       icon: 'manage_accounts',
-      route: '/clientes'
+      route: '/clientes',
+      roles: ['administrador']
     },
     {
       name: 'Usuarios',
       icon: 'person',
-      route: '/usuarios'
+      route: '/usuarios',
+      roles: ['administrador']
     },
   ];
 

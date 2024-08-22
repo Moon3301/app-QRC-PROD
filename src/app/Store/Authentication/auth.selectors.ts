@@ -7,3 +7,8 @@ export const selectToken = createSelector(
   selectAuthState,
   (authState: AuthState) => authState.value
 );
+
+export const selectUser = createSelector(
+  selectAuthState,
+  (authState: AuthState) => authState.user
+)

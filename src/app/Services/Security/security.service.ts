@@ -4,17 +4,17 @@ import { Usuario } from 'src/app/Interfaces/usuario';
 import { UserToken } from 'src/app/Interfaces/usuario';
 
 import { Observable, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import { ApiService } from '../api/api.service';
 
 import { api_url } from '../utilities';
 
 import { Store, select } from '@ngrx/store';
-import { setToken, clearToken } from 'src/app/Store/auth.actions';
-import { AuthState } from 'src/app/Store/auth.reducer';
-import { selectToken } from 'src/app/Store/auth.selectors';
 
+import { selectToken } from 'src/app/Store/Authentication/auth.selectors';
+import { AuthState } from 'src/app/Store/Authentication/auth.reducer';
+import { setToken, clearToken } from 'src/app/Store/Authentication/auth.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -22,36 +22,12 @@ import { selectToken } from 'src/app/Store/auth.selectors';
 
 export class SecurityService {
 
-  private token: string = ''
-  
-
-  
   currentToken:string | null = null;
   token$!: Observable<string | null>;
 
-  //constructor(private api:ApiService, private storage: StorageService, private store: Store<{ auth: AuthState }>) {
-    
-  //}
-
   constructor(private api:ApiService, private store: Store<{ auth: AuthState }>) {
-
-    // Selecciona el token desde el store
-    this.token$ = this.store.select(selectToken);
-
-    this.token$.subscribe(token => {
-      
-      console.log('Token: ',token)
-
-      if (token) {
-        
-        this.currentToken = token
-        console.log('Token obtenido:', token);
-      } else {
-        console.log('No hay token disponible.');
-      }
-    });
-
-  }
+    //this.token$ = this.store.select(selectToken);
+}
 
   setUserToken(token:string) {       
     
@@ -83,32 +59,17 @@ export class SecurityService {
   }
   */
  
-  public async loadToken(): Promise<any>{
-
-    /*
-    try {
-
-      const userToken = await this.loadStoredUserToken();
-      if (!userToken || !userToken.value) {
-        throw new Error('Token no encontrado en el almacenamiento.');
+  public async loadToken(){
+    // Selecciona el token desde el store
+    this.token$ = this.store.select(selectToken);
+    this.token$.subscribe(token => {
+      if (token) {
+        this.currentToken = token
+      } else {
+        console.log('No hay token disponible.');
       }
-      return userToken.value;
-    } catch (error:any) {
-      console.error('Error al obtener el token:', error.message);
-      throw new Error('Error al obtener el token.'); // Lanzar un error si no se puede obtener el token
-    }
-      */
-    
+    });
   }
-  
-  /*
-  public async loadStoredUserToken(){
-
-    const token = await this.storage.get('UserToken');
-    console.log(token)
-    return token
-  }
-  */
 
   async login(username: string, password: string){
 
@@ -155,7 +116,7 @@ export class SecurityService {
         name: 'token',
         value: response.data.token
       }
-      console.log('dadsad')
+      console.log('Guardando token en store')
       //await this.storage.set('UserToken', userToken)
       this.setUserToken(userToken.value)
       
@@ -171,9 +132,7 @@ export class SecurityService {
     
     //this.storage.remove('currentUser');
     
-
   }
-
 
 }
 

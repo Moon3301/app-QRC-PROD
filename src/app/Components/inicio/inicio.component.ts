@@ -14,14 +14,8 @@ export class InicioComponent  implements OnInit {
 
   async ngOnInit() {
 
-    await this.getOrganizations();
   }
 
-  async getOrganizations(){
-
-   const organization = await this.organizations.getOrganizations();
-   console.log(organization)
-
-  }
+  
 
 }

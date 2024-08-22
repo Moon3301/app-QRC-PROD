@@ -70,7 +70,13 @@ export class UsuariosService {
 
   async getUsers(): Promise<any>{
 
-    const token = await this.security.loadToken();
+    this.security.loadToken();
+    const token = this.security.currentToken
+
+    if (!token) {
+      console.error('Token no encontrado o inválido.'); 
+      return null;
+    }
 
     const endpoint = `${api_url}/users`
     const method = 'GET'
@@ -83,7 +89,13 @@ export class UsuariosService {
 
   async addUser(user: Usuario): Promise<any>{
 
-    const token = await this.security.loadToken();
+    this.security.loadToken();
+    const token = this.security.currentToken
+
+    if (!token) {
+      console.error('Token no encontrado o inválido.'); 
+      return null;
+    }
 
     const endpoint = `${api_url}/users`
     const method = 'POST'

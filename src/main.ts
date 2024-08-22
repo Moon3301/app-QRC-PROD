@@ -7,18 +7,13 @@ import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
-import { IonicStorageModule } from '@ionic/storage-angular';
-import { Drivers } from '@ionic/storage';
-import { provideState, provideStore } from '@ngrx/store';
-import { Storage } from '@ionic/storage-angular';
-import { authReducer } from './app/Store/auth.reducer';
+import { provideState, provideStore, MetaReducer } from '@ngrx/store';
+//import { Storage } from '@ionic/storage-angular';
+import { authReducer } from './app/Store/Authentication/auth.reducer';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { environment } from './environments/environment';
-import { localStorageSyncReducer } from './app/Store/localStorageConfig';
-
-if (environment.production) {
-  enableProdMode();
-}
+import { localStorageSyncReducer } from './app/Store/Authentication/auth.configLocalStorage';
+// Define los metaReducers
+export const metaReducers: MetaReducer<any>[] = [localStorageSyncReducer];
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -26,15 +21,18 @@ bootstrapApplication(AppComponent, {
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideAnimationsAsync(),
-    Storage,
-    provideStore(localStorageSyncReducer(authReducer)), // Asegúrate de usar el localStorageSyncReducer
-    provideState({ name: 'auth', reducer: authReducer }),
+    //Storage,
+    // Aplica los metaReducers en provideStore
+    provideStore({
+      auth: authReducer
+    }, { metaReducers }),
+    
     provideStoreDevtools({
-      maxAge: 25, // Retains last 25 states
-      logOnly: !isDevMode(), // Restrict extension to log-only mode
-      autoPause: true, // Pauses recording actions and state changes when the extension window is not open
-      trace: false, //  If set to true, will include stack trace for every dispatched action, so you can see it in trace tab jumping directly to that part of code
-      traceLimit: 75, // maximum stack trace frames to be stored (in case trace option was provided as true)
+      maxAge: 25, // Retiene los últimos 25 estados
+      logOnly: !isDevMode(), // Restringe la extensión al modo de solo registro
+      autoPause: true, // Pausa la grabación de acciones y cambios de estado cuando la ventana de la extensión no está abierta
+      trace: false, // Si se establece en true, incluirá la traza de pila para cada acción despachada
+      traceLimit: 75, // Máximo de frames de traza de pila a almacenar (en caso de que se proporcione la opción trace como true)
     }),
   ],
 }).catch(err => console.error(err));

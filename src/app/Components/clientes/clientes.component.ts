@@ -38,14 +38,19 @@ export class ClientesComponent  implements OnInit {
   @ViewChildren(IonModal) modalClients!: QueryList<IonModal>;
   @ViewChild('modalRegister', { static: false }) modalRegister!: IonModal;
 
-
-
   addFormCliente!: FormGroup
+  organizations: any[] = []
 
   constructor(private router: Router, public clientes: ClientesService, public _FormBuilder: FormBuilder,
-    public organization: OrganizationService) { }
+    public serviceOrganization: OrganizationService) {}
   
-  ngOnInit() {
+ 
+
+  
+  async ngOnInit() {
+
+    this.organizations = await this.getOrganizations();
+    console.log(this.organizations)
 
     this.addFormCliente = this._FormBuilder.group({
 
@@ -57,10 +62,15 @@ export class ClientesComponent  implements OnInit {
 
   }
 
+  public async getOrganizations(): Promise<Organization[]>{
+
+    const organization: Organization[] = await this.serviceOrganization.getOrganizations() || [];
+    return organization
+  }
+
   listOrganizations(){
 
-    const listOrganizations = this.organization.getOrganizations() || [];
-
+    const listOrganizations = this.serviceOrganization.getOrganizations() || [];
     return listOrganizations;
   }
 
@@ -85,8 +95,6 @@ export class ClientesComponent  implements OnInit {
   onWillDismissRegister(event: any) {
     const ev = event as CustomEvent<OverlayEventDetail<string>>;
     if (ev.detail.role === 'confirm') {
-      
-      this.addOrganization();
 
       this.confirmRegister();
       
@@ -131,7 +139,6 @@ export class ClientesComponent  implements OnInit {
       const telefono_supervisor_area = this.addFormCliente.get("telefono_supervisor_area")?.value
 
       let cliente: Cliente = {id: uniximeStamp,nombre: nombre, telefono_jefe_area: telefono_jefe_area, telefono_supervisor_area: telefono_supervisor_area, usuarios: [], equipos:[]}
-
       this.clientes.addCliente(cliente)
 
       this.confirmRegister()
@@ -148,14 +155,14 @@ export class ClientesComponent  implements OnInit {
 
     try{
 
-      let organizacion: Organization;
-
       const Descr = this.addFormCliente.get("nombre")?.value || ''
       const ManagerPhone = this.addFormCliente.get("telefono_jefe_area")?.value || ''
       const SupervisorPhone = this.addFormCliente.get("telefono_supervisor_area")?.value || ''
 
-      organizacion = {Descr: Descr, ManagerPhone: ManagerPhone, SupervisorPhone: SupervisorPhone}
-      this.organization.addOrganization(organizacion)
+      const organizacion: Organization = {id: 0, Descr: Descr, ManagerPhone: ManagerPhone, SupervisorPhone: SupervisorPhone}
+      this.serviceOrganization.addOrganization(organizacion)
+
+      this.confirmRegister();
 
     }catch(error){
 

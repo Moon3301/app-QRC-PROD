@@ -5,4 +5,5 @@ export const setToken = createAction(
   props<{ token: string }>()
 );
 
-export const clearToken = createAction('[Auth] Clear Token');
+export const clearToken = createAction(
+  '[Auth] Clear Token');
