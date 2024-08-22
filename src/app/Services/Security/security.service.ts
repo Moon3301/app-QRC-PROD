@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { UsuariosService } from '../usuarios/usuarios.service';
-import { Usuario } from 'src/app/Interfaces/usuario';
+import { User } from 'src/app/Interfaces/usuario';
 import { UserToken } from 'src/app/Interfaces/usuario';
 
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -87,7 +87,7 @@ export class SecurityService {
 
     if(response){
 
-      const user: Usuario = { 
+      const user: User = { 
         id: response.data.id,
         name: response.data.name,
         position: response.data.position,

@@ -39,13 +39,11 @@ export class ClientesComponent  implements OnInit {
   @ViewChild('modalRegister', { static: false }) modalRegister!: IonModal;
 
   addFormCliente!: FormGroup
+  updateFormOrganzation!: FormGroup
   organizations: any[] = []
 
   constructor(private router: Router, public clientes: ClientesService, public _FormBuilder: FormBuilder,
     public serviceOrganization: OrganizationService) {}
-  
- 
-
   
   async ngOnInit() {
 
@@ -54,9 +52,17 @@ export class ClientesComponent  implements OnInit {
 
     this.addFormCliente = this._FormBuilder.group({
 
-      nombre: ['', Validators.required],
-      telefono_jefe_area: ['', Validators.required],
-      telefono_supervisor_area: ['', Validators.required],
+      descr: ['', Validators.required],
+      managerPhone: ['', Validators.required],
+      supervisorPhone: ['', Validators.required],
+
+    })
+
+    this.updateFormOrganzation = this._FormBuilder.group({
+
+      descr: [''],
+      managerPhone: [''],
+      supervisorPhone: ['']
 
     })
 
@@ -68,36 +74,72 @@ export class ClientesComponent  implements OnInit {
     return organization
   }
 
-  listOrganizations(){
+  public async updateOrganizations(organizacionId: number){
 
-    const listOrganizations = this.serviceOrganization.getOrganizations() || [];
-    return listOrganizations;
+    try{
+      
+      const descr = this.updateFormOrganzation.get("descr")?.value;
+      const managerPhone = this.updateFormOrganzation.get("managerPhone")?.value;
+      const supervisorPhone = this.updateFormOrganzation.get("supervisorPhone")?.value;
+
+      const organization: Organization = {Id: organizacionId, Descr: descr, ManagerPhone: managerPhone, SupervisorPhone: supervisorPhone}
+
+      console.log(organization)
+
+      const response = await this.serviceOrganization.updateOrganization(organization)
+      console.log(response)
+
+      
+
+    }catch(error){
+
+      console.log(error)
+    }
+    
   }
+
+  // DETAIL
 
   onWillDismissDetail(event: any) {
     const ev = event as CustomEvent<OverlayEventDetail<string>>;
+    
     if (ev.detail.role === 'confirm') {
 
-      
     }
+
+    
   }
 
-  confirmDetail() {
+  updateDetailForm(organization: any){
+    
+    this.updateFormOrganzation.patchValue({
+      descr: organization.descr,
+      managerPhone: organization.managerPhone,
+      supervisorPhone: organization.supervisorPhone
+
+    })
+  }
+
+  confirmDetail(organizacion: any) {
     
     this.modalClients.toArray().forEach(modal => modal.dismiss(null, 'confirm'));
+
   }
   
   cancelDetail() {
     
     this.modalClients.toArray().forEach(modal => modal.dismiss(null, 'cancel'));
   }
+  
+
+  // REGISTER
 
   onWillDismissRegister(event: any) {
     const ev = event as CustomEvent<OverlayEventDetail<string>>;
     if (ev.detail.role === 'confirm') {
 
-      this.confirmRegister();
-      
+      this.addFormCliente.reset();
+
     }
   }
 
@@ -126,31 +168,6 @@ export class ClientesComponent  implements OnInit {
       });
   }
 
-  addCliente(){
-
-    try{
-
-      let now = new Date()
-      let timestamp = now.getTime()
-      let uniximeStamp = Math.floor(timestamp / 1000);
-
-      const nombre = this.addFormCliente.get("nombre")?.value
-      const telefono_jefe_area = this.addFormCliente.get("telefono_jefe_area")?.value
-      const telefono_supervisor_area = this.addFormCliente.get("telefono_supervisor_area")?.value
-
-      let cliente: Cliente = {id: uniximeStamp,nombre: nombre, telefono_jefe_area: telefono_jefe_area, telefono_supervisor_area: telefono_supervisor_area, usuarios: [], equipos:[]}
-      this.clientes.addCliente(cliente)
-
-      this.confirmRegister()
-
-    }catch (error){
-
-      console.log("No se pudo crear cliente")
-
-    }
-
-  }
-
   async addOrganization(){
 
     try{
@@ -159,7 +176,7 @@ export class ClientesComponent  implements OnInit {
       const ManagerPhone = this.addFormCliente.get("telefono_jefe_area")?.value || ''
       const SupervisorPhone = this.addFormCliente.get("telefono_supervisor_area")?.value || ''
 
-      const organizacion: Organization = {id: 0, Descr: Descr, ManagerPhone: ManagerPhone, SupervisorPhone: SupervisorPhone}
+      const organizacion: Organization = {Id: 0, Descr: Descr, ManagerPhone: ManagerPhone, SupervisorPhone: SupervisorPhone}
       this.serviceOrganization.addOrganization(organizacion)
 
       this.confirmRegister();

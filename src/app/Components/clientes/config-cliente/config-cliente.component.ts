@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnChanges, OnInit, ViewChild } from '@angular/core';
 
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -20,12 +20,14 @@ import {FormControl, FormsModule, ReactiveFormsModule, FormBuilder, Validators,}
 
 import { ActivatedRoute } from '@angular/router';
 import { Cliente } from 'src/app/Interfaces/cliente';
-import { Usuario } from 'src/app/Interfaces/usuario';
+import { User } from 'src/app/Interfaces/usuario';
 
 import { ClientesService } from 'src/app/Services/clientes/clientes.service';
 import { UsuariosService } from 'src/app/Services/usuarios/usuarios.service';
 import { EquiposService } from 'src/app/Services/equipos/equipos.service';
 import { Category } from 'src/app/Interfaces/category-equip';
+import { OrganizationService } from 'src/app/Services/organization/organization.service';
+import { Organization } from 'src/app/Interfaces/organization';
 @Component({
   standalone: true,
   selector: 'app-config-cliente',
@@ -47,39 +49,52 @@ export class ConfigClienteComponent  implements OnInit {
 
   type: string = ''
 
-  usuariosClientes: Usuario[] = []
+  usuariosClientes: User[] = []
+  organizationUsers: User[] = []
+
   equiposClientes: Category[] = []
+  organizationCategory: Category[] = []
+
+  usuarios: any[] = []
 
   cliente: Cliente = { id: 0, nombre: '', telefono_jefe_area: '', telefono_supervisor_area: '', usuarios: [], equipos: [] };
+  organization!: any;
 
-  constructor(private route: ActivatedRoute, private clientes:ClientesService, private usuariosGlobales:UsuariosService, private _equipos:EquiposService) {}
+  constructor(private route: ActivatedRoute, private clientes:ClientesService, private usuariosGlobales:UsuariosService, private _equipos:EquiposService, private organizationService: OrganizationService) {
 
-  ngOnInit() {
+    
+  }
+
+  async ngOnInit() {
+
+    const dataUser = await this.usuariosGlobales.getUsers();
+    this.usuarios = dataUser.data;
+    console.log(this.usuarios)
+
+    let organizationId
 
     this.route.paramMap.subscribe(params => {
-      const clienteId = params.get('cliente')!;
-
-      const foundCliente = this.clientes.findCliente(parseInt(clienteId, 10));
-      if(foundCliente){
-        this.cliente = foundCliente
-      }
-
-      this.loadData();
-
-      this.route.paramMap.subscribe(params => {
-
-        this.type = params.get('type')!;
-
-        this.loadData();
-
-      });
+      organizationId = params.get('cliente')!;
     });
+
+    this.route.paramMap.subscribe(params => {
+      this.type = params.get('type')!;
+    });
+
+    const response = await this.organizationService.findOrganization(parseInt(organizationId!, 10));
+    const foundOrganization = response.data[0]
+
+    if (foundOrganization){
+      this.organization = foundOrganization
+      console.log(this.organization)
+    }
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || ''))
     );
 
+    await this.loadData();
   }
 
   private _filter(value: string): string[] {
@@ -87,7 +102,7 @@ export class ConfigClienteComponent  implements OnInit {
     const filterValue = value.toLowerCase();
     
     if(this.type == 'usuarios'){
-      const usernameUsuario = this.usuariosGlobales.usuarios.map(user => user.username);
+      const usernameUsuario = this.usuarios.map(user => user.userName);
       return usernameUsuario.filter(option => option.toLowerCase().includes(filterValue));
     }
 
@@ -99,14 +114,19 @@ export class ConfigClienteComponent  implements OnInit {
     return []
   }
 
-  onOptionSelectedUser(event: any) {
+  async onOptionSelectedUser(event: any) {
+   
     const selectedUsername = event.option.value;
-    const selectedUser = this.usuariosGlobales.usuarios.find(user => user.username === selectedUsername);
-
+   
+    const selectedUser = this.usuarios.find(user => user.userName === selectedUsername);
+   
     if (selectedUser) {
-      const clienteId = this.cliente?.id;
-      if (clienteId) {
-        this.clientes.assingUsuario(clienteId, selectedUser);
+      const organizacionId = this.organization?.id;
+     
+      if (organizacionId) {
+
+        const response = await this.organizationService.assignUserToOrganization(selectedUser.id, this.organization.id);
+        console.log(response)
         this.loadDataUsuario(); // Asegúrate de llamar a loadDataCliente después de agregar el usuario
         this.myControl.reset()
       }
@@ -130,21 +150,24 @@ export class ConfigClienteComponent  implements OnInit {
     }
   }
 
-  loadData() {
+  async loadData() {
     if (this.type === 'equipos') {
       // Cargar datos de equipos
       this.loadDataEquipos()
 
     } else if (this.type === 'usuarios') {
       // Cargar datos de usuarios
-      this.loadDataUsuario()
+      await this.loadDataUsuario()
 
     }
   }
 
-  loadDataUsuario() {
-    this.usuariosClientes = this.cliente.usuarios
-    this.dataSource = [...(this.usuariosClientes || [])]; // Clonar la lista para que Angular detecte el cambio
+  async loadDataUsuario() {
+ 
+    const response = await this.usuariosGlobales.getUsersByOrganizationId(this.organization.id!)
+    this.organizationUsers = response.data
+    this.dataSource = [ ... (this.organizationUsers || [])]
+
   }
 
   loadDataEquipos(){
@@ -154,9 +177,10 @@ export class ConfigClienteComponent  implements OnInit {
 
   }
 
-  removeUsuario(clienteId:number, usuarioId: string){
+  async removeUsuario(clienteId:number, usuarioId: string){
 
-    this.clientes.removeUsuario(clienteId, usuarioId)
+    const response = await this.organizationService.unassignUserFromOrganization(usuarioId, clienteId);
+    console.log(response)
     this.loadDataUsuario();
     
   }

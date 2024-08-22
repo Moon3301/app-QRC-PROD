@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AuthState } from 'src/app/Store/Authentication/auth.reducer';
+import { User } from 'src/app/Interfaces/usuario';
 @Injectable({
   providedIn: 'root'
 })
@@ -82,7 +83,7 @@ export class OrganizationService {
     }
 
     const endpoint = `${api_url}/organizations`;
-    const method = 'POST';
+    const method = 'PUT';
     const body = {organization};
 
     return this.api.createRequest(endpoint, method, body, token);
@@ -115,11 +116,12 @@ export class OrganizationService {
       return null;
     }
 
-    const endpoint = `${api_url}/organizations/${organizationId}`;
+    const queryParams = { organizationId: `${organizationId}`}
+    const endpoint = `${api_url}/organizations`;
     const method = 'GET';
     const body = null
 
-    return this.api.createRequest(endpoint, method, body, token);
+    return this.api.createRequest(endpoint, method, body, token, queryParams);
   }
 
   async assignUserToOrganization(user: string, organization: number) {
@@ -132,12 +134,16 @@ export class OrganizationService {
       return null;
     }
 
-    const endpoint = `${api_url}/organizations/user/assign/${organization}/${user}`;
+    const queryParams = {
+      organization: `${organization}`,
+      user: `${user}`
+    }
 
+    const endpoint = `${api_url}/organizations/user/assign`;
     const method = 'POST';
     const body = undefined;
 
-    return this.api.createRequest(endpoint, method, body, token);
+    return this.api.createRequest(endpoint, method, body, token, queryParams);
   }
 
   async unassignUserFromOrganization(user: string, organization: number) {
@@ -150,11 +156,16 @@ export class OrganizationService {
       return null;
     }
 
-    const endpoint = `${api_url}/organizations/user/unassign/${organization}/${user}`;
+    const queryParams = {
+      organization: `${organization}`,
+      user: `${user}`
+    }
+
+    const endpoint = `${api_url}/organizations/user/unassign`;
     const method = 'POST';
     const body = undefined;
 
-    return this.api.createRequest(endpoint, method, body, token);
+    return this.api.createRequest(endpoint, method, body, token, queryParams);
   }
 
   /*

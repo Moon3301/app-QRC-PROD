@@ -23,7 +23,7 @@ import { DetalleUsuarioComponent } from './detalle-usuario/detalle-usuario.compo
 import { MatDialog } from '@angular/material/dialog';
 
 import { UsuariosService } from '../../Services/usuarios/usuarios.service';
-import { Usuario } from '../../Interfaces/usuario';
+import { User } from '../../Interfaces/usuario';
 
 import {MatSelectModule} from '@angular/material/select';
 @Component({
@@ -40,7 +40,7 @@ export class UsuariosComponent  implements OnInit {
   @ViewChild(IonModal) modalRegister!: IonModal;
 
   displayedColumns: string[] = ['nombre', 'correo', 'cargo'];
-  dataSource: Usuario[] = []
+  dataSource: User[] = []
   positions : any
 
   addForm!: FormGroup
@@ -65,10 +65,15 @@ export class UsuariosComponent  implements OnInit {
   }
 
   
-  loadDataUsuarios(){
+  async loadDataUsuarios(){
     /*
     this.dataSource = [...(this.usuarios.listUsuarios() || [])]
     */
+
+    const response = await this.usuarios.getUsers();
+    const usuarios = response.data
+
+    this.dataSource = [... (usuarios || [])]
   }
   
   onWillDismissRegister(event: any) {
@@ -118,7 +123,7 @@ export class UsuariosComponent  implements OnInit {
       const email = this.addForm.get("email")?.value
       const telefono = this.addForm.get("telefono")?.value
 
-      let user: Usuario = {
+      let user: User = {
 
         id: ''+uniximeStamp,
         name: nombre, 

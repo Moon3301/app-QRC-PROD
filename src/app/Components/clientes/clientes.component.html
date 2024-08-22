@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" style="overflow-y: auto; height: 100vh; width: 100%;">
 
   <mat-list>
     <div mat-subheader>Clientes</div>
@@ -6,11 +6,11 @@
    
     @for (organization of organizations; track organization) {
 
-      <mat-list-item [id]="'open-modal' + organization.id">
+      <mat-list-item [id]="'open-modal' + organization.id" (click)="updateDetailForm(organization)">
         
         <div matListItemTitle>{{organization.descr}}</div>
         
-        <ion-modal #modalClients [trigger]="'open-modal' + organization.id" (willDismiss)="onWillDismissDetail($event)" style="background-color: white;">
+        <ion-modal #modalClients [trigger]="'open-modal' + organization.id"  (willDismiss)="onWillDismissDetail($event)" style="background-color: white;">
           <ng-template>
             <ion-header>
               <ion-toolbar>
@@ -26,11 +26,11 @@
 
                 <mat-card-content>
                   <div class="text-center">
-                    <form>
+                    <form [formGroup]="updateFormOrganzation">
                       <p>
                         <mat-form-field appearance="outline" class="w-100">
                           <mat-label>Nombre</mat-label>
-                          <input type="text" matInput placeholder="Nombre" [value]="organization.descr">
+                          <input formControlName="descr" type="text" matInput placeholder="Nombre" [value]="organization.descr">
                           <mat-icon matSuffix>badge</mat-icon>
                         </mat-form-field>
                       </p>
@@ -38,7 +38,7 @@
                       <p>
                         <mat-form-field appearance="outline" class="w-100">
                           <mat-label>Telefono Jefe de Area</mat-label>
-                          <input type="text" matInput placeholder="+569 12345678" [value]="organization.managerPhone">
+                          <input formControlName="managerPhone" type="text" matInput placeholder="+569 12345678" [value]="organization.managerPhone">
                           <mat-icon matSuffix>call</mat-icon>
                           
                         </mat-form-field>
@@ -47,7 +47,7 @@
                       <p>
                         <mat-form-field appearance="outline" class="w-100">
                           <mat-label>Telefono Supervisor de Area</mat-label>
-                          <input type="text" matInput placeholder="+569 12345678" [value]="organization.supervisorPhone">
+                          <input formControlName="supervisorPhone" type="text" matInput placeholder="+569 12345678" [value]="organization.supervisorPhone">
                           <mat-icon matSuffix>call</mat-icon>
                           
                         </mat-form-field>
@@ -55,7 +55,7 @@
                       
                       <!-- Botones -->
                       <div class="row text-center">
-                          <button type="button" style="width: 80%; margin: 0 auto"  mat-flat-button>Actualizar</button>
+                          <button (click)="updateOrganizations(organization.id)" type="button" style="width: 80%; margin: 0 auto"  mat-flat-button>Actualizar</button>
                       </div>
           
                     </form>
@@ -109,14 +109,14 @@
       </ion-header>
       <ion-content class="ion-padding">
         
-        <h5 class="text-center">Crear Cliente</h5>
+        <h5 class="text-center">Crear Organizacion</h5>
         <div class="text-center">
           <form [formGroup]="addFormCliente">
   
             <p>
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Nombre</mat-label>
-                <input type="text" matInput placeholder="Nombre" formControlName="nombre">
+                <input type="text" matInput placeholder="Nombre organizacion" formControlName="descr">
                 <mat-icon matSuffix>apartment</mat-icon>
                 
               </mat-form-field>
@@ -125,7 +125,7 @@
             <p>
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Telefono Jefe de Area</mat-label>
-                <input type="text" matInput placeholder="Nombre" formControlName="telefono_jefe_area">
+                <input type="text" matInput placeholder="Telefono Jefe de area" formControlName="managerPhone">
                 <mat-icon matSuffix>call</mat-icon>
                 
               </mat-form-field>
@@ -134,7 +134,7 @@
             <p>
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Telefono Supervisor de Area</mat-label>
-                <input type="text" matInput placeholder="Nombre" formControlName="telefono_supervisor_area">
+                <input type="text" matInput placeholder="Telefoino Supervisor de area" formControlName="supervisorPhone">
                 <mat-icon matSuffix>call</mat-icon>
                 
               </mat-form-field>

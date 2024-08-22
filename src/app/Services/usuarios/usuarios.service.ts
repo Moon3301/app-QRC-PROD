@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Cargo } from 'src/app/Interfaces/cargo';
-import { Usuario } from 'src/app/Interfaces/usuario';
+import { User } from 'src/app/Interfaces/usuario';
 import { ApiService } from '../api/api.service';
 import { api_url } from '../utilities';
 import { SecurityService } from '../Security/security.service';
@@ -20,7 +20,7 @@ export class UsuariosService {
     {id:5, nombre: 'Cliente'},
   ]
   
-  usuarios: Usuario[] = [
+  usuarios: User[] = [
     {
       id: '1',
       name: 'John Doe',
@@ -68,6 +68,8 @@ export class UsuariosService {
     
   ];
 
+
+
   async getUsers(): Promise<any>{
 
     this.security.loadToken();
@@ -87,7 +89,7 @@ export class UsuariosService {
 
   }
 
-  async addUser(user: Usuario): Promise<any>{
+  async addUser(user: User): Promise<any>{
 
     this.security.loadToken();
     const token = this.security.currentToken
@@ -132,13 +134,22 @@ export class UsuariosService {
     return response
   }
 
-  async getUsersByOrganizationId(organizacionId:number){
+  async getUsersByOrganizationId(organizationId:number){
 
-    const endpoint = `${api_url}/users/${organizacionId}`
+    this.security.loadToken();
+    const token = this.security.currentToken
+
+    if (!token) {
+      console.error('Token no encontrado o inválido.'); 
+      return null;
+    }
+
+    const queryParams = { organizationId: `${organizationId}`}
+    const endpoint = `${api_url}/users`
     const method = 'GET'
     const body = null
 
-    const response = await this.api.createRequest(endpoint, method, body)
+    const response = await this.api.createRequest(endpoint, method, body, token, queryParams)
     return response
 
   }
@@ -148,21 +159,22 @@ export class UsuariosService {
     return this.cargos
   }
 
-  async updateUser(userId: string, updatedUser: Usuario) {
+  async updateUser(userId: string, updatedUser: User) {
+
+    this.security.loadToken();
+    const token = this.security.currentToken
+
+    if (!token) {
+      console.error('Token no encontrado o inválido.'); 
+      return null;
+    }
 
     const endpoint = `${api_url}/users/${userId}`
     const method = 'PUT'
     const body = {updatedUser: updatedUser}
 
-    const response = await this.api.createRequest(endpoint, method, body)
+    const response = await this.api.createRequest(endpoint, method, body, token)
     return response
-
-    /*
-    const index = this.usuarios.findIndex(usuario => usuario.id === id);
-    if (index !== -1) {
-      this.usuarios[index] = updatedUsuario;
-    }
-    */
 
   }
 

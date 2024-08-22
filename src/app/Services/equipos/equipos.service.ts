@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Cliente } from 'src/app/Interfaces/cliente';
 import { Cargo } from 'src/app/Interfaces/cargo';
-import { Usuario } from 'src/app/Interfaces/usuario';
+import { User } from 'src/app/Interfaces/usuario';
 import { Category } from 'src/app/Interfaces/category-equip';
 
 @Injectable({

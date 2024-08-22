@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Cliente } from 'src/app/Interfaces/cliente';
 import { UsuariosService } from '../usuarios/usuarios.service';
-import { Usuario } from 'src/app/Interfaces/usuario';
+import { User } from 'src/app/Interfaces/usuario';
 import { ApiService } from '../api/api.service';
 import { Category } from 'src/app/Interfaces/category-equip';
 
@@ -31,7 +31,7 @@ export class ClientesService {
 
   }
 
-  assingUsuario(clienteId: number, usuario:Usuario){
+  assingUsuario(clienteId: number, usuario:User){
     
     /*
     this.api.createRequest('assing-user', 'POST', {

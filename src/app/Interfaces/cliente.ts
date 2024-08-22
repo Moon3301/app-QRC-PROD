@@ -1,4 +1,4 @@
-import { Usuario } from "./usuario"
+import { User } from "./usuario"
 import { Category } from "./category-equip"
 
 export interface Cliente {
@@ -7,7 +7,7 @@ export interface Cliente {
     nombre: string
     telefono_jefe_area: string
     telefono_supervisor_area: string
-    usuarios: Usuario[]
+    usuarios: User[]
     equipos: Category[]
     
 }

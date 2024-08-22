@@ -1,6 +1,6 @@
 export type Organization = {
 
-    id?: number
+    Id?: number
     Descr: string
     ManagerPhone: string
     SupervisorPhone: string

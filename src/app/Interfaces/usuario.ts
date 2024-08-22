@@ -1,4 +1,4 @@
-export interface Usuario {
+export interface User {
 
     id?: string
     name:string
@@ -52,12 +52,12 @@ export type UserLogin = {
     login_provider: string
     provider_key: string
     provider_display_name: string
-    user: Usuario
+    user: User
 }
 
 export type UserToken = {
 
-    user: Usuario
+    user: User
     login_provider: string
     name: string
     value:string
@@ -67,7 +67,7 @@ export type UserToken = {
 export type UserClaim = {
 
     id: number
-    user: Usuario
+    user: User
     claim_type: string
     claim_value: string
 
