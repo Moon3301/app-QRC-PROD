@@ -2,12 +2,12 @@
 
   <h6 mat-dialog-title>Detalle Usuario</h6>
   
-  <form style="margin-top: 20px;">
+  <form [formGroup]="userDetailForm" style="margin-top: 20px;">
 
     <p>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Email</mat-label>
-        <input  matInput placeholder="Ej: app@gmail.com">
+        <input formControlName="email"  matInput placeholder="Ej: app@gmail.com">
         <mat-icon matSuffix>mail</mat-icon>
         
       </mat-form-field>
@@ -16,7 +16,7 @@
     <p>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Nombre</mat-label>
-        <input  matInput placeholder="Ej: app@gmail.com">
+        <input formControlName="name"  matInput placeholder="Ej: app@gmail.com">
         <mat-icon matSuffix>mail</mat-icon>
         
       </mat-form-field>
@@ -24,8 +24,8 @@
 
     <p>
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Cargo</mat-label>
-        <input  matInput placeholder="Ej: app@gmail.com">
+        <mat-label>Posicion</mat-label>
+        <input formControlName="position"  matInput placeholder="Ej: app@gmail.com">
         <mat-icon matSuffix>mail</mat-icon>
         
       </mat-form-field>
@@ -36,20 +36,30 @@
 
   </form>
   <hr>
-  <form>
+  <form [formGroup]="changepasswordForm">
+    
+    <h6 mat-dialog-title>Actualizar contraseña</h6>
 
     <mat-card>
       <mat-card-content>
 
         <p>
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Contrasena</mat-label>
+            <mat-label>Nueva Contraseña</mat-label>
             <input  matInput placeholder="Ej: app@gmail.com">
-            <mat-icon matSuffix>mail</mat-icon>
+            <mat-icon matSuffix>password</mat-icon>
           </mat-form-field>
         </p>
 
-        <button type="button" class="w-75" mat-flat-button>Enviar</button>
+        <p>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Repita Contraseña</mat-label>
+            <input  matInput placeholder="Ej: app@gmail.com">
+            <mat-icon matSuffix>password</mat-icon>
+          </mat-form-field>
+        </p>
+
+        <button type="button" class="w-75" mat-flat-button>Actualizar</button>
 
       </mat-card-content>
     </mat-card>

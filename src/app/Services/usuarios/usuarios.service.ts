@@ -68,8 +68,6 @@ export class UsuariosService {
     
   ];
 
-
-
   async getUsers(): Promise<any>{
 
     this.security.loadToken();
@@ -108,7 +106,102 @@ export class UsuariosService {
 
   }
 
+  async getUsersByOrganizationId(organizationId:number){
+
+    this.security.loadToken();
+    const token = this.security.currentToken
+
+    if (!token) {
+      console.error('Token no encontrado o inválido.'); 
+      return null;
+    }
+
+    const queryParams = { organization: `${organizationId}`}
+    const endpoint = `${api_url}/users`
+    const method = 'GET'
+    const body = null
+
+    const response = await this.api.createRequest(endpoint, method, body, token, queryParams)
+    return response
+
+  }
+
+  async updateUser(user: string, updatedUser: User) {
+
+    this.security.loadToken();
+    const token = this.security.currentToken
+
+    if (!token) {
+      console.error('Token no encontrado o inválido.'); 
+      return null;
+    }
+
+    const queryParams = {
+      user: user,
+      updatedUser: updatedUser
+    }
+
+    const endpoint = `${api_url}/users`
+    const method = 'PUT'
+    const body = {updatedUser: updatedUser}
+
+    const response = await this.api.createRequest(endpoint, method, body, token, queryParams)
+    return response
+
+  }
+
+  async updatePositionUser(userId:string, position: number){
+
+    // Procedimiento de almacenado UserUpdatePosition
+    // actualiza la posicion del usuario
+    this.security.loadToken();
+    const token = this.security.currentToken
+
+    const endpoint = `${api_url}/users/${userId}/position`
+    const method = 'PUT'
+    const body = {position: position}
+
+    const response = await this.api.createRequest(endpoint, method, body)
+    return response
+
+  }
+
+  async updatePasswordUser(password:string, rep_password:string, user: number){
+
+    this.security.loadToken();
+    const token = this.security.currentToken
+
+    const quryParams = {}
+    const endpoint = `${api_url}/users/${user}/password`
+    const method = 'PUT'
+    const body = { password: password, rep_password: rep_password, user: user}
+
+    const response =  await this.api.createRequest(endpoint, method, body);
+    return response
+
+  }
+
+  async deleteUser(userId: string) {
+
+    this.security.loadToken();
+    const token = this.security.currentToken
+
+    const endpoint = `${api_url}/users/${userId}`
+    const method = 'DELETE'
+    const body = null;
+
+    const response = await this.api.createRequest(endpoint, method, body)
+    return response
+
+    //this.usuarios = this.usuarios.filter(usuario => usuario.id !== id);
+  }
+
+  
+
   async getUserByPosition(position: number = 0) {
+
+    this.security.loadToken();
+    const token = this.security.currentToken
 
     // Procedimiento de almacenado UserRead
     // Si username es vacio y organization es 0, devuelve todos los usuarios
@@ -126,6 +219,9 @@ export class UsuariosService {
 
   async getUserByUsername(username: string = '*'){
 
+    this.security.loadToken();
+    const token = this.security.currentToken
+
     const endpoint = `${api_url}/users/${username}`
     const method = 'GET'
     const body = null
@@ -134,78 +230,13 @@ export class UsuariosService {
     return response
   }
 
-  async getUsersByOrganizationId(organizationId:number){
-
-    this.security.loadToken();
-    const token = this.security.currentToken
-
-    if (!token) {
-      console.error('Token no encontrado o inválido.'); 
-      return null;
-    }
-
-    const queryParams = { organizationId: `${organizationId}`}
-    const endpoint = `${api_url}/users`
-    const method = 'GET'
-    const body = null
-
-    const response = await this.api.createRequest(endpoint, method, body, token, queryParams)
-    return response
-
-  }
-
   getPosition(): Cargo[] {
     
     return this.cargos
   }
 
-  async updateUser(userId: string, updatedUser: User) {
-
-    this.security.loadToken();
-    const token = this.security.currentToken
-
-    if (!token) {
-      console.error('Token no encontrado o inválido.'); 
-      return null;
-    }
-
-    const endpoint = `${api_url}/users/${userId}`
-    const method = 'PUT'
-    const body = {updatedUser: updatedUser}
-
-    const response = await this.api.createRequest(endpoint, method, body, token)
-    return response
-
-  }
-
-  async deleteUser(userId: string) {
-
-    const endpoint = `${api_url}/users/${userId}`
-    const method = 'DELETE'
-    const body = null;
-
-    const response = await this.api.createRequest(endpoint, method, body)
-    return response
-
-    //this.usuarios = this.usuarios.filter(usuario => usuario.id !== id);
-  }
-
   findUser(id: string) {
     return this.usuarios.find(usuario => usuario.id === id);
-  }
-
-  async updatePositionUser(userId:string, position: number){
-
-    // Procedimiento de almacenado UserUpdatePosition
-    // actualiza la posicion del usuario
-
-    const endpoint = `${api_url}/users/${userId}/position`
-    const method = 'PUT'
-    const body = {position: position}
-
-    const response = await this.api.createRequest(endpoint, method, body)
-    return response
-
   }
 
 }

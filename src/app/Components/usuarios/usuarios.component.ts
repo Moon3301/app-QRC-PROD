@@ -43,7 +43,7 @@ export class UsuariosComponent  implements OnInit {
   dataSource: User[] = []
   positions : any
 
-  addForm!: FormGroup
+  createUserForm!: FormGroup
 
   constructor(private _formBuilder: FormBuilder, private matDialog:MatDialog, private usuarios: UsuariosService) {
 
@@ -54,10 +54,10 @@ export class UsuariosComponent  implements OnInit {
 
     this.loadDataUsuarios()
 
-    this.addForm = this._formBuilder.group({
+    this.createUserForm = this._formBuilder.group({
 
       position: ['', Validators.required],
-      nombre: ['', Validators.required],
+      name: ['', Validators.required],
       email: ['', Validators.required],
      
     })
@@ -86,7 +86,7 @@ export class UsuariosComponent  implements OnInit {
 
   confirmRegister() {
 
-    this.addForm.reset();
+    this.createUserForm.reset();
 
     this.loadDataUsuarios();
 
@@ -94,17 +94,17 @@ export class UsuariosComponent  implements OnInit {
   }
 
   cancelRegister() {
-    this.addForm.reset();
+    this.createUserForm.reset();
     this.modalRegister.dismiss(null, 'cancel');
   }
 
   openModalDetalleUsuario(element:any){
 
-    console.log(element)
-    
+    console.log('Data dialog usuarios componente: ',element)
+
     this.matDialog.open(DetalleUsuarioComponent, {
       width: '99%',
-      height: '96%'
+      data: element
     })
   }
 
@@ -116,12 +116,12 @@ export class UsuariosComponent  implements OnInit {
       let timestamp = now.getTime()
       let uniximeStamp = Math.floor(timestamp / 1000);
 
-      const position = this.addForm.get("position")?.value
-      const nombre = this.addForm.get("nombre")?.value
-      const username = this.addForm.get("username")?.value
-      const password = this.addForm.get("password")?.value
-      const email = this.addForm.get("email")?.value
-      const telefono = this.addForm.get("telefono")?.value
+      const position = this.createUserForm.get("position")?.value
+      const nombre = this.createUserForm.get("nombre")?.value
+      const username = this.createUserForm.get("username")?.value
+      const password = this.createUserForm.get("password")?.value
+      const email = this.createUserForm.get("email")?.value
+      const telefono = this.createUserForm.get("telefono")?.value
 
       let user: User = {
 

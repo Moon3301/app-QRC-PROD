@@ -28,7 +28,7 @@ export const initialState: AuthState = {
 export const authReducer = createReducer(
   initialState,
   on(setToken, (state, { token }) => {
-    console.log('Reducer setToken ejecutado con token:', token);
+    
     return {
       ...state,
       value: token,

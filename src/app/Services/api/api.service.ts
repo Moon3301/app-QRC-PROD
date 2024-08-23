@@ -7,7 +7,7 @@ export class ApiService {
 
   constructor() { }
 
-  async createRequest(endpoint: string, _method: string, body: any, token?: string, queryParams?: Record<string, string>): Promise<any> {
+  async createRequest(endpoint: string, _method: string, body: any, token?: string, queryParams?: Record<any, any>): Promise<any> {
     try {
         const headers: HeadersInit = {
             'Content-Type': 'application/json',

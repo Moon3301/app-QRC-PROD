@@ -14,6 +14,8 @@ export class InicioComponent  implements OnInit {
 
   async ngOnInit() {
 
+    const response = await this.organizations.assignCategoryToOrganization(1,1);
+    console.log(response)
   }
 
   

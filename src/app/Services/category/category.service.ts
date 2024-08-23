@@ -2,13 +2,55 @@ import { Injectable } from '@angular/core';
 import { api_url } from '../utilities';
 
 import { ApiService } from '../api/api.service';
+import { SecurityService } from '../Security/security.service';
+import { Category } from 'src/app/Interfaces/category-equip';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
 
-  constructor(private api: ApiService) { }
+  constructor(private api: ApiService, private security: SecurityService) { }
+
+  async getCategories(){
+
+    this.security.loadToken();
+    const token = this.security.currentToken
+
+    if (!token) {
+      console.error('Token no encontrado o inválido.'); 
+      return null;
+    }
+
+    const endpoint = `${api_url}/categories`
+    const method = 'GET'
+    const body = null
+
+    const response = await this.api.createRequest(endpoint, method, body)
+    return response
+
+  }
+
+  async addCategory(category: Category){
+    
+    this.security.loadToken();
+    const token = this.security.currentToken
+
+    if (!token) {
+      console.error('Token no encontrado o inválido.'); 
+      return null;
+    }
+
+    const endpoint = `${api_url}/categories`
+    const method = 'POST'
+    const body = {category: category}
+
+    const response = await this.api.createRequest(endpoint, method, body)
+    return response
+
+  }
+
+  
 
   async getCategoryByName(categoryName: string){
 
