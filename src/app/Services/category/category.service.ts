@@ -24,9 +24,9 @@ export class CategoryService {
 
     const endpoint = `${api_url}/categories`
     const method = 'GET'
-    const body = null
+    const body = undefined
 
-    const response = await this.api.createRequest(endpoint, method, body)
+    const response = await this.api.createRequest(endpoint, method, body, token)
     return response
 
   }
@@ -43,43 +43,71 @@ export class CategoryService {
 
     const endpoint = `${api_url}/categories`
     const method = 'POST'
-    const body = {category: category}
+    const body = category
 
     const response = await this.api.createRequest(endpoint, method, body)
     return response
 
   }
 
-  
-
+  /*
   async getCategoryByName(categoryName: string){
 
-    // Procedimiento de almacenado CategoryAutocomplete
-    // Si el parametro @search es igual a '*' (Por defecto), devolvera todos los registros de la tabla category
-    // Si el parametro @search tiene parametros diferentes a *, devolvera los registros que coincidan PARCIALMENTE
-    // con el parametro indicado. (Parcialmente: Si dentro del paramtro existe alguna cadena que coincida con 
-    // algun registro de la tabla category, lo devolvera igualmente).
+    this.security.loadToken();
+    const token = this.security.currentToken
 
-    const endpoint = `${api_url}/categories/${categoryName}`
+    if (!token) {
+      console.error('Token no encontrado o inválido.'); 
+      return null;
+    }
+
+    const queryParams = {categoryName: `${categoryName}`}
+    const endpoint = `${api_url}/categories`
     const method = 'GET'
     const body = null
 
-    const response = await this.api.createRequest(endpoint, method, body)
+    const response = await this.api.createRequest(endpoint, method, body, token)
     return response
 
   }
+  */
 
   async getCategoryByOrganization(organizationId: number){
 
-    // Procedimiento de almacenado CategoryColletion
-    // Si el parametro es igual a 0 o no se define algun parametro, devuelve todas las categorias de la tabla categoria
-    // Si el parametro tiene valores, devuelve todas las categorias asociadas al ID de la organizacion indicada.
+    this.security.loadToken();
+    const token = this.security.currentToken
 
-    const endpoint = `${api_url}/categories/${organizationId}`
+    if (!token) {
+      console.error('Token no encontrado o inválido.'); 
+      return null;
+    }
+
+    const queryParams = {organization: `${organizationId}`}
+    const endpoint = `${api_url}/categories`
     const method = 'GET'
     const body = null
 
-    const response = await this.api.createRequest(endpoint, method, body)
+    const response = await this.api.createRequest(endpoint, method, body, token, queryParams)
+    return response
+
+  }
+
+  async deleteCategory(categoryId:number){
+
+    this.security.loadToken();
+    const token = this.security.currentToken
+
+    if (!token) {
+      console.error('Token no encontrado o inválido.'); 
+      return null;
+    }
+
+    const queryParams = {category: `${categoryId}`}
+    const endpoint = `${api_url}/categories`
+    const method = 'DELETE'
+    const body = null
+
+    const response = await this.api.createRequest(endpoint, method, body, token, queryParams)
     return response
 
   }

@@ -13,7 +13,7 @@ import {MatCardModule} from '@angular/material/card';
 import {FormControl, FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup,} from '@angular/forms';
 
 import { UsuariosService } from 'src/app/Services/usuarios/usuarios.service';
-import { User } from 'src/app/Interfaces/usuario';
+import { Position, User } from 'src/app/Interfaces/usuario';
 
 @Component({
   standalone: true,
@@ -32,15 +32,27 @@ export class DetalleUsuarioComponent  implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data:any, public usuarioService:UsuariosService) { }
 
   ngOnInit() {
-    console.log('Data dialog detalle-usuario: ',this.data); // Aquí puedes ver los datos recibidos
 
+    
+  
     this.userDetailForm = this._formBuilder.group({
 
+      username: [this.data.username || ''],
       email: [this.data.email || ''],
       name: [this.data.name || ''],
       position: [this.data.position || ''],
+      phone_number: [this.data.phone_number || '']
       
     })
+
+    const positions = this.usuarioService.getPosition();
+    const positionUser = this.userDetailForm.get("position")?.value;
+    const formatPosition = positions.find( x => x.id === positionUser)
+
+    this.userDetailForm.patchValue({
+      position: formatPosition?.name
+    })
+
 
     this.changepasswordForm = this._formBuilder.group({
 
@@ -52,41 +64,24 @@ export class DetalleUsuarioComponent  implements OnInit {
 
   updateDetailUser(){
 
-    const user:User = {
+    const updatedUser:User = {
 
       id: this.data.id,
       name:this.data.name,
       position:this.data.position,
-      signature: 'string',
-      organizacion_id: 0,
       username: this.data.userName,
-      normalized_username:this.data.userName,
       email:this.data.userName,
-      normalized_email:this.data.userName,
-      email_confirmed: true,
-      password_hash: 'string',
-      security_stamp: 'string',
-      concurrency_stamp:'string',
-      phone_number: 'string',
-      phone_number_confirmed:false,
-      two_factor_enabled: false,
-      password: 'string',
-      lockout_end: 'string',
-      lockout_enabled: false,
-      acces_failed_count: 0
-
+      phone_number: this.data.telefono,
+      
     }
 
-    const response = this.usuarioService.updateUser(this.data.id, this.data);
+    const response = this.usuarioService.updateUser(updatedUser);
     console.log(response)
-
 
   }
 
   closeModal(){
     this.matDialogRef.close();
   }
-
-
 
 }

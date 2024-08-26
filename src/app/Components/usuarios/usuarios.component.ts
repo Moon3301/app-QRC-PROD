@@ -59,37 +59,43 @@ export class UsuariosComponent  implements OnInit {
       position: ['', Validators.required],
       name: ['', Validators.required],
       email: ['', Validators.required],
-     
+      username: ['', Validators.required],
+      phone_number: ['', Validators.required]
+
     })
+
+    
 
   }
 
-  
+  formatPosition(positionId:number){
+
+    const positions = this.usuarios.getPosition();
+    const formatPosition = positions.find( x => x.id === positionId)
+
+    if(formatPosition){
+      return formatPosition.name
+    }else{
+      return 'Sin registro'
+    }
+
+  }
+
   async loadDataUsuarios(){
-    /*
-    this.dataSource = [...(this.usuarios.listUsuarios() || [])]
-    */
 
     const response = await this.usuarios.getUsers();
     const usuarios = response.data
-
     this.dataSource = [... (usuarios || [])]
   }
   
   onWillDismissRegister(event: any) {
     const ev = event as CustomEvent<OverlayEventDetail<string>>;
-    if (ev.detail.role === 'confirm') {
-
-      
-    }
+    if (ev.detail.role === 'confirm') {}
   }
 
   confirmRegister() {
-
     this.createUserForm.reset();
-
     this.loadDataUsuarios();
-
     this.modalRegister.dismiss(null,'confirm');
   }
 
@@ -99,8 +105,6 @@ export class UsuariosComponent  implements OnInit {
   }
 
   openModalDetalleUsuario(element:any){
-
-    console.log('Data dialog usuarios componente: ',element)
 
     this.matDialog.open(DetalleUsuarioComponent, {
       width: '99%',
@@ -112,41 +116,23 @@ export class UsuariosComponent  implements OnInit {
 
     try{
 
-      let now = new Date()
-      let timestamp = now.getTime()
-      let uniximeStamp = Math.floor(timestamp / 1000);
-
       const position = this.createUserForm.get("position")?.value
-      const nombre = this.createUserForm.get("nombre")?.value
+      const name = this.createUserForm.get("name")?.value
       const username = this.createUserForm.get("username")?.value
-      const password = this.createUserForm.get("password")?.value
       const email = this.createUserForm.get("email")?.value
-      const telefono = this.createUserForm.get("telefono")?.value
+      const phone_number = this.createUserForm.get("phone_number")?.value
 
-      let user: User = {
+      const user: User = {
 
-        id: ''+uniximeStamp,
-        name: nombre, 
+        name: name, 
         position: position, 
-        signature: '', 
-        organizacion_id: 0,
         username: username, 
-        normalized_username: username,
         email: email, 
-        normalized_email: email, 
-        email_confirmed: false,
-        password_hash: '', 
-        security_stamp: '', 
-        concurrency_stamp: '', 
-        phone_number: telefono, 
-        phone_number_confirmed: false,
-        two_factor_enabled: false,
-        password: password, 
-        lockout_end: '', 
-        lockout_enabled: false, 
-        acces_failed_count: 0
+        phone_number: phone_number,
       
       }
+
+      console.log('user: ',user)
 
       this.usuarios.addUser(user)
 
@@ -158,7 +144,6 @@ export class UsuariosComponent  implements OnInit {
 
     }
     
-
   }
 
 }

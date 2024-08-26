@@ -13,11 +13,11 @@ export class UsuariosService {
   constructor(private api: ApiService, private security: SecurityService) { }
 
   cargos: Cargo[] = [
-    {id:1, nombre: 'Administrador'},
-    {id:2, nombre: 'Supervisor'},
-    {id:3, nombre: 'Tecnico'},
-    {id:4, nombre: 'Ayudante'},
-    {id:5, nombre: 'Cliente'},
+    {id:0, name: 'Administrador'},
+    {id:1, name: 'Supervisor'},
+    {id:2, name: 'Tecnico'},
+    {id:3, name: 'Ayudante'},
+    {id:4, name: 'Cliente'},
   ]
   
   usuarios: User[] = [
@@ -25,45 +25,19 @@ export class UsuariosService {
       id: '1',
       name: 'John Doe',
       position: 1,
-      signature: 'signature1',
-      organizacion_id: 1,
       username: 'johndoe',
-      normalized_username: 'JOHNDOE',
       email: 'john.doe@example.com',
-      normalized_email: 'JOHN.DOE@EXAMPLE.COM',
-      email_confirmed: true,
-      password_hash: 'hash1',
-      security_stamp: 'stamp1',
-      concurrency_stamp: 'stamp1',
       phone_number: '1234567890',
-      phone_number_confirmed: true,
-      two_factor_enabled: false,
-      password: 'password1',
-      lockout_end: '',
-      lockout_enabled: false,
-      acces_failed_count: 0
+          
     },
     {
       id: '2',
       name: 'Jane Smith',
       position: 2,
-      signature: 'signature2',
-      organizacion_id: 1,
       username: 'janesmith',
-      normalized_username: 'JANESMITH',
       email: 'jane.smith@example.com',
-      normalized_email: 'JANE.SMITH@EXAMPLE.COM',
-      email_confirmed: true,
-      password_hash: 'hash2',
-      security_stamp: 'stamp2',
-      concurrency_stamp: 'stamp2',
       phone_number: '0987654321',
-      phone_number_confirmed: true,
-      two_factor_enabled: true,
-      password: 'password2',
-      lockout_end: '',
-      lockout_enabled: true,
-      acces_failed_count: 1
+      
     },
     
   ];
@@ -99,7 +73,7 @@ export class UsuariosService {
 
     const endpoint = `${api_url}/users`
     const method = 'POST'
-    const body = {user: user}
+    const body = user
 
     const response = await this.api.createRequest(endpoint, method, body, token)
     return response
@@ -126,7 +100,7 @@ export class UsuariosService {
 
   }
 
-  async updateUser(user: string, updatedUser: User) {
+  async updateUser( updatedUser: User) {
 
     this.security.loadToken();
     const token = this.security.currentToken
@@ -136,16 +110,11 @@ export class UsuariosService {
       return null;
     }
 
-    const queryParams = {
-      user: user,
-      updatedUser: updatedUser
-    }
-
     const endpoint = `${api_url}/users`
     const method = 'PUT'
-    const body = {updatedUser: updatedUser}
+    const body = updatedUser
 
-    const response = await this.api.createRequest(endpoint, method, body, token, queryParams)
+    const response = await this.api.createRequest(endpoint, method, body, token)
     return response
 
   }

@@ -22,12 +22,10 @@ import { ActivatedRoute } from '@angular/router';
 import { Cliente } from 'src/app/Interfaces/cliente';
 import { User } from 'src/app/Interfaces/usuario';
 
-import { ClientesService } from 'src/app/Services/clientes/clientes.service';
 import { UsuariosService } from 'src/app/Services/usuarios/usuarios.service';
-import { EquiposService } from 'src/app/Services/equipos/equipos.service';
-import { Category } from 'src/app/Interfaces/category-equip';
+import { Category } from 'src/app/Interfaces/category';
 import { OrganizationService } from 'src/app/Services/organization/organization.service';
-import { Organization } from 'src/app/Interfaces/organization';
+import { CategoryService } from 'src/app/Services/category/category.service';
 @Component({
   standalone: true,
   selector: 'app-config-cliente',
@@ -56,20 +54,17 @@ export class ConfigClienteComponent  implements OnInit {
   organizationCategory: Category[] = []
 
   usuarios: any[] = []
+  categorias: any[] = []
 
   cliente: Cliente = { id: 0, nombre: '', telefono_jefe_area: '', telefono_supervisor_area: '', usuarios: [], equipos: [] };
   organization!: any;
 
-  constructor(private route: ActivatedRoute, private clientes:ClientesService, private usuariosGlobales:UsuariosService, private _equipos:EquiposService, private organizationService: OrganizationService) {
+  constructor(private route: ActivatedRoute, private usuariosGlobales:UsuariosService,
+    private organizationService: OrganizationService, private categoryService: CategoryService) {
 
-    
   }
 
   async ngOnInit() {
-
-    const dataUser = await this.usuariosGlobales.getUsers();
-    this.usuarios = dataUser.data;
-    console.log(this.usuarios)
 
     let organizationId
 
@@ -89,12 +84,13 @@ export class ConfigClienteComponent  implements OnInit {
       console.log(this.organization)
     }
 
+    await this.loadData();
+
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || ''))
     );
-
-    await this.loadData();
+ 
   }
 
   private _filter(value: string): string[] {
@@ -107,7 +103,8 @@ export class ConfigClienteComponent  implements OnInit {
     }
 
     if(this.type == 'equipos'){
-      const nameEquipo = this._equipos.listEquipos().map(equip => equip.name);
+      console.log('Filter categorias: ',this.categorias)
+      const nameEquipo = this.categorias.map(equip => equip.descr);
       return nameEquipo.filter(option => option.toLocaleLowerCase().includes(filterValue))
     }
 
@@ -125,7 +122,7 @@ export class ConfigClienteComponent  implements OnInit {
      
       if (organizacionId) {
 
-        const response = await this.organizationService.assignUserToOrganization(selectedUser.id, this.organization.id);
+        const response = await this.organizationService.assignUserToOrganization(selectedUser.id, this.organization.id!);
         console.log(response)
         this.loadDataUsuario(); // Asegúrate de llamar a loadDataCliente después de agregar el usuario
         this.myControl.reset()
@@ -133,18 +130,24 @@ export class ConfigClienteComponent  implements OnInit {
     }
   }
 
-  onOptionSelectedEquip(event: any) {
+  async onOptionSelectedEquip(event: any) {
+
     const selectedEquipName = event.option.value;
-    console.log(selectedEquipName)
-    const selectedEquip = this._equipos.listEquipos().find(equip => equip.name === selectedEquipName);
+    console.log('selectedEquipName ', selectedEquipName)
+    console.log('organizationCategory ', this.organizationCategory)
+    const selectedEquip = this.categorias.find(equip => equip.descr === selectedEquipName);
     
-    console.log(selectedEquip)
+    console.log('selectedEquip',selectedEquip)
 
     if (selectedEquip) {
-      const clienteId = this.cliente?.id;
-      if (clienteId) {
-        this.clientes.assignEquipo(clienteId, selectedEquip);
-        this.loadDataEquipos(); 
+
+      const organizacionId = this.organization?.id;
+
+      if (organizacionId) {
+
+        const response = await this.organizationService.assignCategoryToOrganization(this.organization.id!, selectedEquip.id)
+        console.log('assignCategoryToOrganization', response)
+        this.loadDataCategory(); 
         this.myControl.reset()
       }
     }
@@ -153,42 +156,56 @@ export class ConfigClienteComponent  implements OnInit {
   async loadData() {
     if (this.type === 'equipos') {
       // Cargar datos de equipos
-      this.loadDataEquipos()
+      await this.loadDataCategory();
 
     } else if (this.type === 'usuarios') {
       // Cargar datos de usuarios
-      await this.loadDataUsuario()
+      await this.loadDataUsuario();
 
     }
   }
 
   async loadDataUsuario() {
- 
-    const response = await this.usuariosGlobales.getUsersByOrganizationId(this.organization.id!)
+
+    const dataUser = await this.usuariosGlobales.getUsers();
+    this.usuarios = dataUser.data;
+    console.log(this.usuarios)
+
+    const response = await this.usuariosGlobales.getUsersByOrganizationId(this.organization.id!);
+    console.log(response)
+
     this.organizationUsers = response.data
     this.dataSource = [ ... (this.organizationUsers || [])]
 
   }
 
-  loadDataEquipos(){
+  async loadDataCategory(){
 
-    this.equiposClientes = this.cliente.equipos
-    this.dataSource = [...(this.equiposClientes || [])]
+    const dataCategory = await this.categoryService.getCategories();
+    this.categorias = dataCategory.data
+    console.log('Todas las Categorias: ',this.categorias)
+
+    const response = await this.categoryService.getCategoryByOrganization(this.organization.id!);
+    console.log('Categorias por organizacion: ',response.data)
+
+    this.organizationCategory = response.data
+    this.dataSource = [...(this.organizationCategory || [])]
 
   }
 
-  async removeUsuario(clienteId:number, usuarioId: string){
+  async removeUsuario(organizationId:number, usuarioId: string){
 
-    const response = await this.organizationService.unassignUserFromOrganization(usuarioId, clienteId);
-    console.log(response)
+    const response = await this.organizationService.unassignUserFromOrganization(usuarioId, organizationId);
+    console.log('removeUsuario ',response)
     this.loadDataUsuario();
     
   }
 
-  removeEquipo(clienteId:number, equipoId: number){
+  async removeEquipo(organizationId:number, equipoId: number){
     
-    this.clientes.removeEquipo(clienteId, equipoId);
-    this.loadDataEquipos();
+    const response = await this.organizationService.unassignCategoryFromOrganization(equipoId, organizationId);
+    console.log('remove equipo: ',response)
+    this.loadDataCategory();
 
   }
 

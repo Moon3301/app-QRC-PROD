@@ -1,5 +1,5 @@
 export interface Cargo {
     
     id: number
-    nombre: string
+    name: string
 }

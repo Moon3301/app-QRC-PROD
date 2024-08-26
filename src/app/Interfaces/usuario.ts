@@ -2,24 +2,11 @@ export interface User {
 
     id?: string
     name:string
+    username: string
     position:number
-    signature: string
-    organizacion_id: number
-    username: string,
-    normalized_username:string
     email:string
-    normalized_email:string
-    email_confirmed: boolean
-    password_hash: string
-    security_stamp: string
-    concurrency_stamp:string
-    phone_number: string,
-    phone_number_confirmed:boolean
-    two_factor_enabled: boolean
-    password: string,
-    lockout_end: string
-    lockout_enabled: boolean
-    acces_failed_count: number
+    phone_number: string
+    password?: string
     
 }
 

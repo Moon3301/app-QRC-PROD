@@ -7,52 +7,78 @@ import { Equipment, EquipmentItem, EquipmentCalendar, EquipmentFilter } from 'sr
 import { ApiService } from '../api/api.service';
 
 import { api_url } from '../utilities';
+import { SecurityService } from '../Security/security.service';
 
 @Injectable({ 
   providedIn: 'root'
 })
 export class EquipmentService {
 
-  constructor(private api:ApiService) { }
+  constructor(private api:ApiService, private security: SecurityService) { }
 
-  async getEquipment() {
+  async getEquipments() {
 
-    const endpoint = ''
+    this.security.loadToken();
+    const token = this.security.currentToken
+
+    if (!token) {
+      console.error('Token no encontrado o inválido.'); 
+      return null;
+    }
+
+    const endpoint = `${api_url}/equipment`
     const method = 'GET'
-    const body = ''
+    const body = undefined
 
-    const response = await this.api.createRequest(endpoint, method, body)
+    const response = await this.api.createRequest(endpoint, method, body, token)
     return response
 
   }
 
-  async getEquipmentById(id:number){
+  async getEquipmentByOrganizationId(organizationId:number){
 
-    const endpoint = ''
-    const method = 'POST'
-    const body = ''
+    this.security.loadToken();
+    const token = this.security.currentToken
 
-    const response = await this.api.createRequest(endpoint, method, body)
+    if (!token) {
+      console.error('Token no encontrado o inválido.'); 
+      return null;
+    }
+
+    const queryParams = { organizationId: `${organizationId}`}
+    const endpoint = `${api_url}/equipment`
+    const method = 'GET'
+    const body = undefined
+
+    const response = await this.api.createRequest(endpoint, method, body, token, queryParams)
     return response
 
   }
 
   async createEquipment(equipment:Equipment){
 
-    const endpoint = ''
-    const method = 'POST'
-    const body = ''
+    this.security.loadToken();
+    const token = this.security.currentToken
 
-    const response = await this.api.createRequest(endpoint, method, body)
+    if (!token) {
+      console.error('Token no encontrado o inválido.'); 
+      return null;
+    }
+
+    const endpoint = `${api_url}/equipment`
+    const method = 'POST'
+    const body = {equipment: equipment}
+
+    const response = await this.api.createRequest(endpoint, method, body, token)
     return response
 
   }
 
   async updateEquipment(id:number, equipment:Equipment){
 
-    const endpoint = ''
-    const method = 'POST'
-    const body = ''
+    const endpoint = `${api_url}/equipment`
+    const method = 'PUT'
+    const body = {equipment: equipment}
 
     const response = await this.api.createRequest(endpoint, method, body)
     return response
@@ -62,18 +88,22 @@ export class EquipmentService {
   // DELETE
   // Procedimiento de almacenado realiza un UPDATE sobre la tabla equipmentFilterTable
 
-  async deleteEquipment(id:number, organizationId:number, calendar:number, priority:number, shift:number,
-    categoryId:number, asset:string, descr: string, location: string, physicalFile:string, serial:string,
-    brand:string, model:string, accreditation:boolean, month:boolean){
+  async deleteEquipment(equipmentId:number){
 
+    this.security.loadToken();
+    const token = this.security.currentToken
+
+    if (!token) {
+      console.error('Token no encontrado o inválido.'); 
+      return null;
+    }
+
+    const queryParams = {equipmentId: `${equipmentId}`}
     const endpoint = `${api_url}/equipment`
-    const method = 'POST'
+    const method = 'DELETE'
+    const body = undefined
 
-    const body = {id:id, organizationId:organizationId, calendar: calendar, priority: priority, shift: shift, 
-    categoryId: categoryId, asset: asset, descr: descr, location: location, physicalFile: physicalFile, serial: serial,
-    brand: brand, model: model, accreditation: accreditation, month: month}
-
-    const response = await this.api.createRequest(endpoint, method, body)
+    const response = await this.api.createRequest(endpoint, method, body, token, queryParams)
     return response
 
   }

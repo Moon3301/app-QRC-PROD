@@ -84,17 +84,17 @@
         
           <!-- Position Column -->
           <ng-container matColumnDef="delete">
-            <th style="width: 30%; text-align: center;" mat-header-cell *matHeaderCellDef></th>
+            <th style="width: 30%; text-align: center;" mat-header-cell *matHeaderCellDef>Eliminar</th>
             <td style="width: 30%;" mat-cell *matCellDef="let element">
-              <button (click)="removeEquipo(cliente.id, element.id)" mat-flat-button><mat-icon style="margin: 0 auto;" matSuffix>delete</mat-icon></button>
+              <button (click)="removeEquipo(organization.id, element.id)" mat-flat-button><mat-icon style="margin: 0 auto;" matSuffix>delete</mat-icon></button>
   
             </td>
           </ng-container>
         
           <!-- Name Column -->
           <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef> Name </th>
-            <td #button mat-cell *matCellDef="let element">{{element.name}}</td>
+            <th mat-header-cell *matHeaderCellDef> Nombre </th>
+            <td #button mat-cell *matCellDef="let element">{{element.descr}}</td>
           </ng-container>
         
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

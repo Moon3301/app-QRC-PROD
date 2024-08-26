@@ -91,23 +91,9 @@ export class SecurityService {
         id: response.data.id,
         name: response.data.name,
         position: response.data.position,
-        signature: '',
-        organizacion_id: 0,
         username: response.data.userName,
-        normalized_username:  ''+response.data.userName.toUpperCase(),
         email: response.data.email,
-        normalized_email: ''+response.data.email.toUpperCase(),
-        email_confirmed: true,
-        password_hash: '',
-        security_stamp: '',
-        concurrency_stamp: '',
         phone_number: '',
-        phone_number_confirmed: true,
-        two_factor_enabled: false,
-        password: '',
-        lockout_end: '',
-        lockout_enabled: false,
-        acces_failed_count: 0
       }
 
       const userToken: UserToken = {

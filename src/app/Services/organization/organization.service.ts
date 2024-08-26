@@ -46,7 +46,7 @@ export class OrganizationService {
 
     const endpoint = `${api_url}/organizations`;
     const method = 'POST';
-    const body = {organization};
+    const body = organization
 
     const response = await this.api.createRequest(endpoint, method, body, token);
     return response
@@ -64,7 +64,7 @@ export class OrganizationService {
 
     const endpoint = `${api_url}/organizations`;
     const method = 'PUT';
-    const body = {organization};
+    const body = organization
 
     return this.api.createRequest(endpoint, method, body, token);
   }
@@ -79,11 +79,12 @@ export class OrganizationService {
       return null;
     }
 
-    const endpoint = `${api_url}/organizations/${organizationId}`;
+    const queryParams = {organizationId: `${organizationId}`}
+    const endpoint = `${api_url}/organizations`;
     const method = 'DELETE';
     const body = null;
 
-    return this.api.createRequest(endpoint, method, body, token);
+    return this.api.createRequest(endpoint, method, body, token, queryParams);
   }
 
   async findOrganization(organizationId: number) {
@@ -171,7 +172,7 @@ export class OrganizationService {
     return this.api.createRequest(endpoint, method, body, token, queryParams);
   }
 
-  async unassignCategoryFromOrganization(organization: number, category: number) {
+  async unassignCategoryFromOrganization(category: number, organization: number) {
     
     this.security.loadToken();
     const token = this.security.currentToken

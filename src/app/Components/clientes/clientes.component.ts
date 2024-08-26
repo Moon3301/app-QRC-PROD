@@ -48,7 +48,6 @@ export class ClientesComponent  implements OnInit {
   async ngOnInit() {
 
     this.organizations = await this.getOrganizations();
-    console.log(this.organizations)
 
     this.addFormCliente = this._FormBuilder.group({
 
@@ -84,15 +83,10 @@ export class ClientesComponent  implements OnInit {
 
       const organization: Organization = {Id: organizacionId, Descr: descr, ManagerPhone: managerPhone, SupervisorPhone: supervisorPhone}
 
-      console.log(organization)
-
       const response = await this.serviceOrganization.updateOrganization(organization)
       console.log(response)
 
-      
-
     }catch(error){
-
       console.log(error)
     }
     
@@ -120,15 +114,16 @@ export class ClientesComponent  implements OnInit {
     })
   }
 
-  confirmDetail(organizacion: any) {
+  async confirmDetail() {
     
     this.modalClients.toArray().forEach(modal => modal.dismiss(null, 'confirm'));
-
+    this.organizations = await this.getOrganizations();
   }
   
-  cancelDetail() {
+  async cancelDetail() {
     
     this.modalClients.toArray().forEach(modal => modal.dismiss(null, 'cancel'));
+    this.organizations = await this.getOrganizations();
   }
   
 
@@ -143,12 +138,16 @@ export class ClientesComponent  implements OnInit {
     }
   }
 
-  confirmRegister() {
+  async confirmRegister() {
+
+    this.organizations = await this.getOrganizations();
     this.addFormCliente.reset();
     this.modalRegister.dismiss(null,'confirm');
   }
   
-  cancelRegister() {
+  async cancelRegister() {
+    
+    this.organizations = await this.getOrganizations();
     this.addFormCliente.reset();
     this.modalRegister.dismiss(null, 'cancel');
   }
@@ -172,9 +171,9 @@ export class ClientesComponent  implements OnInit {
 
     try{
 
-      const Descr = this.addFormCliente.get("nombre")?.value || ''
-      const ManagerPhone = this.addFormCliente.get("telefono_jefe_area")?.value || ''
-      const SupervisorPhone = this.addFormCliente.get("telefono_supervisor_area")?.value || ''
+      const Descr = this.addFormCliente.get("descr")?.value || '';
+      const ManagerPhone = this.addFormCliente.get("managerPhone")?.value || '';
+      const SupervisorPhone = this.addFormCliente.get("supervisorPhone")?.value || '';
 
       const organizacion: Organization = {Id: 0, Descr: Descr, ManagerPhone: ManagerPhone, SupervisorPhone: SupervisorPhone}
       this.serviceOrganization.addOrganization(organizacion)

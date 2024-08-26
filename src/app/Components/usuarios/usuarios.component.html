@@ -3,6 +3,31 @@
 
   <p></p>
 
+  <div class="container" style="overflow-y: auto; height: 100vh; width: 100%;">
+    <br>
+  
+    <p></p>
+    
+      @for(user of dataSource; track user){
+
+        <mat-card class="mat-card-custom">
+          <mat-card-content>
+            
+            <p><strong>Cargo:</strong> {{formatPosition(user.position)}}</p>
+            <p><strong>Correo:</strong> {{user.email}}</p>
+            <p><strong>Nombre:</strong> {{user.name}}</p>
+    
+            <button mat-stroked-button color="primary" (click)="openModalDetalleUsuario(user)">
+              Ver detalles
+            </button>
+            
+          </mat-card-content>
+        </mat-card>
+        <hr>
+      }
+    
+  </div>
+  
   <mat-card>
     <mat-card-content>
       
@@ -12,10 +37,7 @@
         <ng-container matColumnDef="cargo">
           <th mat-header-cell *matHeaderCellDef> Cargo </th>
           <td  mat-cell *matCellDef="let element">
-            {{element.position}}
-            
-            
-          
+            {{formatPosition(element.position)}}
           </td>
         </ng-container>
       
@@ -24,7 +46,6 @@
           <th mat-header-cell *matHeaderCellDef >Correo</th>
           <td mat-cell *matCellDef="let element">
           {{element.email}}
-          
           </td>
         </ng-container>
       
@@ -33,17 +54,13 @@
           <th mat-header-cell *matHeaderCellDef> Name </th>
           <td mat-cell *matCellDef="let element">
             {{element.name}}
-            
-            
-          
           </td>
         </ng-container>
       
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr #button  (click)="openModalDetalleUsuario(row)" mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
       </table>
-
-
+      
     </mat-card-content>
   </mat-card>
 
@@ -86,8 +103,17 @@
 
           <p>
             <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Username</mat-label>
+              <input type="text" matInput placeholder="Nombre de usuario" formControlName="username">
+              <mat-icon matSuffix>person</mat-icon>
+              
+            </mat-form-field>
+          </p>
+
+          <p>
+            <mat-form-field appearance="outline" class="w-100">
               <mat-label>Nombre</mat-label>
-              <input type="text" matInput placeholder="Nombre y Apellido" formControlName="nombre">
+              <input type="text" matInput placeholder="Nombre y Apellido" formControlName="name">
               <mat-icon matSuffix>person</mat-icon>
               
             </mat-form-field>
@@ -98,6 +124,14 @@
               <mat-label>Email</mat-label>
               <input type="text" matInput placeholder="Email" formControlName="email">
               <mat-icon matSuffix>mail</mat-icon>
+            </mat-form-field>
+          </p>
+
+          <p>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Telefono</mat-label>
+              <input type="text" matInput placeholder="Email" formControlName="phone_number">
+              <mat-icon matSuffix>phone</mat-icon>
             </mat-form-field>
           </p>
     
